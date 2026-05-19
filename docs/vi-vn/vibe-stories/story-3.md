@@ -1,96 +1,96 @@
 ---
-title: 我给每个学生，做了一个不会累的“学霸同桌”
-description: 一位高中信息技术老师用 AI 做出“编程学伴”的故事。
+title: Tôi tạo cho mỗi học sinh một "bạn học xuất sắc" không bao giờ mệt
+description: Câu chuyện về một giáo viên tin học trung học dùng AI tạo ra "bạn học lập trình".
 ---
 
-# 我给每个学生，做了一个不会累的“学霸同桌”
+# Tôi tạo cho mỗi học sinh một "bạn học xuất sắc" không bao giờ mệt
 
 <p style="font-size: 52px; line-height: 1; margin: 0 0 12px;">🧑‍🏫</p>
 
-**讲述者：一位高中信息技术老师**
+**Người kể: Một giáo viên tin học trung học**
 
-我是一名高中信息技术教师，也是学校的信息中心主任，还是石家庄市 AIGC 种子教师的一员。这些身份听起来花里胡哨，但说白了，就是在做三件事：为祖国培养人才、为教师减轻负担、为教学提升效率。
+Tôi là giáo viên tin học trung học, đồng thời là giám đốc trung tâm thông tin của trường, và là thành viên của đội ngũ giáo viên hạt giống AIGC thành phố Thạch Gia Trang. Những danh hiệu này nghe có vẻ rắc rối, nhưng nói thẳng ra, tôi đang làm ba việc: bồi dưỡng nhân tài cho đất nước, giảm gánh nặng cho giáo viên, nâng cao hiệu quả giảng dạy.
 
-所以我学习人工智能、思考如何应用，一开始既是工作要求，也是个人爱好。但真正让我下决心做点什么的，是我负责教学的那门 Python 实践课。
+Vì vậy, tôi học AI và suy nghĩ cách ứng dụng — ban đầu vừa là yêu cầu công việc, vừa là sở thích cá nhân. Nhưng thứ thực sự thúc đẩy tôi quyết tâm làm gì đó, chính là môn học thực hành Python mà tôi phụ trách.
 
-## 01 那节差点把我“淹没”的 Python 课
+## 01 Tiết Python suýt "nhấn chìm" tôi
 
-我教的 Python 编程课，内容本身并不复杂。只需要学生们写个程序算出 BMI 指数，输入身高体重，判断胖瘦，再输出结果。但是对于没有任何编程基础的学生来说，接触一个全新的领域并理解其中的运行规则，是一件非常困难的事。
+Nội dung của môn lập trình Python tôi dạy vốn không phức tạp. Chỉ cần học sinh viết chương trình tính chỉ số BMI — nhập chiều cao, cân nặng, phán đoán béo gầy, rồi xuất kết quả. Nhưng với học sinh hoàn toàn không có nền tảng lập trình, việc tiếp xúc một lĩnh vực hoàn toàn mới và hiểu được quy tắc vận hành là điều cực kỳ khó khăn.
 
-很多时候，老师讲的和学生理解的相差甚远。所以一些已经讲过的内容，会被学生反复提问。任务刚布置下去，过不了一会，四面八方都是举起的手，此起彼伏的“老师老师老师”……那种感觉，就像站在菜市场中央，每个摊主都在招呼你。
+Nhiều khi thầy giảng và học sinh hiểu hoàn toàn khác nhau. Vì vậy những nội dung đã giảng rồi, học sinh vẫn hỏi đi hỏi lại. Vừa giao nhiệm vụ xong, chẳng mấy chốc bốn phía đã đầy bàn tay giơ lên, tiếng "thầy ơi thầy ơi thầy ơi" nối tiếp nhau... Cảm giác đó giống như đứng giữa chợ, mỗi người bán hàng đều đang gọi mình.
 
-50 个学生，1 个老师。每个学生卡住的点都不一样：有人不明白 `input()` 是干什么的，有人不知道 `if` 语句怎么写，有人根本搞不懂数据类型转换。一节课 45 分钟，我像个不停拧螺丝的工人，这边刚拧紧一颗，扭头一看，旁边又松了三颗。
+50 học sinh, 1 giáo viên. Mỗi học sinh bị kẹt ở chỗ khác nhau: có người không hiểu `input()` dùng để làm gì, có người không biết viết câu lệnh `if` như thế nào, có người hoàn toàn không hiểu chuyển đổi kiểu dữ liệu. Một tiết 45 phút, tôi như công nhân không ngừng vặn ốc — vừa vặn chặt cái này, quay sang đã thấy ba cái kia lỏng ra.
 
-![那节 Python 实践课上的 BMI 题目](./images/story-3/image1.png)
+![Bài tập BMI trong tiết thực hành Python](./images/story-3/image1.png)
 
-虽然一刻都没有停下来，但举手提问的同学好像一点都没少。有的学生等了几分钟还等不到我，就开始自己折腾电脑；还有的学生索性直接趴下睡觉了。下课铃响起的那一刻，我站在机房里，看着眼前一片混乱，突然觉得特别无力。
+Dù không dừng lại một giây, nhưng học sinh giơ tay hỏi hình như không bớt đi chút nào. Có em chờ mấy phút vẫn không gặp được tôi, thì bắt đầu tự mày mò máy tính; còn có em thì đơn giản là gục xuống ngủ. Lúc chuông báo hết giờ vang lên, tôi đứng trong phòng máy, nhìn cảnh hỗn loạn trước mắt, đột nhiên cảm thấy thật bất lực.
 
-不是学生的问题，他们已经很努力了。也不是我教得不好，而是这个模式本身就有问题。编程不是数学课，没法把所有人的问题统一讲给全班听，只能一个个去指导。
+Không phải lỗi học sinh — các em đã rất cố gắng rồi. Cũng không phải tôi dạy không tốt, mà bản thân mô hình này có vấn đề. Lập trình không như Toán, không thể tổng hợp tất cả vấn đề giảng cho cả lớp cùng nghe, mà phải hướng dẫn từng người.
 
-## 02 给每个学生，配一个不会累的“学霸同学”
+## 02 Trang bị cho mỗi học sinh một "bạn học xuất sắc" không biết mệt
 
-那天晚上我失眠了。不是焦虑，而是在想一个问题：如果每个学生都能有一个“助教”，随时解答他的问题，会怎么样？
+Đêm hôm đó tôi mất ngủ. Không phải lo lắng, mà đang suy nghĩ một câu hỏi: nếu mỗi học sinh đều có một "trợ giảng" sẵn sàng giải đáp thắc mắc bất cứ lúc nào, thì sao?
 
-这个助教不直接给答案，只需要告诉他：“你这里错了”“这个函数是这样用的”“换个思路试试”……
+Trợ giảng này không đưa đáp án trực tiếp, chỉ cần nói với em: "Chỗ này sai rồi", "Hàm này dùng thế này", "Thử nghĩ theo cách khác xem"...
 
-就像以前读书时，坐在旁边的那个学霸同学。你卡住了，问他一句，他点拨你一下，然后你自己就解决了。想到这里，我突然意识到，AI 或许可以变成这样一位“学霸同桌”。
+Giống như hồi còn đi học, người bạn học xuất sắc ngồi bên cạnh. Em bị kẹt, hỏi một câu, bạn ấy gợi ý một chút, rồi tự em giải quyết được. Nghĩ đến đây, tôi đột nhiên nhận ra — AI có thể trở thành "bạn học xuất sắc ngồi cạnh" như vậy.
 
-现有的 AI 编程工具虽然可以直接给答案，但还不能做到真正的学习引导。所以我决定自己做一个新的应用，一个会教学、会引导、会陪着学生把问题想清楚的 AI 助教。
+Các công cụ lập trình AI hiện có dù có thể đưa ra đáp án trực tiếp, nhưng chưa thực sự làm được việc hướng dẫn học tập. Vì vậy tôi quyết tâm tự làm một ứng dụng mới — một AI trợ giảng biết dạy, biết hướng dẫn, biết cùng học sinh suy nghĩ cho rõ vấn đề.
 
-![信息科技课程中心的首页原型](./images/story-3/image2.png)
+![Nguyên mẫu trang chủ của Trung tâm khóa học Tin học](./images/story-3/image2.png)
 
-## 03 从梦想到现实：编程学伴
+## 03 Từ ước mơ đến hiện thực: Bạn học lập trình
 
-我之前只写过一些简单的小软件，但没碰过这么复杂的应用开发。对“接入 AI 的应用开发”更是完全没有经验，所以一开始心里非常没底。也是从那时候开始，我这个“会教书但不会做复杂产品”的老师，第一次真正把脑子里的想法跑了起来，变成了一个可用应用。
+Trước đây tôi chỉ viết một vài phần mềm nhỏ đơn giản, chưa từng làm ứng dụng phức tạp như thế này. Về "phát triển ứng dụng tích hợp AI" thì hoàn toàn không có kinh nghiệm, nên ban đầu trong lòng rất không vững. Cũng từ lúc đó, tôi — một giáo viên "biết dạy nhưng không biết làm sản phẩm phức tạp" — lần đầu tiên thực sự biến ý tưởng trong đầu thành ứng dụng có thể sử dụng được.
 
-那段时间，我连续 5 天每天晚上跟着课程打卡学习。开发过程中最难的地方不是写代码，而是找 AI 的 API：哪个平台免费、哪个速度快、哪个适合教育场景……这些都得一个个试。
+Giai đoạn đó, tôi liên tục 5 ngày mỗi tối theo khóa học để học và thực hành. Phần khó nhất trong quá trình phát triển không phải là viết code, mà là tìm API của AI: nền tảng nào miễn phí, cái nào tốc độ nhanh, cái nào phù hợp với bối cảnh giáo dục... cái nào cũng phải thử từng cái.
 
-我还记得第一次在应用里集成 AI，输入“input 函数怎么用”，看到它真的返回了示例代码和讲解时，那种兴奋和欣慰到现在都记得。我给这个应用起名叫“信息科技课程中心”，核心模块是“编程学伴”。
+Tôi vẫn nhớ lần đầu tiên tích hợp AI vào ứng dụng, gõ "hàm input dùng như thế nào", thấy nó thực sự trả về ví dụ code và giải thích — cảm giác phấn khích và vui mừng đó đến bây giờ vẫn còn. Tôi đặt tên ứng dụng này là "Trung tâm khóa học Tin học", module cốt lõi là "Bạn học lập trình".
 
-![编程学伴的代码审查界面](./images/story-3/image3.png)
+![Giao diện đánh giá code của Bạn học lập trình](./images/story-3/image3.png)
 
-它能做三件事：
+Nó làm được ba việc:
 
-- **基础知识答疑**：学生问“for 循环怎么写”“列表怎么用”，学伴直接给出用法说明和示例代码。因为这是基础知识，不是作业题。
-- **作业题引导**：学生拿着老师布置的题目来问，学伴不给完整代码，而是用苏格拉底式提问一步步引导他自己想出来。
-- **代码审查**：学生把自己写的代码贴上来，学伴指出问题在哪，但不直接替他改完。
+- **Giải đáp kiến thức cơ bản**: Học sinh hỏi "vòng lặp for viết thế nào", "list dùng ra sao", bạn học đưa ngay cách dùng và code ví dụ. Vì đây là kiến thức cơ bản, không phải bài tập về nhà.
+- **Hướng dẫn bài tập**: Học sinh mang đề bài thầy giao đến hỏi, bạn học không đưa code hoàn chỉnh, mà dùng phương pháp đặt câu hỏi kiểu Socrates để từng bước dẫn dắt em tự nghĩ ra.
+- **Đánh giá code**: Học sinh dán code mình viết lên, bạn học chỉ ra vấn đề ở đâu, nhưng không tự sửa thay em.
 
-为什么要设计成这样？因为学习的目的不是“完成作业”，而是“学会解决问题”。如果 AI 直接给答案，学生只会复制粘贴，表面上交差了，实际上什么都没学会。
+Tại sao thiết kế như vậy? Vì mục đích học không phải là "hoàn thành bài tập", mà là "học cách giải quyết vấn đề". Nếu AI đưa đáp án thẳng, học sinh chỉ copy paste — bề ngoài xong việc, thực tế chẳng học được gì.
 
-## 04 作业和记录成了新的麻烦
+## 04 Bài tập và ghi chép trở thành rắc rối mới
 
-软件做出来之后，我自己测试了一圈，觉得挺好。同事看完也说：“这个太棒了，解决了我们的痛点。”但开学后第一周，新的问题就来了：学生在课上用编程学伴解决了问题，然后作业提交到哪里？
+Phần mềm làm xong, tôi tự test một vòng, thấy khá ổn. Đồng nghiệp xem xong cũng nói: "Cái này tuyệt lắm, giải quyết đúng điểm đau của chúng ta." Nhưng tuần đầu tiên sau khai học, vấn đề mới nảy sinh: học sinh dùng Bạn học lập trình giải quyết được vấn đề trong giờ học, rồi bài tập nộp ở đâu?
 
-以前我们用的是极域电子教室，学生在机房里提交，我在教师机上收。但这个系统有个致命问题，只能在机房里用，下课就断。学生在机房之外，既无法继续做课程作业，也无法回看之前的学习记录。
+Trước đây chúng tôi dùng hệ thống lớp học điện tử, học sinh nộp bài trong phòng máy, tôi nhận trên máy giáo viên. Nhưng hệ thống này có vấn đề chết người — chỉ dùng được trong phòng máy, hết giờ là ngắt. Học sinh ra ngoài phòng máy, không thể tiếp tục làm bài khóa học, cũng không thể xem lại ghi chép học tập trước đó.
 
-于是我又花了几个晚上，给“编程学伴”加了一整套班级和课程管理系统：
+Vậy là tôi lại bỏ thêm vài tối để thêm vào "Bạn học lập trình" một hệ thống quản lý lớp học và khóa học hoàn chỉnh:
 
-- 老师可以创建班级和课程；
-- 学生加入班级后，可以看到所有课程内容和作业；
-- 课上没完成的，课下还能继续做、继续交；
-- 老师可以课下批阅作业，不合格的打回重做；
-- 当学生通过某门课的所有作业，系统会自动发一份课程完成证书。
+- Giáo viên có thể tạo lớp học và khóa học;
+- Học sinh tham gia lớp, có thể xem tất cả nội dung khóa học và bài tập;
+- Bài chưa làm xong trong giờ, sau giờ vẫn có thể tiếp tục làm và nộp;
+- Giáo viên có thể chấm bài sau giờ học, bài không đạt thì trả lại làm lại;
+- Khi học sinh vượt qua tất cả bài tập của một khóa học, hệ thống tự động cấp chứng chỉ hoàn thành khóa học.
 
-![课程与班级管理界面](./images/story-3/image4.png)
+![Giao diện quản lý khóa học và lớp học](./images/story-3/image4.png)
 
-这个“证书”是我特意加的。因为我知道，对于高中生来说，一个小小的认可和仪式感，足以让他觉得“我真的学会了什么”。
+"Chứng chỉ" này là tôi cố tình thêm vào. Vì tôi biết rằng, với học sinh trung học, một sự công nhận nhỏ và cảm giác nghi thức nhỏ đủ để các em cảm thấy "mình thực sự học được gì đó".
 
-![课程完成证书示意](./images/story-3/image5.png)
+![Mẫu chứng chỉ hoàn thành khóa học](./images/story-3/image5.png)
 
-编程学伴加上课程管理，形成了一个完整的学习闭环，也让学生的学习更有始有终、更有成就感。
+Bạn học lập trình kết hợp quản lý khóa học tạo thành một vòng khép kín học tập hoàn chỉnh, cũng khiến việc học của học sinh có đầu có đuôi, có thêm cảm giác thành tựu.
 
-## 05 如果每个老师，都能多一个帮手就好了
+## 05 Giá mà mỗi giáo viên đều có thêm một người giúp đỡ
 
-现在学生放假了。虽然课程管理系统还没真正在课堂上大规模使用，但同事们测试后的反馈让我很有信心：“这就是我们需要的东西。”更让我没想到的是，这个系统甚至有可能推广到石家庄全市的其他学校。
+Bây giờ học sinh đang nghỉ hè. Dù hệ thống quản lý khóa học chưa thực sự triển khai quy mô lớn trong lớp học, nhưng phản hồi của đồng nghiệp sau khi test khiến tôi rất tự tin: "Đây chính là thứ chúng ta cần." Điều tôi không ngờ hơn là — hệ thống này thậm chí có thể được nhân rộng đến các trường khác trong toàn thành phố Thạch Gia Trang.
 
-我一开始做这个系统，只是想解决自己班上那 50 个学生的问题，没想着做多大的事。但转念一想，如果全市的信息技术老师都在面对同样的困境，所有学生都在喊“老师”，而老师只有一个，那这个工具就确实应该被更多人用到。
+Ban đầu tôi làm hệ thống này, chỉ muốn giải quyết vấn đề cho 50 học sinh trong lớp mình, không nghĩ đến làm việc gì to lớn. Nhưng nghĩ lại — nếu tất cả giáo viên tin học trong thành phố đều đang đối mặt với khó khăn tương tự, tất cả học sinh đều đang gọi "thầy ơi", mà thầy chỉ có một người, thì công cụ này thực sự nên được nhiều người dùng hơn.
 
-AI 可能就是那个答案。不是用 AI 替代老师，而是用 AI 帮助老师，让每个学生都能得到个性化的指导。
+AI có thể chính là câu trả lời đó. Không phải dùng AI để thay thế giáo viên, mà dùng AI để hỗ trợ giáo viên — giúp mỗi học sinh nhận được sự hướng dẫn cá nhân hóa.
 
-## 06 结语
+## 06 Lời kết
 
-最后说说技术实现。我用的是百度秒哒平台，0 成本部署。我们学校没有服务器预算，所以这个“0 成本”特别重要。5 天时间，产品就从想法走到了上线。甚至从学 Vibe Coding 到做出应用，利用的都是晚上的零碎时间。
+Cuối cùng nói một chút về triển khai kỹ thuật. Tôi dùng nền tảng Baidu Miaoda, triển khai 0 chi phí. Trường chúng tôi không có ngân sách máy chủ, nên "0 chi phí" này đặc biệt quan trọng. 5 ngày, sản phẩm từ ý tưởng đến ra mắt. Thậm chí từ lúc học Vibe Coding đến làm được ứng dụng, đều tận dụng thời gian rảnh buổi tối.
 
-我不是专业开发者，也不是技术大牛。只是一个普通的高中信息技术老师，在某个失眠的夜晚，想解决一个真实问题。后来我发现，技术真的可以改变教育。不是那种宏大叙事的“教育革命”，而是具体的、微小的、但真实有效的改变。
+Tôi không phải nhà phát triển chuyên nghiệp, cũng không phải cao thủ kỹ thuật. Chỉ là một giáo viên tin học trung học bình thường, trong một đêm mất ngủ, muốn giải quyết một vấn đề thực tế. Sau đó tôi phát hiện ra — công nghệ thực sự có thể thay đổi giáo dục. Không phải kiểu "cách mạng giáo dục" hoành tráng, mà là sự thay đổi cụ thể, nhỏ bé, nhưng thực sự hiệu quả.
 
-如果你也是信息技术老师，也在面对类似困境，或者你只是对 AI + 教育感兴趣，欢迎继续交流。我们一起，让技术真正服务教育。
+Nếu bạn cũng là giáo viên tin học, cũng đang đối mặt với khó khăn tương tự, hoặc bạn chỉ đơn giản quan tâm đến AI + giáo dục — hãy cùng trao đổi. Cùng nhau, để công nghệ thực sự phục vụ giáo dục.

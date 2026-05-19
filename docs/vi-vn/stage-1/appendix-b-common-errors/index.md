@@ -1,325 +1,325 @@
 ---
-title: '写代码时遇到错误怎么办 - 截图问 AI 的实战指南'
-description: '学习如何高效地向 AI 提问来解决开发中的各种报错问题，掌握截图、描述、定位问题的标准流程，让 AI 成为你的调试助手。'
+title: 'Gặp lỗi khi viết code thì làm gì - Hướng dẫn thực tế: chụp màn hình hỏi AI'
+description: 'Học cách đặt câu hỏi cho AI một cách hiệu quả để giải quyết các lỗi trong quá trình phát triển, nắm vững quy trình chuẩn: chụp màn hình, mô tả, xác định vấn đề — biến AI thành trợ lý debug của bạn.'
 ---
 
 <script setup>
-const duration = '约 <strong>30 分钟</strong>'
+const duration = 'khoảng <strong>30 phút</strong>'
 </script>
 
-# 写代码时遇到错误怎么办
+# Gặp lỗi khi viết code thì làm gì
 
-## 本章导读
+## Giới thiệu chương
 
-<ChapterIntroduction :duration="duration" :tags="['调试技巧', 'AI 协作', '问题排查', '开发者工具']" coreOutput="一套标准化的报错排查流程" expectedOutput="能独立解决 90% 的常见报错">
+<ChapterIntroduction :duration="duration" :tags="['Kỹ thuật debug', 'Cộng tác với AI', 'Xử lý sự cố', 'Công cụ developer']" coreOutput="Một quy trình xử lý lỗi được chuẩn hóa" expectedOutput="Có thể tự giải quyết 90% lỗi thường gặp">
 
-在 AI 时代，排查错误的方式已经变了。
+Trong kỷ nguyên AI, cách xử lý lỗi đã thay đổi.
 
-你不需要背下所有错误类型，不需要成为调试专家，甚至不需要理解错误是什么意思。
+Bạn không cần thuộc lòng tất cả các loại lỗi, không cần trở thành chuyên gia debug, thậm chí không cần hiểu lỗi có nghĩa là gì.
 
-<strong>你只需要学会一件事：怎么问 AI。</strong>
+<strong>Bạn chỉ cần học một việc: cách hỏi AI.</strong>
 
-本章会教你一套<strong>从简单到进阶</strong>的排查流程：
+Chương này sẽ dạy bạn một quy trình xử lý <strong>từ đơn giản đến nâng cao</strong>:
 
-1. <strong>第一步：直接问</strong>：描述现象 + 截图，一句话提问
-2. <strong>第二步：补充信息</strong>：如果解决不了，再打开 F12 补充关键信息
+1. <strong>Bước 1: Hỏi trực tiếp</strong>: Mô tả hiện tượng + chụp màn hình, hỏi một câu
+2. <strong>Bước 2: Bổ sung thông tin</strong>: Nếu chưa giải quyết được, mở F12 bổ sung thêm thông tin quan trọng
 
-掌握这套流程后，<strong>90% 的报错你都能自己解决</strong>。
+Sau khi nắm vững quy trình này, <strong>90% lỗi bạn đều có thể tự giải quyết</strong>.
 
 </ChapterIntroduction>
 
-::: info 说明
-本章所有方法基于 Cursor/Trae/Claude 等 AI IDE 的实际使用经验，可直接应用于日常开发。
+::: info Lưu ý
+Tất cả phương pháp trong chương này đều dựa trên kinh nghiệm thực tế sử dụng Cursor/Trae/Claude và các AI IDE khác, có thể áp dụng trực tiếp vào phát triển hàng ngày.
 :::
 
 <div style="margin: 50px 0;">
   <ClientOnly>
     <StepBar :active="0" :items="[
-      { title: '直接提问', description: '描述现象 + 截图' },
-      { title: '补充信息', description: '打开 F12 定位问题' },
-      { title: '迭代解决', description: '直到问题解决' }
+      { title: 'Hỏi trực tiếp', description: 'Mô tả hiện tượng + chụp màn hình' },
+      { title: 'Bổ sung thông tin', description: 'Mở F12 xác định vấn đề' },
+      { title: 'Lặp lại đến khi giải quyết', description: 'Cho đến khi vấn đề được giải quyết' }
     ]" />
   </ClientOnly>
 </div>
 
-## 1. 核心心法：截图问 AI
+## 1. Bí quyết cốt lõi: Chụp màn hình hỏi AI
 
-::: warning 为什么这一章很重要？
+::: warning Tại sao chương này quan trọng?
 
-很多初学者遇到报错时的第一反应是：
-- 慌张，开始瞎改代码
-- 花半小时搜索"xxx 错误怎么解决"
-- 试图自己理解错误是什么意思
-- 自己 debug 到深夜
+Nhiều người mới gặp lỗi thường phản ứng đầu tiên là:
+- Hoảng loạn, bắt đầu sửa code bừa bãi
+- Dành nửa tiếng tìm kiếm "cách giải quyết lỗi xxx"
+- Cố tự hiểu lỗi có nghĩa gì
+- Một mình debug đến tận đêm khuya
 
-<strong>这些都是在浪费时间。</strong>
+<strong>Những việc này đều đang lãng phí thời gian.</strong>
 
-在 AI 时代，调试已经变成了一件很简单的事：
+Trong kỷ nguyên AI, debug đã trở thành việc rất đơn giản:
 
 ```
-看到报错 → 截图 → 问 AI → 按 AI 说的做
+Thấy lỗi → Chụp màn hình → Hỏi AI → Làm theo AI nói
 ```
 
-你不需要理解错误，不需要会调试，甚至不需要知道问题出在哪里。
+Bạn không cần hiểu lỗi, không cần biết debug, thậm chí không cần biết vấn đề nằm ở đâu.
 
-<strong>你只需要学会怎么问。</strong>
+<strong>Bạn chỉ cần học cách hỏi.</strong>
 
 :::
 
-### 1.1 最简单的提问方式
+### 1.1 Cách hỏi đơn giản nhất
 
-不需要复杂的模板，两种方式任选：
+Không cần template phức tạp, chọn một trong hai cách:
 
-**方式一：描述现象**
+**Cách 1: Mô tả hiện tượng**
 
-格式：刚才做了什么，现在出现了什么
-
-```
-刚才我修改了登录页面的代码，现在页面白屏了，怎么办？
-```
-
-**方式二：截图**
-
-直接截图当前页面或报错信息
+Định dạng: Vừa làm gì, bây giờ xảy ra điều gì
 
 ```
-[截图]
-
-这个报错怎么解决？
+Vừa sửa code trang đăng nhập, bây giờ trang trắng trống, phải làm sao?
 ```
 
-**最好的方式：描述 + 截图**
+**Cách 2: Chụp màn hình**
+
+Chụp màn hình trực tiếp trang hiện tại hoặc thông tin lỗi
 
 ```
-刚才我修改了登录页面的代码，现在页面白屏了。
+[Ảnh chụp màn hình]
 
-[截图]
-
-怎么办？
+Lỗi này giải quyết thế nào?
 ```
 
-**记住：描述清楚上下文，加上截图，AI 能更快帮你解决问题。**
-
-### 1.2 如何把问题讲清楚
-
-很多初学者知道要提问，但不知道怎么说。其实只需要讲清楚三件事：
-
-**1. 刚才做了什么**
+**Cách tốt nhất: Mô tả + Chụp màn hình**
 
 ```
-刚才我点击了保存按钮
-刚才我修改了登录页面的代码
-刚才我刷新了页面
+Vừa sửa code trang đăng nhập, bây giờ trang trắng trống.
+
+[Ảnh chụp màn hình]
+
+Phải làm sao?
 ```
 
-**2. 现在看到了什么**
+**Nhớ: Mô tả rõ ngữ cảnh, kèm ảnh chụp màn hình, AI có thể giúp bạn nhanh hơn.**
+
+### 1.2 Cách trình bày vấn đề rõ ràng
+
+Nhiều người mới biết cần hỏi nhưng không biết nói thế nào. Thực ra chỉ cần nói rõ ba điều:
+
+**1. Vừa làm gì**
 
 ```
-现在页面是空白的
-现在按钮点了没反应
-现在显示报错信息
+Vừa nhấp nút Lưu
+Vừa sửa code trang đăng nhập
+Vừa tải lại trang
 ```
 
-**3. 想要达到什么效果**
+**2. Bây giờ thấy gì**
 
 ```
-我想让数据保存成功
-我想让页面正常显示
-我想让按钮点击后弹出提示
+Bây giờ trang trắng trống
+Bây giờ nhấp nút không có phản ứng
+Bây giờ hiện thông báo lỗi
 ```
 
-**完整示例：**
+**3. Muốn đạt kết quả gì**
 
 ```
-刚才我点击了保存按钮，现在页面显示"保存失败"的报错。
-
-[截图]
-
-我想让表单数据成功保存到数据库，该怎么办？
+Muốn lưu dữ liệu thành công
+Muốn trang hiển thị bình thường
+Muốn nhấp nút sau đó hiện thông báo
 ```
 
-**关键原则：**
-- 用大白话描述，不用专业术语
-- 按时间顺序说：先做了什么，然后发生了什么
-- 把你的预期说出来，让 AI 知道你想要什么
-
-## 2. 第一步：直接描述现象提问
-
-遇到问题时，<strong>不要急着打开 F12</strong>。先直接描述现象，截图当前页面，丢给 AI 看看。
-
-很多时候，AI 看到截图就能直接给出解决方案。
-
-### 2.1 常见现象怎么描述
-
-::: tip 直接描述即可
-
-**页面白屏**
-```
-页面打开是空白的，怎么办？
-
-[截图]
-```
-
-**按钮点击没反应**
-```
-点击这个按钮没反应，帮我看看。
-
-[截图]
-```
-
-**数据保存不了**
-```
-点了保存，数据没存上，怎么办？
-
-[截图]
-```
-
-**样式显示不对**
-```
-这个按钮位置偏了，怎么调整？
-
-[截图]
-```
-
-**接口报错**
-```
-调用接口报错了，帮我看看。
-
-[截图]
-```
-
-:::
-
-### 2.2 如果 AI 直接解决了
-
-恭喜你，问题解决了！按照 AI 说的修改即可。
-
-### 2.3 如果 AI 说"需要更多信息"
-
-这时候才需要打开 F12，补充关键信息。往下看。
-
-## 3. 第二步：补充关键信息
-
-当 AI 说需要更多信息时，根据问题类型，打开 F12 截取对应的内容。
-
-### 3.1 什么时候需要补充信息
-
-AI 可能会这样回复：
-- "请打开 Console 看看有没有报错"
-- "截图 Network 面板给我看看"
-- "需要看具体的错误信息"
-
-这时候，根据下面的指引补充截图。
-
-### 3.2 补充 Console 信息（页面白屏/报错）
-
-::: tip 操作步骤
-
-**第一步：按 F12 打开开发者工具**
-
-Mac 是 `Cmd+Option+I`，或者右键页面选"检查"。
-
-**第二步：切换到 Console 标签页**
-
-**第三步：截图红色报错信息**
-
-**第四步：发给 AI**
+**Ví dụ đầy đủ:**
 
 ```
-Console 报错如下：
+Vừa nhấp nút Lưu, bây giờ trang hiện lỗi "Lưu thất bại".
 
-[截图]
+[Ảnh chụp màn hình]
+
+Muốn lưu dữ liệu biểu mẫu thành công vào cơ sở dữ liệu, phải làm sao?
+```
+
+**Nguyên tắc quan trọng:**
+- Dùng ngôn ngữ bình thường, không cần thuật ngữ chuyên ngành
+- Nói theo thứ tự thời gian: làm gì trước, rồi xảy ra gì
+- Nói ra kỳ vọng của bạn, để AI biết bạn muốn gì
+
+## 2. Bước 1: Mô tả hiện tượng hỏi trực tiếp
+
+Khi gặp vấn đề, <strong>đừng vội mở F12</strong>. Hãy mô tả hiện tượng trực tiếp, chụp màn hình trang hiện tại, đưa cho AI xem trước.
+
+Nhiều khi, AI thấy ảnh chụp là có thể đưa ra giải pháp ngay.
+
+### 2.1 Cách mô tả các hiện tượng thường gặp
+
+::: tip Mô tả trực tiếp là được
+
+**Trang trắng trống**
+```
+Mở trang ra trống trắng, phải làm sao?
+
+[Ảnh chụp màn hình]
+```
+
+**Nhấp nút không có phản ứng**
+```
+Nhấp nút này không có phản ứng, xem giúp tôi với.
+
+[Ảnh chụp màn hình]
+```
+
+**Không lưu được dữ liệu**
+```
+Nhấp lưu, dữ liệu không lưu được, phải làm sao?
+
+[Ảnh chụp màn hình]
+```
+
+**Hiển thị style sai**
+```
+Nút này bị lệch vị trí, điều chỉnh thế nào?
+
+[Ảnh chụp màn hình]
+```
+
+**API báo lỗi**
+```
+Gọi API bị lỗi, xem giúp tôi với.
+
+[Ảnh chụp màn hình]
 ```
 
 :::
 
-### 3.3 补充 Network 信息（数据问题/API 报错）
+### 2.2 Nếu AI giải quyết ngay được
 
-::: tip 操作步骤
+Chúc mừng, vấn đề đã giải quyết! Sửa theo AI hướng dẫn là xong.
 
-**第一步：按 F12 打开开发者工具**
+### 2.3 Nếu AI nói "cần thêm thông tin"
 
-**第二步：切换到 Network 标签页**
+Lúc này mới cần mở F12, bổ sung thông tin quan trọng. Xem tiếp phần dưới.
 
-**第三步：重新操作一遍**（点保存/刷新页面）
+## 3. Bước 2: Bổ sung thông tin quan trọng
 
-**第四步：找到对应请求，截图**
+Khi AI nói cần thêm thông tin, tuỳ loại vấn đề, mở F12 chụp nội dung tương ứng.
 
-- 看 URL 和状态码
-- 看 Payload（传的参数）
-- 看 Response（返回结果）
+### 3.1 Khi nào cần bổ sung thông tin
 
-**第五步：发给 AI**
+AI có thể trả lời như sau:
+- "Mở Console xem có báo lỗi không"
+- "Chụp màn hình panel Network cho tôi xem"
+- "Cần xem thông báo lỗi cụ thể"
 
-```
-Network 信息如下：
+Lúc này, bổ sung ảnh chụp theo hướng dẫn dưới đây.
 
-请求：[截图1]
-参数：[截图2]
-返回：[截图3]
-```
+### 3.2 Bổ sung thông tin Console (Trang trắng/Báo lỗi)
 
-:::
+::: tip Các bước thực hiện
 
-### 3.4 补充 Elements 信息（样式问题）
+**Bước 1: Nhấn F12 mở Developer Tools**
 
-::: tip 操作步骤
+Trên Mac là `Cmd+Option+I`, hoặc nhấp chuột phải vào trang chọn "Inspect".
 
-**第一步：右键元素 → "检查"**
+**Bước 2: Chuyển sang tab Console**
 
-开发者工具会自动定位到该元素。
+**Bước 3: Chụp ảnh thông báo lỗi màu đỏ**
 
-**第二步：截图 Styles 面板**
-
-**第三步：发给 AI**
+**Bước 4: Gửi cho AI**
 
 ```
-元素样式如下：
+Lỗi Console như sau:
 
-[截图]
+[Ảnh chụp màn hình]
 ```
 
 :::
 
-## 4. 第三步：迭代直到解决
+### 3.3 Bổ sung thông tin Network (Vấn đề dữ liệu/API báo lỗi)
 
-### 4.1 低效的做法
+::: tip Các bước thực hiện
 
-这些做法会浪费你的时间：
+**Bước 1: Nhấn F12 mở Developer Tools**
 
-看到报错就慌张，开始瞎改代码
-花半小时搜索错误解决方案
-试图自己理解每个错误的意思
-一个人 debug 到深夜
+**Bước 2: Chuyển sang tab Network**
 
-### 4.2 高效的做法
+**Bước 3: Thực hiện lại thao tác** (nhấp lưu/tải lại trang)
 
-按照这套流程来：
+**Bước 4: Tìm request tương ứng, chụp ảnh**
 
-先直接描述现象截图提问
-AI 说需要更多信息时，再打开 F12 补充
-按照建议修改代码
-改完后测试，如果问题还在就继续截图提问
+- Xem URL và mã trạng thái
+- Xem Payload (tham số được truyền)
+- Xem Response (kết quả trả về)
 
-## 5. 总结：完整流程
+**Bước 5: Gửi cho AI**
 
 ```
-遇到问题
+Thông tin Network như sau:
+
+Request: [Ảnh chụp 1]
+Tham số: [Ảnh chụp 2]
+Kết quả trả về: [Ảnh chụp 3]
+```
+
+:::
+
+### 3.4 Bổ sung thông tin Elements (Vấn đề style)
+
+::: tip Các bước thực hiện
+
+**Bước 1: Nhấp chuột phải vào phần tử → "Inspect"**
+
+Developer Tools sẽ tự định vị đến phần tử đó.
+
+**Bước 2: Chụp ảnh panel Styles**
+
+**Bước 3: Gửi cho AI**
+
+```
+Style phần tử như sau:
+
+[Ảnh chụp màn hình]
+```
+
+:::
+
+## 4. Bước 3: Lặp lại cho đến khi giải quyết
+
+### 4.1 Cách làm kém hiệu quả
+
+Những việc này sẽ lãng phí thời gian của bạn:
+
+- Thấy lỗi là hoảng, bắt đầu sửa code bừa bãi
+- Dành nửa tiếng tìm kiếm giải pháp cho lỗi
+- Cố tự hiểu từng lỗi có nghĩa gì
+- Một mình debug đến tận đêm khuya
+
+### 4.2 Cách làm hiệu quả
+
+Làm theo quy trình này:
+
+1. Mô tả hiện tượng + chụp màn hình hỏi trước
+2. Khi AI nói cần thêm thông tin, mới mở F12 bổ sung
+3. Sửa code theo gợi ý
+4. Sửa xong kiểm tra, nếu vẫn còn vấn đề thì tiếp tục chụp ảnh hỏi
+
+## 5. Tổng kết: Quy trình hoàn chỉnh
+
+```
+Gặp vấn đề
     ↓
-直接描述现象 + 截图
+Mô tả hiện tượng + Chụp màn hình
     ↓
-丢给 AI："怎么办？"
+Đưa cho AI: "Phải làm sao?"
     ↓
-AI 直接解决？
-    ↓ 是
-按 AI 说的做
+AI giải quyết ngay?
+    ↓ Có
+Làm theo AI nói
     ↓
-测试是否解决
+Kiểm tra đã giải quyết chưa
     ↓
-    ↓ 否 / AI 需要更多信息
-打开 F12，补充关键信息
+    ↓ Không / AI cần thêm thông tin
+Mở F12, bổ sung thông tin quan trọng
     ↓
-再发给 AI
+Gửi lại cho AI
     ↓
-重复直到解决
+Lặp lại cho đến khi giải quyết
 ```

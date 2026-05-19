@@ -1,89 +1,89 @@
 ---
-title: 放弃月入过万，他在农村小学带孩子们“用AI赶苍蝇”
-description: 一个乡村代课老师带着孩子们，用 AI 做出真实课堂工具的故事。
+title: Từ bỏ thu nhập cao, anh về làng dạy trẻ "đuổi ruồi bằng AI"
+description: Câu chuyện về một giáo viên dạy hợp đồng ở nông thôn cùng học trò tạo ra công cụ hỗ trợ giảng dạy thực sự bằng AI.
 ---
 
-# 放弃月入过万，他在农村小学带孩子们“用AI赶苍蝇”
+# Từ bỏ thu nhập cao, anh về làng dạy trẻ "đuổi ruồi bằng AI"
 
 <p style="font-size: 52px; line-height: 1; margin: 0 0 12px;">👨‍🏫</p>
 
-**讲述者：小学老师小浩**
+**Người kể: Tiểu Hạo — giáo viên tiểu học**
 
-小浩，是一位小学三年级的乡村代课老师。曾经的他做过运营，搞过商业数据分析，也敲过代码，月入过万。在旁人眼里，这个从农村走出来的年轻人算是“混得不错”。但他放弃了令人羡慕的工作，辞职回到老家，只为带农村孩子们去看更大的世界。
+Tiểu Hạo là giáo viên dạy hợp đồng lớp 3 ở một trường tiểu học nông thôn. Trước đây anh từng làm vận hành, phân tích dữ liệu kinh doanh, rồi cả lập trình — thu nhập hàng tháng cũng kha khá. Trong mắt nhiều người, chàng trai xuất thân từ vùng quê này đã "thành đạt". Nhưng anh từ bỏ công việc được ngưỡng mộ, về quê để đưa các em nhỏ nông thôn ra nhìn thế giới rộng lớn hơn.
 
-![小浩老师和孩子们](./images/story-1/image1.jpeg)
+![Thầy Tiểu Hạo và các em học sinh](./images/story-1/image1.jpeg)
 
-## 01 当“人工智能”第一次出现在课堂
+## 01 Lần đầu tiên "trí tuệ nhân tạo" xuất hiện trong lớp học
 
-刚来村里教书的时候，小浩老师的心里是堵着的。“村里条件有限，孩子们很难有机会看到外面的世界，他们的世界很小，小到只有翻旧的课本和脚下的泥土。”他想让孩子们看看更大的世界，也想告诉他们，这个世界上有一个东西叫“人工智能”。它能画画，会写诗，还能回答脑袋里所有天马行空的问题。
+Mới về làng dạy học, lòng thầy Tiểu Hạo nặng trĩu. "Điều kiện ở làng có hạn, các em khó có cơ hội nhìn ra thế giới bên ngoài. Thế giới của chúng rất nhỏ — chỉ có sách giáo khoa cũ kỹ và mảnh đất dưới chân." Anh muốn cho các em thấy thế giới rộng lớn hơn, muốn nói với chúng rằng trên đời này có thứ gọi là "trí tuệ nhân tạo" — có thể vẽ tranh, làm thơ, trả lời mọi câu hỏi bay bổng trong đầu.
 
-![乡村课堂里的日常](./images/story-1/image2.jpeg)
+![Sinh hoạt hàng ngày trong lớp học nông thôn](./images/story-1/image2.jpeg)
 
-刚开始推进的时候并不顺利。让孩子们自己带手机来学校，通过手机接触 AI，这个想法一度遭到了校领导的坚决反对：“你这是让孩子抄答案！这叫不务正业！”但他没有放弃，三天两头想办法去说服校领导。最后双方各退一步，可以学 AI，但是不能违反学校规定，学生不能自己带手机到课堂上。
+Ban đầu không suôn sẻ chút nào. Ý tưởng cho học sinh tự mang điện thoại đến trường để tiếp cận AI bị ban giám hiệu phản đối kịch liệt: "Anh đang cho trẻ sao chép câu trả lời! Đây là không làm đúng bổn phận!" Nhưng anh không bỏ cuộc, ngày này qua ngày khác tìm cách thuyết phục ban giám hiệu. Cuối cùng hai bên nhường nhau một bước: được học AI, nhưng không vi phạm quy định nhà trường — học sinh không được tự mang điện thoại vào lớp.
 
-于是，小浩老师就自掏腰包，收了几部二手手机，把自己的“豆包”账号登录到这些手机上给孩子们用。就这样，孩子们第一次摸上了“高科技”。他们很快学会了用 AI 搜资料、学舞蹈，甚至玩文生图。AI 第一次帮这些孩子打开了新世界的大门。
+Vậy là thầy Tiểu Hạo tự bỏ tiền túi mua vài chiếc điện thoại cũ, đăng nhập tài khoản AI của mình vào đó cho các em dùng. Thế là lần đầu tiên, các em được chạm tay vào "công nghệ cao". Chúng nhanh chóng học cách dùng AI để tra tài liệu, học nhảy, thậm chí thử tạo ảnh từ văn bản. AI lần đầu tiên mở ra cánh cửa đến thế giới mới cho những đứa trẻ này.
 
-![孩子们在机房里接触 AI 的样子](./images/story-1/image3.png)
+![Các em học sinh trong phòng máy tính tiếp xúc với AI](./images/story-1/image3.png)
 
-## 02 农村课堂的“特产”：苍蝇与误触
+## 02 "Đặc sản" của lớp học nông thôn: Ruồi và chạm nhầm
 
-现在农村教室也装上了多媒体电子屏，这在很大程度上提高了教学效率，促进了教育公平。但在实际教学环境中，还是有很多难以解决的尴尬。比如，苍蝇。
+Giờ đây các lớp học nông thôn cũng được lắp màn hình điện tử đa phương tiện — điều này cải thiện hiệu quả giảng dạy đáng kể và thúc đẩy công bằng giáo dục. Nhưng trong thực tế giảng dạy, vẫn còn nhiều rắc rối khó giải quyết. Ví dụ như... ruồi.
 
-电子屏发热发光，苍蝇尤其喜欢往上扑。屏幕无法识别是正常操作还是误触，经常造成课件乱跳、视频暂停，甚至中途关机的问题。一节课 40 分钟，得花 20 分钟在讲台上赶苍蝇，好好的课上得稀碎，小浩老师和孩子们都苦不堪言。
+Màn hình điện tử tỏa nhiệt và phát sáng, ruồi đặc biệt thích bu vào. Màn hình không phân biệt được thao tác bình thường hay chạm nhầm, thường gây ra tình trạng bài giảng nhảy loạn, video tạm dừng, thậm chí tắt máy giữa chừng. Một tiết 40 phút, phải mất 20 phút đuổi ruồi trên bục giảng — tiết học bị cắt vụn, thầy Tiểu Hạo và các em đều khổ sở.
 
-![被误触困扰的教室电子屏](./images/story-1/image4.png)
+![Màn hình điện tử trong lớp bị phiền vì chạm nhầm](./images/story-1/image4.png)
 
-突然有一天，一个学生举手对小浩老师说：“老师，我们能不能一起做一个程序，把苍蝇‘关’在外面？”
+Một hôm, một em học sinh giơ tay hỏi thầy Tiểu Hạo: "Thầy ơi, chúng ta có thể cùng làm một chương trình để nhốt ruồi ở ngoài không?"
 
-## 03 和苍蝇的战斗，我们是和 AI “聊天”打赢的
+## 03 Trận chiến với ruồi — chúng ta thắng nhờ "trò chuyện" với AI
 
-和小学三年级的娃娃一起写代码，还是做这种对技术和知识要求较高的防误触程序，在以前是想都不敢想的。但现在不一样了。有了 AI 的帮助，一切都变得可能。
+Cùng bọn trẻ lớp 3 viết code, lại còn làm chương trình chống chạm nhầm đòi hỏi kỹ thuật và kiến thức cao — điều này trước đây không dám nghĩ tới. Nhưng bây giờ khác rồi. Có AI giúp sức, mọi thứ đều có thể.
 
-正好看到一套 Vibe Coding 公益教程，小浩老师就带着孩子们一起“玩”了起来。孩子们出点子，小浩老师负责当“翻译官”，把他们的话喂给 AI。不用去死磕那些复杂语法，指针、句柄、底层消息队列这些拦路虎，统统被 AI 挡在了身后。
+Tình cờ thấy một bộ tài liệu Vibe Coding phục vụ cộng đồng, thầy Tiểu Hạo đã dẫn các em cùng "chơi". Các em đưa ra ý tưởng, thầy đóng vai "phiên dịch viên", chuyển lời các em thành ngôn ngữ cho AI hiểu. Không cần vật lộn với cú pháp phức tạp, con trỏ, handle, hàng đợi tin nhắn tầng thấp — tất cả chướng ngại vật đó đều có AI chặn lại phía sau.
 
-- “哎，电脑能不能分清楚，现在是鼠标在点，还是屏幕自己在动？”
-- “能不能给屏幕加个‘透明的罩子’，苍蝇撞上去没反应，但我用鼠标还能操作？”
+- "Này, máy tính có phân biệt được không — bây giờ là chuột đang nhấp, hay màn hình tự di chuyển?"
+- "Có thể thêm một 'lớp phủ trong suốt' cho màn hình không — ruồi va vào không có phản ứng, nhưng dùng chuột vẫn thao tác được?"
 
-这一问，还真问出了门道。AI 告诉他们要区分 `RawInput`，要识别 `ExtraInfo`。孩子们虽然听不懂这些专业术语，但他们可以通过数据观察和小组讨论，发现不同输入的 `ExtraInfo` 值确实有差别。
+Câu hỏi này mở ra hướng đi. AI cho biết cần phân biệt `RawInput`, cần nhận diện `ExtraInfo`. Dù các em không hiểu những thuật ngữ chuyên ngành này, nhưng qua quan sát dữ liệu và thảo luận nhóm, chúng phát hiện giá trị `ExtraInfo` của các loại đầu vào khác nhau thực sự có sự khác biệt.
 
-![“小浩触屏锁”的输入识别界面](./images/story-1/image5.png)
+!["Màn hình nhận diện đầu vào của Khóa màn hình Tiểu Hạo"](./images/story-1/image5.png)
 
-就这样，小浩老师和孩子们你一句我一句，和 AI 硬生生“聊”出了现在的【小浩触屏锁】。它的原理很简单：通过识别输入信号的特征，精准拦截掉屏幕的触控信号，只保留鼠标操作。这样一来，不管苍蝇在屏幕上怎么开派对，课件都能稳如泰山。
+Cứ thế, thầy Tiểu Hạo và các em bạn luân phiên trò chuyện với AI, từng câu từng câu "nói chuyện" ra được sản phẩm hiện tại: **Khóa Màn Hình Tiểu Hạo**. Nguyên lý khá đơn giản: nhận diện đặc trưng tín hiệu đầu vào, chặn chính xác tín hiệu cảm ứng của màn hình, chỉ giữ lại thao tác chuột. Như vậy dù ruồi có mở tiệc trên màn hình thế nào, bài giảng vẫn vững như bàn thạch.
 
-虽然这个软件不是什么高大上的商业产品，但它真的解决了农村课堂里的真实痛点。它不只是一个程序，更是孩子们第一次参与创造、第一次用技术回应生活问题的答案。
+Dù phần mềm này không phải sản phẩm thương mại cao cấp, nhưng nó thực sự giải quyết được điểm đau thực tế của lớp học nông thôn. Đây không chỉ là một chương trình — đây là lần đầu tiên các em tham gia sáng tạo, lần đầu tiên dùng công nghệ để đáp lại những vấn đề trong cuộc sống.
 
-## 04 从写一行代码到敲一扇门
+## 04 Từ viết một dòng code đến gõ một cánh cửa
 
-令小浩老师印象最深的，是元旦那天。他问豆包：“怎么带孩子们过一个有意义的节？”AI 没建议开 party，也没建议搞表演，而是说：“与其在教室狂欢，不如去看看村里的孤寡老人。”
+Điều thầy Tiểu Hạo nhớ nhất là ngày Tết Dương lịch. Anh hỏi AI: "Làm thế nào để đưa các em đón một cái Tết có ý nghĩa?" AI không gợi ý tổ chức tiệc, cũng không gợi ý biểu diễn, mà nói: "Thay vì ăn mừng trong lớp học, hãy đến thăm những cụ già cô đơn trong làng."
 
-于是，他真带着孩子们去看望村里的一位独居五保户大爷。去的时候，大爷正坐在破旧的木凳上吃午饭，桌上只有一碗白水煮面和一盘咸菜。小浩老师心里一揪，后悔没多带些吃的。几个平时调皮捣蛋的孩子都表现得比平时更乖，还和大爷聊起了天。
+Vậy là anh thực sự dẫn các em đến thăm một cụ già sống một mình trong làng. Khi đến nơi, cụ đang ngồi trên chiếc ghế gỗ cũ ăn bữa trưa — trên bàn chỉ có một bát mì nấu nước trắng và một đĩa dưa mặn. Lòng thầy Tiểu Hạo thắt lại, tiếc vì không mang thêm đồ ăn. Những đứa trẻ thường ngày nghịch ngợm nhất đều ngoan hơn bình thường, còn ngồi trò chuyện với cụ.
 
-离开之后，有几个孩子扯着小浩老师的衣角，眼圈红红地说：“老师，我们以后多来帮帮大爷吧。”那天回去的路上，冷风在脸上刮得生疼，他心里却是热乎乎的。
+Ra về, vài em kéo áo thầy Tiểu Hạo, mắt đỏ hoe nói: "Thầy ơi, sau này chúng mình hay đến giúp cụ nhé." Trên đường về hôm đó, gió lạnh cắt vào mặt buốt rát, nhưng lòng anh ấm áp lạ thường.
 
-他说：“教育不光是教书本知识，还得教人心。AI 给出的答案，从来不仅仅是技术，更是那颗被它点燃的、想去温暖别人的心。”
+Anh nói: "Giáo dục không chỉ là dạy kiến thức sách vở, còn phải dạy lòng người. Câu trả lời AI đưa ra không bao giờ chỉ là kỹ thuật — mà còn là trái tim được nó thắp lên, muốn sưởi ấm người khác."
 
-## 05 小浩老师的一点心里话
+## 05 Đôi lời từ trái tim thầy Tiểu Hạo
 
-其实做这个软件，最大的收获不是软件本身，而是看到了孩子们眼里的光。以前孩子们觉得，电脑是城里孩子的玩具，编程是天才的事，跟自己没关系。但现在，他们知道，只要有想法，只要敢想，甚至只要会“说话”，他们就能通过 AI 改变自己的生活。
+Thực ra làm phần mềm này, thu hoạch lớn nhất không phải là phần mềm — mà là thấy ánh mắt rạng rỡ của các em. Trước đây các em nghĩ máy tính là đồ chơi của trẻ thành phố, lập trình là việc của thiên tài, chẳng liên quan gì đến mình. Nhưng bây giờ, chúng biết rằng chỉ cần có ý tưởng, chỉ cần dám nghĩ, thậm chí chỉ cần biết "nói chuyện" — chúng có thể thay đổi cuộc sống của mình qua AI.
 
-那个提议做软件的孩子，以前最调皮，现在上课听得最认真。因为他知道，他参与创造的东西，正在帮大家解决问题。这种“我也能行”的自信，比考一百分更珍贵。
+Em học sinh đề xuất làm phần mềm — trước đây nghịch nhất lớp, bây giờ học chăm nhất lớp. Vì em biết rằng thứ mình tham gia tạo ra đang giúp mọi người giải quyết vấn đề. Sự tự tin "mình cũng làm được" đó quý giá hơn điểm 10 nhiều lắm.
 
-![孩子们的笑脸和课堂合影](./images/story-1/image6.jpeg)
+![Nụ cười của các em và ảnh chụp lớp học](./images/story-1/image6.jpeg)
 
-他也坦白说，自己带孩子们用手机、搞 AI，没少挨批评，也没少听流言蜚语。很多人说他不务正业，带坏风气。但看着孩子们因为 AI 变得更好奇、更善良，他觉得一切都是值得的。
+Anh cũng thành thật chia sẻ rằng mình dẫn các em dùng điện thoại, tìm hiểu AI — không ít lần bị phê bình, cũng không ít lần nghe tiếng đồn. Nhiều người nói anh không lo làm đúng bổn phận, làm hỏng không khí học tập. Nhưng nhìn các em trở nên tò mò hơn, tốt bụng hơn nhờ AI, anh cảm thấy tất cả đều xứng đáng.
 
-## 06 写在最后
+## 06 Lời cuối
 
-小浩老师真挚地呼吁大家，多多关注公立教育里真实可落地的 AI 电子数字化课堂。农村娃的小小世界，其实更需要 AI 的帮助。AI 不只是工具，更是帮孩子们链接大千世界的一扇窗。
+Thầy Tiểu Hạo chân thành kêu gọi mọi người quan tâm hơn đến lớp học kỹ thuật số AI thực sự có thể triển khai trong giáo dục công lập. Thế giới nhỏ bé của những đứa trẻ nông thôn thực sự cần sự trợ giúp của AI hơn. AI không chỉ là công cụ — mà còn là cánh cửa sổ giúp các em kết nối với thế giới rộng lớn.
 
-![孩子们写给老师的祝福](./images/story-1/image7.png)
+![Lời chúc của các em gửi thầy](./images/story-1/image7.png)
 
-![“老师您辛苦了”](./images/story-1/image8.png)
+!["Thầy ơi thầy vất vả rồi"](./images/story-1/image8.png)
 
-![孩子们手写的小纸条](./images/story-1/image9.png)
+![Những mảnh giấy nhỏ viết tay của các em](./images/story-1/image9.png)
 
-![生活里的孩子们](./images/story-1/image10.png)
+![Các em trong cuộc sống hàng ngày](./images/story-1/image10.png)
 
-![教室里的孩子们](./images/story-1/image11.png)
+![Các em trong lớp học](./images/story-1/image11.png)
 
-![小浩的自拍](./images/story-1/image12.png)
+![Ảnh tự chụp của thầy Tiểu Hạo](./images/story-1/image12.png)

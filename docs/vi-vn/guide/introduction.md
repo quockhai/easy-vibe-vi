@@ -1,82 +1,82 @@
-# 项目介绍
+# Giới thiệu dự án
 
-2025年，被很多人视为AI编程的元年。越来越多的人开始用AI写代码，但往往做出来的还停留在玩具层面——不知道如何用Vibe Coding组织开发流程，不知道该选哪些工具，更不清楚从原型到上线中间还差哪些关键步骤。
+Năm 2025 được nhiều người xem là năm khởi đầu của kỷ nguyên lập trình AI. Ngày càng nhiều người bắt đầu dùng AI để viết code, nhưng thành phẩm thường vẫn chỉ dừng lại ở mức "đồ chơi" — không biết cách tổ chức quy trình phát triển bằng Vibe Coding, không biết chọn công cụ nào, càng không rõ từ bản mẫu (prototype) đến khi ra mắt sản phẩm còn thiếu những bước then chốt nào.
 
-我们采用循序渐进的**三阶段实战路径**：新手入门阶段通过小游戏快速上手AI编程，第一阶段掌握Vibe Coding工作方式并完成Web应用原型，第二阶段学习全栈开发与部署上线，第三阶段构建跨平台复杂应用。
+Chúng tôi áp dụng **lộ trình thực chiến ba giai đoạn** theo từng bước: giai đoạn nhập môn giúp người mới nhanh chóng làm quen với lập trình AI qua các trò chơi nhỏ; giai đoạn một nắm vững cách làm việc theo phong cách Vibe Coding và hoàn thiện bản mẫu ứng dụng web; giai đoạn hai học phát triển toàn ngăn xếp (full-stack) và triển khai sản phẩm; giai đoạn ba xây dựng ứng dụng phức tạp đa nền tảng.
 
-每个阶段都配有完整项目实战，让你在真实挑战中从玩具走向产品，最终具备**将任何想法落地为可用应用**的能力。
+Mỗi giai đoạn đều có dự án thực tế hoàn chỉnh để bạn vượt qua thách thức thực sự, từ "đồ chơi" tiến đến sản phẩm thực thụ, và cuối cùng có được khả năng **biến bất kỳ ý tưởng nào thành ứng dụng có thể sử dụng được**.
 
-我们相信，掌握Vibe Coding并配合系统化训练，你一个人就能成为**集前后端开发、AI能力集成、产品设计于一身的全能开发者**。
+Chúng tôi tin rằng, khi thành thạo Vibe Coding kết hợp với luyện tập có hệ thống, một mình bạn hoàn toàn có thể trở thành **nhà phát triển toàn năng — vừa làm frontend, vừa làm backend, vừa tích hợp khả năng AI, vừa thiết kế sản phẩm**.
 
-本项目主要面向三类学习者：
+Dự án này hướng đến ba nhóm người học chính:
 
-- **新手（普通人 / 产品与运营侧）**：帮助非技术背景角色和入门学习者听懂关键概念，完成第一个 AI 小工具或产品原型。
-- **初中级开发者（有一定基础的学生和开发者）**：系统掌握 vibe coding 与原生 AI 应用开发。
-- **高级开发者（公司与初创、开源与独立开发者）**：支持团队和个人快速搭建、验证与迭代原生 AI 应用。
+- **Người mới bắt đầu (người dùng phổ thông / Product & Operations)**: Giúp những người không có nền tảng kỹ thuật và người mới học hiểu được các khái niệm then chốt, hoàn thành công cụ AI nhỏ đầu tiên hoặc bản mẫu sản phẩm đầu tiên.
+- **Lập trình viên sơ-trung cấp (học sinh, sinh viên và developer có nền tảng nhất định)**: Nắm vững vibe coding và phát triển ứng dụng AI thuần túy.
+- **Lập trình viên cao cấp (doanh nghiệp, startup, open source và indie developer)**: Hỗ trợ nhóm và cá nhân xây dựng, kiểm chứng và lặp lại ứng dụng AI thuần túy nhanh chóng.
 
-## 📖 内容导航
+## 📖 Điều hướng nội dung
 
-### 总附录
+### Phụ lục tổng hợp
 
-[AI 能力词典：常见 AI 核心概念与名词、场景解释](/zh-cn/appendix/8-artificial-intelligence/ai-capability-dictionary)
+[Từ điển năng lực AI: Các khái niệm và thuật ngữ AI cốt lõi, giải thích theo ngữ cảnh](/zh-cn/appendix/8-artificial-intelligence/ai-capability-dictionary)
 
-### 零、幼儿园
+### Zero — Giai đoạn vỡ lòng
 
-| 章节                                                                                   | 关键内容                               | 状态 |
-| :------------------------------------------------------------------------------------- | :------------------------------------- | :--- |
-| [新手入门：学习地图](/zh-cn/stage-1/learning-map/)                                 | 整体学习路径导览                       | ✅   |
-| [新手入门：AI 时代，会说话就会编程](/zh-cn/stage-1/ai-capabilities-through-games/) | 通过贪吃蛇等案例初步感受 AI 编程的能力 | ✅   |
+| Chương | Nội dung chính | Trạng thái |
+| :--- | :--- | :--- |
+| [Nhập môn: Bản đồ học tập](/zh-cn/stage-1/learning-map/) | Tổng quan lộ trình học tập | ✅ |
+| [Nhập môn: Kỷ nguyên AI — Biết nói là biết lập trình](/zh-cn/stage-1/ai-capabilities-through-games/) | Cảm nhận lập trình AI qua các ví dụ như trò chơi rắn | ✅ |
 
-### 一、AI 产品经理
+### Một — Quản lý sản phẩm AI
 
-| 章节                                                                          | 关键内容                                                 | 状态 |
-| :---------------------------------------------------------------------------- | :------------------------------------------------------- | :--- |
-| [初级二：认识 AI IDE 工具](/zh-cn/stage-1/introduction-to-ai-ide/)        | 学会使用 IDE，掌握界面结构和高效提示方式                 | ✅   |
-| [初级三：动手做出原型](/zh-cn/stage-1/building-prototype/)                | 从产品分析拆解，到多页面产品原型实现的完整闭环           | ✅   |
-| [初级四：给原型加上 AI 能力](/zh-cn/stage-1/integrating-ai-capabilities/) | 理解并完成常见 AI 能力（文本图片视频）的 API 接入        | ✅   |
-| [初级五：完整项目实战](/zh-cn/stage-1/complete-project-practice/)         | 模拟真实场景、接受用户反馈迭代并完成项目展示（含大作业） | ✅   |
+| Chương | Nội dung chính | Trạng thái |
+| :--- | :--- | :--- |
+| [Sơ cấp 2: Làm quen với công cụ AI IDE](/zh-cn/stage-1/introduction-to-ai-ide/) | Học cách dùng IDE, nắm giao diện và cách viết prompt hiệu quả | ✅ |
+| [Sơ cấp 3: Tự tay tạo bản mẫu](/zh-cn/stage-1/building-prototype/) | Từ phân tích sản phẩm đến triển khai bản mẫu nhiều trang — vòng tròn hoàn chỉnh | ✅ |
+| [Sơ cấp 4: Tích hợp khả năng AI vào bản mẫu](/zh-cn/stage-1/integrating-ai-capabilities/) | Hiểu và hoàn thành việc kết nối API với các khả năng AI phổ biến (văn bản, hình ảnh, video) | ✅ |
+| [Sơ cấp 5: Thực hành dự án hoàn chỉnh](/zh-cn/stage-1/complete-project-practice/) | Mô phỏng tình huống thực tế, tiếp nhận phản hồi người dùng và hoàn thiện trình bày dự án (có bài tập lớn) | ✅ |
 
-#### 附录
+#### Phụ lục
 
-| 章节                                                                  | 关键内容                                  | 状态 |
-| :-------------------------------------------------------------------- | :---------------------------------------- | :--- |
-| [附录A：产品思维补充](/zh-cn/stage-1/appendix-a-product-thinking/)    | 从想法评估到需求拆解与 MVP 的产品思维框架 | ✅   |
-| [附录B：常见报错及解决方案](/zh-cn/stage-1/appendix-b-common-errors/) | vibe coding 中的常见错误及排查方法        | ✅   |
-| [附录：从哪里找点子](/zh-cn/stage-1/appendix-idea-sources/)          | 从参考应用、趋势和 VC 清单里收出细分方向  | ✅   |
-| [附录：双钻模型](/zh-cn/stage-1/appendix-double-diamond/)           | 理解先定义问题，再展开方案设计的完整节奏  | ✅   |
-| [附录：Jobs to Be Done](/zh-cn/stage-1/appendix-jobs-to-be-done/)  | 用 JTBD 方法看清用户真正想完成的事        | ✅   |
-| [附录：The Mom Test 用户访谈法](/zh-cn/stage-1/appendix-mom-test/) | 通过用户访谈验证需求的调研方法            | ✅   |
+| Chương | Nội dung chính | Trạng thái |
+| :--- | :--- | :--- |
+| [Phụ lục A: Bổ sung tư duy sản phẩm](/zh-cn/stage-1/appendix-a-product-thinking/) | Khung tư duy sản phẩm từ đánh giá ý tưởng đến phân tách yêu cầu và MVP | ✅ |
+| [Phụ lục B: Lỗi thường gặp và cách xử lý](/zh-cn/stage-1/appendix-b-common-errors/) | Các lỗi thường gặp trong vibe coding và phương pháp gỡ lỗi | ✅ |
+| [Phụ lục: Tìm ý tưởng ở đâu](/zh-cn/stage-1/appendix-idea-sources/) | Tìm hướng ngách từ ứng dụng tham khảo, xu hướng và danh sách VC | ✅ |
+| [Phụ lục: Mô hình Double Diamond](/zh-cn/stage-1/appendix-double-diamond/) | Hiểu nhịp độ hoàn chỉnh: xác định vấn đề trước, rồi mở rộng thiết kế giải pháp | ✅ |
+| [Phụ lục: Jobs to Be Done](/zh-cn/stage-1/appendix-jobs-to-be-done/) | Dùng phương pháp JTBD để nhìn rõ điều người dùng thực sự muốn hoàn thành | ✅ |
+| [Phụ lục: The Mom Test — Phương pháp phỏng vấn người dùng](/zh-cn/stage-1/appendix-mom-test/) | Phương pháp nghiên cứu xác thực nhu cầu qua phỏng vấn người dùng | ✅ |
 
-### 二、初中级开发工程师
+### Hai — Kỹ sư phát triển sơ-trung cấp
 
-#### 前端部分
+#### Phần Frontend
 
-| 章节                                                                                                                | 关键内容                                                                     | 状态 |
-| :------------------------------------------------------------------------------------------------------------------ | :--------------------------------------------------------------------------- | :--- |
-| 使用 lovart 生产素材                                                                                        | 学会用 lovart 批量生成人物、场景等视觉素材，为 UI 设计和前端开发提供素材基础 | 🚧   |
-| Figma 与 MasterGo 入门                                                                                      | 用设计工具梳理信息架构和页面结构，为前端实现打基础                           | 🚧   |
-| 构建第一个现代应用程序-UI 设计                                                                              | 基于设计稿完成组件化界面，实现从设计到代码的第一条链路                       | 🚧   |
-| 参考 UI 设计规范设计页面和按钮                                                                              | 学习用主流设计规范组织页面结构、按钮层级，并借助 AI 生成设计方案             | 🚧   |
-| [一起做霍格沃茨画像](/zh-cn/stage-2/frontend/hogwarts-portraits/) | 从 0 到 1 做出接入 AI 能力的前端应用，串联设计与开发                         | 🚧   |
+| Chương | Nội dung chính | Trạng thái |
+| :--- | :--- | :--- |
+| Tạo tài nguyên với Lovart | Học cách dùng Lovart để tạo hàng loạt nhân vật, cảnh vật và tài nguyên hình ảnh làm nền tảng cho thiết kế UI và phát triển frontend | 🚧 |
+| Nhập môn Figma và MasterGo | Dùng công cụ thiết kế để sắp xếp kiến trúc thông tin và cấu trúc trang, đặt nền móng cho triển khai frontend | 🚧 |
+| Xây dựng ứng dụng hiện đại đầu tiên — Thiết kế UI | Hoàn thành giao diện theo thành phần dựa trên bản thiết kế, thực hiện luồng đầu tiên từ thiết kế đến code | 🚧 |
+| Thiết kế trang và nút theo chuẩn thiết kế UI | Học cách tổ chức cấu trúc trang và cấp bậc nút bằng các chuẩn thiết kế phổ biến, kết hợp AI để tạo phương án thiết kế | 🚧 |
+| [Cùng làm bức chân dung Hogwarts](/zh-cn/stage-2/frontend/hogwarts-portraits/) | Làm ứng dụng frontend tích hợp khả năng AI từ 0 đến 1, kết nối thiết kế và phát triển | 🚧 |
 
-#### 后端开发部分
+#### Phần phát triển Backend
 
-| 章节                                                                                                                    | 关键内容                                                      | 状态 |
-| :---------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------ | :--- |
-| 什么是 API                                                                                                      | 理解 HTTP 接口与请求响应模型，为后端集成与联调做准备          | 🚧   |
-| [从数据库到 Supabase](/zh-cn/stage-2/backend/database-supabase/) | 在 Supabase 上落地数据库和 API，打通数据模型与前端页面        | 🚧   |
-| 大模型辅助编写接口代码与接口文档                                                                                | 用大模型协助生成接口与数据库文档及代码，实现可读可测的后端    | 🚧   |
-| Git 工作流与 Zeabur 部署                                                                                        | 在 Git 工作流中管理代码，并将应用部署到 Zeabur 上线           | 🚧   |
-| 现代 CLI 开发工具                                                                                               | 使用 CLI 类 AI 编程工具加速开发与调试，形成个人工程化工作流   | 🚧   |
-| 如何集成 stripe 等收费系统                                                                                      | 接入支付系统，完成收费链路与基础结算流程                      | 🚧   |
-| 构建第一个现代应用程序-全栈应用                                                                               | 综合前端、后端与支付模块，完成可上线的全栈 Web 应用           | 🚧   |
-| 现代前端组件库 + Trae 实战                                                                                    | 使用现代前端组件库与 Trae，独立完成可登录注册并支持收费的产品 | 🚧   |
+| Chương | Nội dung chính | Trạng thái |
+| :--- | :--- | :--- |
+| API là gì | Hiểu giao diện HTTP và mô hình request-response, chuẩn bị cho tích hợp và kết nối backend | 🚧 |
+| [Từ cơ sở dữ liệu đến Supabase](/zh-cn/stage-2/backend/database-supabase/) | Triển khai cơ sở dữ liệu và API trên Supabase, kết nối mô hình dữ liệu với trang frontend | 🚧 |
+| Dùng LLM hỗ trợ viết code giao diện và tài liệu API | Dùng LLM để tạo tài liệu và code giao diện cùng cơ sở dữ liệu, xây dựng backend dễ đọc và dễ kiểm tra | 🚧 |
+| Git workflow và triển khai Zeabur | Quản lý code trong Git workflow và triển khai ứng dụng lên Zeabur | 🚧 |
+| Công cụ CLI phát triển hiện đại | Dùng công cụ lập trình AI dạng CLI để tăng tốc phát triển và gỡ lỗi, xây dựng quy trình làm việc kỹ thuật cá nhân | 🚧 |
+| Tích hợp hệ thống thanh toán như Stripe | Kết nối hệ thống thanh toán, hoàn thiện luồng thu phí và quy trình quyết toán cơ bản | 🚧 |
+| Xây dựng ứng dụng hiện đại đầu tiên — Ứng dụng full-stack | Kết hợp frontend, backend và module thanh toán, hoàn thành ứng dụng web full-stack có thể ra mắt | 🚧 |
+| Thư viện component frontend hiện đại + Trae thực chiến | Dùng thư viện component frontend hiện đại và Trae để độc lập hoàn thành sản phẩm hỗ trợ đăng nhập, đăng ký và thanh toán | 🚧 |
 
-#### AI 能力附录
+#### Phụ lục năng lực AI
 
-| 章节                                                                                                                                                                  | 关键内容                                                       | 状态 |
-| :-------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------- | :--- |
-| [Dify 入门与知识库集成](/zh-cn/stage-2/ai-capabilities/dify-knowledge-base/) | 用 Dify Workflow 与基础 RAG 搭建工具类产品，为后续应用升级打样 | 🚧   |
-| 学会查询 AI 词典与集成多模态 API                                                                                                                               | 学会查找合适的模型与 API，并把文本、图像等多模态能力接入产品   | 🚧   |
+| Chương | Nội dung chính | Trạng thái |
+| :--- | :--- | :--- |
+| [Nhập môn Dify và tích hợp knowledge base](/zh-cn/stage-2/ai-capabilities/dify-knowledge-base/) | Dùng Dify Workflow và RAG cơ bản để xây dựng sản phẩm công cụ, làm mẫu cho nâng cấp ứng dụng sau này | 🚧 |
+| Học tra cứu từ điển AI và tích hợp API đa phương thức | Học cách tìm mô hình và API phù hợp, tích hợp các khả năng đa phương thức như văn bản, hình ảnh vào sản phẩm | 🚧 |
 
-### 三、高级开发工程师
+### Ba — Kỹ sư phát triển cao cấp

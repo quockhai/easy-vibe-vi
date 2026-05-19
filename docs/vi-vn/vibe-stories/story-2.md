@@ -1,78 +1,78 @@
 ---
-title: 期末考试周，我偷偷用AI造了个“校园闲鱼”
-description: 一位大二学生在期末周做出校园二手交易产品 demo 的故事。
+title: Tuần thi cuối kỳ, tôi bí mật dùng AI xây "Chợ đồ cũ campus"
+description: Câu chuyện về một sinh viên năm 2 tạo ra demo sản phẩm mua bán đồ cũ trong khuôn viên trường trong tuần thi cuối kỳ.
 ---
 
-# 期末考试周，我偷偷用AI造了个“校园闲鱼”
+# Tuần thi cuối kỳ, tôi bí mật dùng AI xây "Chợ đồ cũ campus"
 
 <p style="font-size: 52px; line-height: 1; margin: 0 0 12px;">🎓</p>
 
-**讲述者：一位大二学生**
+**Người kể: Một sinh viên năm 2**
 
-## 01 毛小驴的“3 小时奇迹”，和我被干烧的 CPU
+## 01 "Kỳ tích 3 tiếng" của Mao Xiaolu và bộ não gần cháy của tôi
 
-“帮我测试一下，跟它聊聊。”
+"Giúp mình test thử nhé, chat với nó xem."
 
-“好厉害，快期末了还熬夜敲代码，快复习吧。”
+"Giỏi thật, sắp thi rồi còn thức khuya gõ code, mau đi ôn bài đi."
 
-“只用了 3 个小时。”
+"Chỉ mất 3 tiếng thôi."
 
-2026 年 1 月的期末周，我正忙着复习功课，突然收到技术大佬毛小驴甩过来的一个链接。那是一个 AI 对话网站，网站里日程、追番功能一应俱全，界面也已经有模有样。
+Tuần thi cuối kỳ tháng 1 năm 2026, tôi đang bận ôn thi thì đột nhiên nhận được một link từ cao thủ kỹ thuật Mao Xiaolu ném sang. Đó là một trang web trò chuyện AI — lịch trình, tính năng theo dõi anime đủ cả, giao diện trông đã ra hồn hẳn.
 
-3 小时？我盯着屏幕，感觉 CPU 都快被干烧了。这大佬的速度再次刷新了我的认知。他随后又发来一堆资料，我打开一看，每个字都认识，连起来却像天书。想问他，又怕暴露自己的“菜”，于是只能：他抛术语，我默默复制给豆包，等豆包解释完，我再小心翼翼地回他。我的学习，从“人传人”变成了“人传 AI 传人”。
+3 tiếng? Tôi trừng mắt nhìn màn hình, cảm giác bộ não sắp bốc khói. Tốc độ của cao thủ này lại một lần nữa vượt qua nhận thức của tôi. Anh ấy tiếp tục gửi một đống tài liệu — tôi mở ra xem, từng chữ đều nhận ra, ghép lại thành câu thì như thiên thư. Muốn hỏi lại, lại sợ lộ ra mình "gà" quá, thế là chỉ có thể: anh ấy ném thuật ngữ, tôi thầm copy paste hỏi AI, đợi AI giải thích xong rồi dè dặt trả lời lại. Cách học của tôi chuyển từ "người truyền người" sang "người truyền AI truyền người".
 
-![毛小驴做出的初版网站](./images/story-2/image1.png)
+![Trang web phiên bản đầu của Mao Xiaolu](./images/story-2/image1.png)
 
-## 02 进群第一天，我选择闭嘴
+## 02 Ngày đầu vào nhóm, tôi chọn cách im lặng
 
-1 月份组队学习开始了，毛小驴把我拉进学习大群里。开场是自我介绍环节，“多年开发经验”“某大厂在职”……看着其他人的自我介绍，我的手指在键盘上停了几秒，最后还是删掉了刚刚打好的两行字。心里默默叹气：“唉，高手过招，笨蛋还是不多说话了。”
+Tháng 1 bắt đầu học nhóm, Mao Xiaolu kéo tôi vào nhóm học lớn. Mở đầu là phần tự giới thiệu — "nhiều năm kinh nghiệm phát triển", "đang làm tại công ty lớn"... Nhìn phần giới thiệu của người khác, ngón tay tôi dừng lại trên bàn phím vài giây, rồi xóa đi hai dòng vừa gõ. Trong lòng thầm thở dài: "Ôi thôi, cao thủ đấu nhau, thằng ngốc này đừng nói nhiều."
 
-后来我和毛小驴，还有一位新认识的朋友组队，建了一个三人小群，我的状态终于松弛下来了。群里开放平等的氛围让我特别开心：没人管你多大、什么职业、厉不厉害，遇到问题就平等交流，一起琢磨。虽然平时都是各忙各的，话不多，但能感受到大家有在默默努力，有种莫名的踏实感。不被标签定义、只凭兴趣一起往前冲，这种感觉我在学校里很少遇到。
+Sau đó tôi, Mao Xiaolu và một người bạn mới quen lập nhóm ba người, trạng thái của tôi mới thực sự thoải mái. Không khí cởi mở bình đẳng trong nhóm khiến tôi vui lắm: không ai quan tâm bạn bao nhiêu tuổi, nghề gì, giỏi không — gặp vấn đề thì bình đẳng trao đổi, cùng nhau suy nghĩ. Dù thường ai lo việc nấy, ít nói chuyện, nhưng có thể cảm nhận được mọi người đang thầm lặng nỗ lực — có cảm giác vững tâm kỳ lạ. Không bị dán nhãn, chỉ vì cùng sở thích mà tiến lên cùng nhau — cảm giác này ở trường tôi hiếm khi gặp.
 
-![独自探索的晚自习](./images/story-2/image2.png)
+![Đêm tự học một mình khám phá](./images/story-2/image2.png)
 
-## 03 在期末周“摸鱼”，反而学得更起劲
+## 03 "Lướt mạng" trong tuần thi, lại học được nhiều hơn
 
-在这段学习里，紧张和焦虑感比以前少了很多。准备期末考试的时候，即使打卡进度有点慢，也没人催我、怪我，一切自己对自己负责就好。不同于高中和大学那种标准答案式的学习氛围，这种自由感反而让我更有干劲。
+Trong giai đoạn học này, cảm giác căng thẳng và lo lắng ít hơn nhiều so với trước. Khi chuẩn bị thi cuối kỳ, dù tiến độ điểm danh hơi chậm, cũng không ai thúc giục hay trách cứ — tự mình chịu trách nhiệm với bản thân là được. Khác với không khí học theo đáp án chuẩn ở cấp 3 và đại học, sự tự do này ngược lại khiến tôi có nhiều động lực hơn.
 
-每天的任务打卡就像打怪升级一样，学习变得更主动，也让我学到了更多东西。
+Việc điểm danh nhiệm vụ mỗi ngày giống như upgrade nhân vật trong game — việc học chủ động hơn, cũng học được nhiều thứ hơn.
 
-![期末复习时的学习现场](./images/story-2/image3.png)
+![Cảnh học ôn thi cuối kỳ](./images/story-2/image3.png)
 
-## 04 脑子一热，给自己挖了个“大坑”
+## 04 Nóng đầu một cái, tự đào hố chôn mình
 
-转眼寒假将近，这一轮学习也接近尾声。结业直播展示前，老师问我想不想演示一个 demo。
+Thoáng cái đã gần nghỉ đông, vòng học này cũng sắp kết thúc. Trước buổi livestream tốt nghiệp, thầy hỏi tôi có muốn demo một sản phẩm không.
 
-“想！”
+"Muốn!"
 
-我几乎是条件反射地答应了，虽然答应的时候连做什么都还没想好。
+Tôi gần như phản xạ trả lời ngay, dù lúc đó chưa nghĩ ra làm cái gì.
 
-刷着宿舍楼群里出二手物品的信息，我突然有了些头绪。校园里的二手交易，其实一直都藏在各种临时群聊里。买东西直接约在宿舍楼或食堂见面，很少有人特意用闲鱼。那如果，有一个只属于校园的二手平台呢？它不仅能精准展示本校或附近学校的二手物品，还能天然多一层信任，减少使用者被骗的顾虑。
+Lướt qua thông tin rao bán đồ cũ trong nhóm chat ký túc xá, tôi chợt nảy ra ý tưởng. Giao dịch đồ cũ trong khuôn viên trường thực ra vẫn đang nằm rải rác trong các nhóm chat tạm thời. Mua đồ thì hẹn gặp ở tòa nhà ký túc xá hay căng-tin, ít ai đặc biệt dùng app mua bán. Vậy nếu có một sàn đồ cũ chỉ dành riêng cho campus thì sao? Không chỉ có thể hiển thị chính xác đồ cũ của trường này hay trường lân cận, mà còn tự nhiên thêm một lớp tin tưởng, giảm bớt lo lắng bị lừa.
 
-说干就干，我开始了人生第一次 AI 产品设计。页面设计其实很顺畅：进去就是商品浏览页，顶部放搜索栏，下面放“我的”和“我要出售”，简单直接。真正让我头疼的是 AI 功能该加在哪。起初我想做购物平台的 AI 推荐，但因为性价比这件事根本没法统一衡量，就放弃了。后来又冒出几个点子，也都经不起推敲。思路一度彻底卡住。
+Nghĩ là làm, tôi bắt đầu lần đầu tiên thiết kế sản phẩm AI trong đời. Thiết kế trang thực ra khá suôn sẻ: vào là trang duyệt hàng hóa, trên cùng đặt thanh tìm kiếm, bên dưới là "Của tôi" và "Muốn bán" — đơn giản trực tiếp. Điều thực sự làm tôi đau đầu là tính năng AI nên thêm vào đâu. Ban đầu muốn làm AI gợi ý mua sắm kiểu trang thương mại, nhưng vì "tính giá trị" không thể đo lường thống nhất nên bỏ. Sau đó nảy thêm vài ý tưởng, cũng đều không chịu được xét kỹ. Suy nghĩ hoàn toàn bị kẹt.
 
-直到我和一位数码爱好者朋友聊起这件事，他一句话点醒了我：“大家卖二手物品只会写使用了多久、哪里有瑕疵、功能有哪些，但不会像商家那样标参数。要是来个 AI，帮小白买家把商品介绍明白，不就省得他们到处查资料了？”
+Cho đến khi tôi kể chuyện này với một người bạn mê thiết bị số, anh ấy một câu chỉ đúng chỗ: "Mọi người bán đồ cũ chỉ viết dùng bao lâu rồi, chỗ nào có vết, có chức năng gì — nhưng không viết thông số như người bán hàng chuyên nghiệp. Nếu có AI giúp người mua mới giải thích rõ sản phẩm, chẳng phải đỡ phải tìm hiểu khắp nơi?"
 
-一下子，我的方向就清晰了。AI 功能就加在商品描述上。后来，智能定价的功能也跟着落了地。
+Ngay lập tức, hướng đi của tôi rõ ràng. Tính năng AI thêm vào phần mô tả sản phẩm. Sau đó, tính năng định giá thông minh cũng theo đó ra đời.
 
-![校园闲鱼网站展示](./images/story-2/image4.png)
+![Trình diễn website Chợ đồ cũ campus](./images/story-2/image4.png)
 
-## 05 直播当“差生”，却收获了最宝贵的肯定
+## 05 Livestream như "học sinh kém", nhưng nhận được sự công nhận quý giá nhất
 
-我花了很多心思的作品终于在直播前完成了。可越到展示那一刻，我越紧张。我前面演示的几个作品都很精致，交互一个比一个流畅。本来赛前还信心满满的我，到真正要上台的时候，心里只剩一句：“总要允许差生存在的。”
+Sản phẩm tôi bỏ bao nhiêu tâm huyết cuối cùng hoàn thành trước buổi livestream. Nhưng càng đến lúc trình bày, tôi càng lo. Vài sản phẩm trước tôi demo trông rất tinh tế, tương tác cái nào cũng mượt hơn cái kia. Ban đầu còn tự tin lắm, đến lúc thực sự phải lên sân khấu, trong đầu chỉ còn một câu: "Cũng phải cho phép học sinh kém tồn tại chứ."
 
-于是我深吸一口气，勇敢又不安地讲完了自己的 demo。展示结束后，我脑海里炸开一连串自我否定：我提的问题很傻，我的作品不完美，我的想法无聊，甚至很多地方还没实现……
+Vậy là tôi hít một hơi thật sâu, dũng cảm mà bất an trình bày xong demo của mình. Sau khi kết thúc, trong đầu tôi nổ ra một loạt tự phủ nhận: câu hỏi tôi đặt ra ngớ ngẩn quá, sản phẩm của tôi không hoàn hảo, ý tưởng nhàm chán, thậm chí nhiều chỗ còn chưa làm được...
 
-可没想到，现场的老师不但没有否定我，还给了很多具体可落地的建议。那一刻我才意识到，原来不完美也可以被认真对待。这种安心展示一个还不成熟作品的机会，之前几乎从未有过。
+Nhưng không ngờ, thầy giáo ở đó không những không phủ nhận tôi, còn đưa ra rất nhiều gợi ý cụ thể có thể thực hiện ngay. Lúc đó tôi mới nhận ra — hóa ra không hoàn hảo cũng có thể được đối xử nghiêm túc. Cơ hội được thoải mái trình bày một sản phẩm chưa chín muồi như vậy, trước đây gần như chưa bao giờ có.
 
-![项目开发与 Builder 协作现场](./images/story-2/image5.png)
+![Hiện trường phát triển dự án và cộng tác Builder](./images/story-2/image5.png)
 
-## 06 我得到的，远不止一个 Demo
+## 06 Thứ tôi nhận được còn hơn cả một Demo
 
-通过这次学习，我觉得自己解决真实问题的能力被真正拉起来了。首先，学习效率提高了。我学会了自己搭建小工具，比如 AI 日程表、个人博客等。其次，我的学习方式也变了。不再对着厚厚的教程一页页硬啃，而是直接动手设计自己的小项目，在干中学。
+Qua lần học này, tôi cảm thấy khả năng giải quyết vấn đề thực tế của mình được nâng lên thực sự. Đầu tiên, hiệu quả học tập tăng lên. Tôi học cách tự xây dựng các công cụ nhỏ — như lịch AI, blog cá nhân, v.v. Thứ hai, cách học của tôi cũng thay đổi. Không còn ngồi đọc từng trang tài liệu dày cộp, mà trực tiếp thiết kế dự án nhỏ của mình, vừa làm vừa học.
 
-不会代码没关系，AI 可以帮忙写。遇到问题就直接问 AI：“这串什么意思？”“用了什么知识？”“报错怎么解决？”
+Không biết code không sao, AI có thể giúp viết. Gặp vấn đề thì hỏi thẳng AI: "Đoạn này nghĩa là gì?" "Dùng kiến thức gì?" "Báo lỗi thì giải quyết thế nào?"
 
-有了 Trae 以后，从“想”到“做”之间那堵高墙，好像一下子矮了下去。即使没有扎实的编程基础，我也能把脑海里的想法一点点做成现实，看着产品不断更新迭代，心里的成就感是实打实的。
+Có Trae rồi, bức tường cao giữa "nghĩ" và "làm" như đột nhiên thấp xuống. Dù không có nền tảng lập trình vững chắc, tôi cũng có thể từng bước biến ý tưởng trong đầu thành hiện thực — nhìn sản phẩm liên tục cập nhật và phát triển, cảm giác thành tựu trong lòng là thật sự.
 
-这次经历让我相信，创造的门槛，或许真的没有想象中那么高。
+Lần trải nghiệm này khiến tôi tin rằng — ngưỡng cửa của sáng tạo, có lẽ thực sự không cao như tưởng tượng.

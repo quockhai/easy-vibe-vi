@@ -1,6 +1,6 @@
 ---
-title: '从创意到 AI 产品 - Easy-Vibe 学习路线图'
-description: '学习 AI 编程完整路线图：从零基础到全栈开发。掌握 Vibe Coding、Claude Code、Cursor 等 AI IDE 工具，学会产品思维、全栈开发和 AI 能力集成。'
+title: 'Từ ý tưởng đến sản phẩm AI - Bản đồ học tập Easy-Vibe'
+description: 'Lộ trình học lập trình AI hoàn chỉnh: Từ không có nền tảng đến phát triển full-stack. Nắm vững Vibe Coding, Claude Code, Cursor và các công cụ AI IDE, học tư duy sản phẩm, phát triển full-stack và tích hợp khả năng AI.'
 ---
 
 <script setup>
@@ -9,56 +9,56 @@ import { relatedArticlesMap } from '@theme/data/relatedArticles'
 const relatedArticles = relatedArticlesMap['zh-cn/stage-1/learning-map'] ?? []
 </script>
 
-# 从创意到 AI 产品
+# Từ ý tưởng đến sản phẩm AI
 
-::: info 特别感谢
-特别感谢来自 **清华大学深圳国际研究生院** 的同学们对本课程的测试、反馈和支持！你们的意见和贡献让这门课程变得更好。[👉 查看完整贡献者名单](https://github.com/datawhalechina/easy-vibe#-contributing--contributors)
+::: info Lời cảm ơn đặc biệt
+Xin gửi lời cảm ơn đặc biệt đến các bạn sinh viên từ **Trường Sau Đại Học Quốc Tế Thâm Quyến, Đại học Thanh Hoa** đã kiểm tra, phản hồi và ủng hộ khóa học này! Ý kiến và đóng góp của các bạn đã giúp khóa học này ngày càng tốt hơn. [👉 Xem danh sách đầy đủ người đóng góp](https://github.com/datawhalechina/easy-vibe#-contributing--contributors)
 :::
 
-以前做软件，门槛很高：你要懂编程、懂算法，还得有几年的项目经验。
-现在不一样了。只要你有想法，AI 就能帮你写代码。
+Ngày trước làm phần mềm, rào cản rất cao: bạn phải hiểu lập trình, hiểu thuật toán, còn cần vài năm kinh nghiệm dự án thực tế.
+Bây giờ thì khác rồi. Chỉ cần bạn có ý tưởng, AI có thể giúp bạn viết code.
 
-这是一个巨大的变化：**编程语言正在变成自然语言**。
+Đây là một thay đổi khổng lồ: **ngôn ngữ lập trình đang biến thành ngôn ngữ tự nhiên**.
 
-大语言模型（LLM）的出现，让开发不再是“技术大神的专属”，而是变成了每个人都能上手的工具。曾经最难的是“怎么写代码”，现在最难的是“**你要做什么**”。
+Sự xuất hiện của mô hình ngôn ngữ lớn (LLM) đã khiến việc phát triển phần mềm không còn là "đặc quyền của các cao thủ kỹ thuật", mà trở thành công cụ mà bất kỳ ai cũng có thể tiếp cận. Điều khó nhất trước đây là "làm thế nào để viết code", còn bây giờ điều khó nhất là "**bạn muốn làm gì**".
 
-> **什么是 Vibe Coding？**
-> 简单说，就是“用说话来编程”。 氛围编程的意思是你可以依赖只和 AI 对话，而不是直接写代码的方式，来完成编程项目。
+> **Vibe Coding là gì?**
+> Nói đơn giản, đó là "lập trình bằng cách nói chuyện". Vibe Coding có nghĩa là bạn có thể hoàn thành dự án lập trình chỉ thông qua đối thoại với AI, thay vì phải tự viết code.
 
-当然，让 AI 写出代码只是第一步。要做出一个真正能用的产品，你还会遇到这些问题：
-- 怎么让 AI 写出干净、能维护的代码？
-- 怎么把零散的代码拼成一个能跑的应用？
-- 怎么让应用真正上线、被人用到？
-- 怎么把文本生成、图像识别这些 AI 能力装进你的产品？
+Tất nhiên, để AI viết ra code chỉ là bước đầu tiên. Để tạo ra một sản phẩm thực sự có thể dùng được, bạn sẽ gặp phải những câu hỏi như:
+- Làm thế nào để AI viết code sạch, có thể bảo trì?
+- Làm thế nào để ghép các đoạn code rời rạc thành một ứng dụng có thể chạy?
+- Làm thế nào để ứng dụng thực sự ra mắt và được người dùng sử dụng?
+- Làm thế nào để tích hợp các khả năng AI như tạo văn bản, nhận dạng hình ảnh vào sản phẩm?
 
-这些问题将在这门课中找到答案。
+Những câu hỏi này sẽ được giải đáp trong khóa học này.
 
-不管你是学生、老师、医生、工人，还是任何一位对技术一窍不通的普通人——不用先学几年编程，两周时间就能做出能跑、能演示的产品原型。
+Dù bạn là học sinh, giáo viên, bác sĩ, công nhân, hay bất kỳ người bình thường nào không có kiến thức kỹ thuật — bạn không cần học lập trình nhiều năm trước, chỉ cần hai tuần là có thể tạo ra bản mẫu sản phẩm có thể chạy và trình bày được.
 
-| 你的身份 | 这门课能帮你 |
+| Bạn là ai | Khóa học này giúp bạn |
 |---------|-------------|
-| 学生 | 作业、比赛、创业，自己动手做项目，不再求人 |
-| 职场人 | 把重复工作自动化，提升效率，甚至开发副业 |
-| 产品经理 / 设计师 | 想法不再停留在纸面，能快速做出 Demo 给老板/客户看 |
-| 创业者 / 中小企业主 | 低成本验证想法，不用花几万块找外包也能做出 MVP |
-| 老师 / 教育工作者 | 制作教学工具、课件、自动化出题，提升教学效率 |
-| 医生 / 律师 / 专业工作者 | 把专业流程自动化，打造自己的效率工具 |
-| 任何人 | 用 AI 解决生活/工作中的具体问题，让不可能变成可能 |
+| Học sinh, sinh viên | Bài tập, thi cử, khởi nghiệp — tự tay làm dự án, không cần nhờ ai |
+| Người đi làm | Tự động hóa công việc lặp lại, tăng hiệu suất, thậm chí phát triển nghề tay trái |
+| Product Manager / Designer | Ý tưởng không còn nằm trên giấy, có thể nhanh chóng tạo Demo cho sếp/khách hàng xem |
+| Người khởi nghiệp / Doanh nghiệp vừa và nhỏ | Kiểm chứng ý tưởng với chi phí thấp, không cần bỏ tiền triệu thuê outsource vẫn có thể làm MVP |
+| Giáo viên / Nhà giáo dục | Tạo công cụ dạy học, slide bài giảng, tự động ra đề — nâng cao hiệu quả giảng dạy |
+| Bác sĩ / Luật sư / Chuyên gia | Tự động hóa quy trình chuyên nghiệp, xây dựng công cụ năng suất riêng |
+| Bất kỳ ai | Dùng AI giải quyết các vấn đề cụ thể trong cuộc sống/công việc, biến điều không thể thành có thể |
 
-AI 时代，执行力和想法永远比技术更重要。
+Trong kỷ nguyên AI, khả năng thực thi và ý tưởng luôn quan trọng hơn kỹ thuật.
 
-## 成长路径：从“会用 AI”到“会做 AI 产品”
+## Lộ trình phát triển: Từ "biết dùng AI" đến "biết làm sản phẩm AI"
 
 <div class="stage-intro">
   <div class="stage-card">
     <div class="stage-icon">🎮</div>
-    <h3>新手入门</h3>
-    <p class="stage-role">体验 AI 编程</p>
+    <h3>Nhập môn</h3>
+    <p class="stage-role">Trải nghiệm lập trình AI</p>
     <div class="stage-tags">
-      <span>贪吃蛇小游戏</span>
-      <span>零基础上手</span>
-      <span>Vibecoding 初体验</span>
-      <span>几分钟生成</span>
+      <span>Trò chơi rắn</span>
+      <span>Bắt đầu từ số 0</span>
+      <span>Trải nghiệm Vibe Coding đầu tiên</span>
+      <span>Tạo trong vài phút</span>
     </div>
   </div>
 </div>
@@ -66,35 +66,35 @@ AI 时代，执行力和想法永远比技术更重要。
 <div class="stage-grid">
   <div class="stage-card">
     <div class="stage-icon">🛠️</div>
-    <h3>第一阶段</h3>
-    <p class="stage-role">产品经理 / 运营</p>
+    <h3>Giai đoạn 1</h3>
+    <p class="stage-role">Product Manager / Vận hành</p>
     <div class="stage-tags">
       <span>AI IDE (Cursor/Claude)</span>
-      <span>需求拆解 & 原型</span>
-      <span>接入 AI 能力</span>
-      <span>完整 Demo 开发</span>
+      <span>Phân tách yêu cầu & Bản mẫu</span>
+      <span>Tích hợp khả năng AI</span>
+      <span>Phát triển Demo hoàn chỉnh</span>
     </div>
   </div>
   <div class="stage-card">
     <div class="stage-icon">💻</div>
-    <h3>第二阶段</h3>
-    <p class="stage-role">初中级开发 / 独立开发者</p>
+    <h3>Giai đoạn 2</h3>
+    <p class="stage-role">Lập trình viên sơ-trung cấp / Indie developer</p>
     <div class="stage-tags">
-      <span>Figma 到代码</span>
-      <span>Supabase 数据库</span>
-      <span>Stripe 支付集成</span>
-      <span>Dify 知识库</span>
+      <span>Figma đến Code</span>
+      <span>Supabase Database</span>
+      <span>Tích hợp Stripe</span>
+      <span>Dify Knowledge Base</span>
     </div>
   </div>
   <div class="stage-card">
     <div class="stage-icon">🚀</div>
-    <h3>第三阶段</h3>
-    <p class="stage-role">高级开发 / 架构师</p>
+    <h3>Giai đoạn 3</h3>
+    <p class="stage-role">Lập trình viên cao cấp / Kiến trúc sư</p>
     <div class="stage-tags">
-      <span>Web/小程序/多端</span>
-      <span>MCP 高级工具</span>
+      <span>Web/Mini Program/Đa nền tảng</span>
+      <span>MCP — Công cụ nâng cao</span>
       <span>RAG & LangGraph</span>
-      <span>高级工程师思维</span>
+      <span>Tư duy kỹ sư cao cấp</span>
     </div>
   </div>
 </div>
@@ -175,101 +175,101 @@ AI 时代，执行力和想法永远比技术更重要。
 }
 </style>
 
-通过这个完整的学习路径，你将获得：
+Thông qua lộ trình học tập hoàn chỉnh này, bạn sẽ có được:
 
-- **Vibe Coding开发能力：** 熟练使用 vibecoding 思维和 AI 编码工具，将开发效率提升数倍。不再需要死记硬背语法，而是学会如何引导 AI 生成高质量代码。
-- **全栈开发技能：** 从 UI 设计到前端实现，从数据库设计到 API 开发，从本地开发到云端部署，掌握现代 Web 应用的完整技术栈。
-- **AI 能力集成：** 学会调用各类多模态 AI API，将文本、图像、语音等 AI 能力无缝集成到你的应用中，并通过 RAG 等技术构建智能化产品。
-- **产品思维与运营能力：** 从用户研究到需求拆解，从 MVP 设计到产品迭代，从支付集成到用户管理，形成完整的产品开发与运营闭环。
+- **Khả năng phát triển theo Vibe Coding:** Thành thạo tư duy Vibe Coding và các công cụ lập trình AI, nâng hiệu quả phát triển lên gấp nhiều lần. Không cần ghi nhớ cú pháp, mà học cách hướng dẫn AI tạo ra code chất lượng cao.
+- **Kỹ năng phát triển full-stack:** Từ thiết kế UI đến triển khai frontend, từ thiết kế database đến phát triển API, từ phát triển local đến triển khai đám mây — nắm vững toàn bộ tech stack của ứng dụng web hiện đại.
+- **Tích hợp khả năng AI:** Học cách gọi các loại API AI đa phương thức, tích hợp liền mạch các khả năng như văn bản, hình ảnh, giọng nói vào ứng dụng, và xây dựng sản phẩm thông minh qua các kỹ thuật như RAG.
+- **Tư duy sản phẩm và vận hành:** Từ nghiên cứu người dùng đến phân tách yêu cầu, từ thiết kế MVP đến lặp lại sản phẩm, từ tích hợp thanh toán đến quản lý người dùng — hình thành vòng tròn khép kín hoàn chỉnh của phát triển và vận hành sản phẩm.
 
-# 学完能做什么？
+# Học xong có thể làm được gì?
 
-## 第一阶段：做出你的第一个产品原型
+## Giai đoạn 1: Tạo ra bản mẫu sản phẩm đầu tiên của bạn
 
-这个阶段适合完全没编程基础，或者只会一点点但不太自信的同学。你不用先学一堆理论知识，而是直接跟着做，在做的过程中学会用 AI 工具写代码。
+Giai đoạn này phù hợp cho những người hoàn toàn không có nền tảng lập trình, hoặc chỉ biết một chút nhưng chưa tự tin. Bạn không cần học một đống lý thuyết trước, mà trực tiếp làm theo từng bước — vừa làm vừa học cách dùng công cụ AI để viết code.
 
-**学完你能**：
-- 用 AI 编程工具独立完成一个网页应用
-- 把产品想法变成能点击、能交互的原型
-- 给原型加上 AI 功能（比如文生图、智能对话）
-- 遇到报错知道怎么排查和解决
+**Sau khi hoàn thành bạn có thể**:
+- Dùng công cụ lập trình AI độc lập hoàn thành một ứng dụng web
+- Biến ý tưởng sản phẩm thành bản mẫu có thể nhấp và tương tác
+- Thêm tính năng AI vào bản mẫu (ví dụ như tạo hình từ văn bản, hội thoại thông minh)
+- Biết cách gỡ lỗi khi gặp sự cố
 
-简单说，就是能做出一个"能跑、能给别人演示"的东西。
+Nói đơn giản, bạn có thể tạo ra thứ gì đó "có thể chạy và có thể demo cho người khác xem".
 
-我们可以先通过小游戏感受 AI 编程，然后学会用 AI 编程工具帮你写代码、改报错。接着从简单页面开始，逐步做出能交互的多页面应用，再加上文生图、智能对话这些 AI 功能。最后独立完成一个完整项目，让你的创意能够真正拥有落地的可能。
+Chúng ta sẽ bắt đầu bằng cách trải nghiệm lập trình AI qua các trò chơi nhỏ, rồi học cách dùng công cụ lập trình AI để viết code và sửa lỗi. Tiếp theo bắt đầu từ các trang đơn giản, dần dần tạo ra ứng dụng nhiều trang có tương tác, rồi thêm các tính năng AI như tạo hình từ văn bản, hội thoại thông minh. Cuối cùng, độc lập hoàn thành một dự án hoàn chỉnh, biến ý tưởng sáng tạo của bạn thực sự thành hiện thực.
 
-# 为什么要用项目制来训练？
+# Tại sao phải dùng phương pháp học theo dự án?
 
-> **现实世界的挑战**
+> **Thách thức của thế giới thực**
 >
-> 原因其实很简单：按照大多数同学现在的状态，直接走入职场，很可能会在真实项目和老板 / 客户的“社会毒打”下寸步难行。现实世界更常见的场景是：
+> Lý do thực ra rất đơn giản: theo tình trạng hiện tại của đa số học viên, nếu đi thẳng vào làm việc, rất có thể sẽ bị "đời thực phang cho tơi tả" trước các dự án thực sự và yêu cầu của sếp/khách hàng. Kịch bản phổ biến hơn trong thế giới thực là:
 
-> 你的导师 / 老板：我们要做一个 xxx，目标是达到 yyy 的效果。
+> Người hướng dẫn/sếp của bạn: Chúng ta cần làm một cái gì đó xxx, mục tiêu đạt được hiệu quả yyy.
 >
-> 文档？现成框架？详细的需求说明？很多时候都不存在。
+> Tài liệu? Framework có sẵn? Mô tả yêu cầu chi tiết? Nhiều khi không có.
 
-真实工作中的许多任务，本质上就是在高度不确定的环境下解决从未见过的问题：需求是模糊的，边界是变化的，没人告诉你标准答案，你需要自己查资料、做实验、搭原型、不断迭代，最后给出一个“能跑、能用、能上线”的解决方案。
+Nhiều nhiệm vụ trong công việc thực tế, về bản chất là giải quyết những vấn đề chưa từng gặp trong môi trường rất không chắc chắn: yêu cầu mơ hồ, ranh giới thay đổi, không ai nói cho bạn đáp án chuẩn — bạn cần tự tra tài liệu, làm thí nghiệm, dựng bản mẫu, liên tục lặp lại, cuối cùng đưa ra giải pháp "có thể chạy, có thể dùng, có thể ra mắt".
 
-这门课想做的，就是在一个相对安全的环境里，提前给你一次“模拟社会毒打”：
+Điều khóa học này muốn làm là trong một môi trường tương đối an toàn, cho bạn trải nghiệm một lần "bị đời thực thử thách mô phỏng" trước:
 
-- 通过看似有一定难度的项目任务，迫使你练习拆解问题、设计方案、自己寻找资料
-- 通过不那么“傻瓜化”的脚手架和代码，让你学会阅读、理解和改造一份中大型代码库
-- 通过从创意到上线的完整闭环，让你体验真实产品从 0 到 1 的完整过程
+- Thông qua các nhiệm vụ dự án có độ khó nhất định, buộc bạn luyện tập phân tách vấn đề, thiết kế phương án, tự tìm tài liệu
+- Thông qua bộ khung và code không quá "nhai sẵn", giúp bạn học cách đọc, hiểu và cải tạo một codebase quy mô vừa và lớn
+- Thông qua vòng tròn khép kín hoàn chỉnh từ ý tưởng đến ra mắt, cho bạn trải nghiệm toàn bộ quá trình sản phẩm thực từ 0 đến 1
 
-短期来看，这种训练确实比较折磨人；但从长期来看，它会极大提高你在求职和职业发展中的竞争力：你会更能扛事儿，更能在不确定环境中找到突破口，也更有能力把 AI 变成真正落地的产品，而不是停留在“玩玩 Demo”阶段。
+Ngắn hạn, kiểu luyện tập này thực ra khá "gian khổ"; nhưng dài hạn, nó sẽ nâng cao đáng kể khả năng cạnh tranh của bạn trong tìm việc và phát triển sự nghiệp: bạn sẽ chịu được áp lực hơn, tìm được đột phá trong môi trường không chắc chắn hơn, và có khả năng biến AI thành sản phẩm thực sự hơn, thay vì chỉ dừng lại ở giai đoạn "chơi Demo".
 
-# 提问的艺术：AI 时代的必备技能
+# Nghệ thuật đặt câu hỏi: Kỹ năng không thể thiếu trong kỷ nguyên AI
 
-在 AI 时代，提问也属于一种 “基本功”。同一份代码、同一个报错，**你怎么提问，几乎决定了 AI 能给出怎样的答案**：是泛泛而谈，还是一步一步给出可落地的改法。
+Trong kỷ nguyên AI, đặt câu hỏi cũng là một "kỹ năng cơ bản". Cùng một đoạn code, cùng một lỗi, **cách bạn đặt câu hỏi gần như quyết định AI có thể đưa ra câu trả lời như thế nào**: chung chung hay từng bước đưa ra cách sửa có thể áp dụng ngay.
 
-**养成好习惯**：把“向 AI 提问”当成日常开发流程的一部分：遇到不懂、卡住的问题就立刻问。
+**Hãy xây dựng thói quen tốt**: Xem "đặt câu hỏi cho AI" là một phần của quy trình phát triển hàng ngày — khi gặp điều không hiểu hoặc bị kẹt, hãy hỏi ngay.
 
-## 为什么这是必备技能？
+## Tại sao đây là kỹ năng không thể thiếu?
 
-- **现实很少有完整文档**：更多时候你面对的是不清晰的需求、半成品代码、零散的错误信息
-- **AI 是你随身的导师 + 同事**：会提问的人，能把它变成“高质量的结对编程”
-- **能力上限由沟通决定**：你越能提供关键信息、越能约束输出格式，答案越可用
+- **Thực tế hiếm khi có tài liệu đầy đủ**: Bạn thường đối mặt với yêu cầu không rõ ràng, code dang dở, thông tin lỗi rời rạc
+- **AI là người cố vấn + đồng nghiệp luôn ở bên bạn**: Người biết đặt câu hỏi có thể biến nó thành "lập trình đôi chất lượng cao"
+- **Giới hạn năng lực được quyết định bởi giao tiếp**: Bạn cung cấp thông tin quan trọng càng nhiều, ràng buộc định dạng đầu ra càng rõ, câu trả lời càng có thể dùng được
 
-**常见误区**：只问一句“为啥报错？”通常只能得到一堆猜测。把上下文补齐，才会得到可执行的方案。
+**Hiểu lầm thường gặp**: Chỉ hỏi một câu "Tại sao báo lỗi?" thường chỉ nhận được một đống phỏng đoán. Bổ sung đầy đủ ngữ cảnh mới nhận được phương án có thể thực thi.
 
-## 如何把信息"喂给"AI：截图 vs 复制粘贴
+## Cách "đưa thông tin" cho AI: Ảnh chụp màn hình vs Sao chép dán
 
-两种方式都可以，但用途不同：
+Cả hai cách đều được, nhưng có mục đích khác nhau:
 
-| 方式         | 适用场景                                  | 关键要求                                  |
-| ------------ | ----------------------------------------- | ----------------------------------------- |
-| **复制粘贴** | 报错堆栈、日志、代码、配置、API 返回      | 尽量完整，不要只截一行关键字              |
-| **截图**     | UI 布局问题、交互异常、工具界面找不到按钮 | 截全屏 + 标注重点区域，最好配一句文字说明 |
+| Cách | Trường hợp phù hợp | Yêu cầu quan trọng |
+| --- | --- | --- |
+| **Sao chép dán** | Stack lỗi, log, code, cấu hình, API response | Cố gắng đầy đủ, đừng chỉ chụp một dòng từ khóa |
+| **Ảnh chụp màn hình** | Vấn đề bố cục UI, tương tác bất thường, không tìm thấy nút trong giao diện công cụ | Chụp toàn màn hình + đánh dấu vùng quan trọng, tốt nhất kèm một câu giải thích bằng chữ |
 
-::: danger ⚠️ 重要前提
-**并非所有 AI 都支持图片输入。** 截图沟通需要 AI 具备多模态能力（即能够理解和分析图片）。目前支持图片输入的 AI 包括：Claude (Anthropic)、GPT-4V/GPT-4o (OpenAI)、Gemini (Google)、以及部分国产大模型如通义千问、文心一言等。
+::: danger ⚠️ Điều kiện tiên quyết quan trọng
+**Không phải tất cả AI đều hỗ trợ đầu vào hình ảnh.** Giao tiếp bằng ảnh chụp màn hình yêu cầu AI có khả năng đa phương thức (tức là có thể hiểu và phân tích hình ảnh). Hiện tại các AI hỗ trợ đầu vào hình ảnh bao gồm: Claude (Anthropic), GPT-4V/GPT-4o (OpenAI), Gemini (Google), và một số mô hình lớn nội địa như Tongyi Qianwen, Wenxin Yiyan, v.v.
 
-**如果你使用的 AI 不支持图片输入**，截图将无法被识别，此时请改用复制粘贴文字的方式沟通。
+**Nếu AI bạn đang dùng không hỗ trợ đầu vào hình ảnh**, ảnh chụp màn hình sẽ không được nhận dạng — hãy chuyển sang dùng cách sao chép dán văn bản.
 :::
 
-## 让 AI “解释得很好”的提示词技巧
+## Kỹ thuật prompt giúp AI "giải thích rõ ràng"
 
-如果你不是只要答案，而是要“学会”答案。使用类似下面指令能显著提升解释质量：
+Nếu bạn không chỉ muốn câu trả lời mà muốn "hiểu được" câu trả lời, các lệnh như dưới đây có thể cải thiện đáng kể chất lượng giải thích:
 
-> **学习型提问示例**
+> **Ví dụ câu hỏi học tập**
 >
-> - “请先用 5 句话讲清楚这个概念，再给几个问题提问我验证我理解对了没。”
-> - ”请你详细解释一下这个报错信息，我不理解为什么会报错。”
+> - "Hãy dùng 5 câu giải thích rõ khái niệm này trước, rồi đưa ra một vài câu hỏi để hỏi tôi xem tôi có hiểu đúng không."
+> - "Hãy giải thích chi tiết thông báo lỗi này cho tôi, tôi không hiểu tại sao lại báo lỗi."
 
-# 坚持了好久还是搞不定，我想放弃了
+# Cố mãi vẫn không làm được, tôi muốn bỏ cuộc rồi
 
-也许是你坚持的方法不对。不要一个人在黑暗中硬撑，可以来跟作者和助教们聊聊：把你已经尝试过的方法、遇到的具体卡点、和你目前的心理状态，坦诚地说出来。很多时候，只要稍微调整一下方向、补上一个关键知识点，你就能继续往前走。
+Có thể là phương pháp kiên trì của bạn không đúng. Đừng một mình chật vật trong bóng tối, hãy đến nói chuyện với tác giả và trợ giảng: chia sẻ thành thật những phương pháp bạn đã thử, những điểm cụ thể bạn bị kẹt, và tâm trạng hiện tại của bạn. Nhiều khi, chỉ cần điều chỉnh hướng đi một chút, bổ sung một điểm kiến thức then chốt, bạn có thể tiếp tục tiến về phía trước.
 
-# 我觉得教程有的设计不合理
+# Tôi thấy một số thiết kế trong tài liệu không hợp lý
 
-欢迎随时联系作者、提交 issue，或者在群里 / 课堂上直接反馈。我们非常希望和你一起把这套教程打磨得越来越好：哪里不清晰、哪里体验不好、哪里让你白费力气，都可以坦诚指出来。越真实、越具体的反馈，越能帮助后来者少踩坑。
+Hãy liên hệ tác giả, gửi issue, hoặc phản hồi trực tiếp trong nhóm/lớp học bất cứ lúc nào. Chúng tôi rất mong cùng bạn mài giũa bộ tài liệu này ngày càng tốt hơn: phần nào không rõ, phần nào trải nghiệm không tốt, phần nào khiến bạn tốn công vô ích — đều có thể nói thẳng ra. Phản hồi càng thực tế và cụ thể, càng giúp người học sau tránh được sai lầm.
 
-# Reference
+# Tài liệu tham khảo
 
-- [南京大学 计算机科学与技术系 计算机系统基础 课程实验](https://nju-projectn.github.io/ics-pa-gitbook/ics2025/)
+- [Thực hành thí nghiệm khóa học Cơ sở Hệ thống Máy tính, Khoa Khoa học và Công nghệ Máy tính, Đại học Nam Kinh](https://nju-projectn.github.io/ics-pa-gitbook/ics2025/)
 
 <RelatedArticlesSection
-  title="接下来可以学什么"
-  description="按“从会用 AI 到会做产品”的路线，继续向前推进。"
+  title="Tiếp theo có thể học gì"
+  description="Tiếp tục tiến theo lộ trình 'từ biết dùng AI đến biết làm sản phẩm'."
   :items="relatedArticles"
 />
