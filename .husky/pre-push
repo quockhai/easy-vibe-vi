@@ -3,12 +3,22 @@
 echo "🚀 Pre-push checks started..."
 echo ""
 
+# Attempt to load nvm or add common paths so GUI clients can find npm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+
 echo "1️⃣ Running forced build..."
-if ! SITEMAP_NO_WRITE=1 npm run build:force > /dev/null 2>&1; then
+BUILD_OUTPUT=$(SITEMAP_NO_WRITE=1 npm run build:force 2>&1)
+if [ $? -ne 0 ]; then
   echo ""
   echo "❌ Forced build failed! Please fix build errors before pushing."
   echo ""
-  echo "💡 Run 'npm run build:force' to see detailed errors"
+  echo "--- Error Details ---"
+  echo "$BUILD_OUTPUT"
+  echo "---------------------"
+  echo ""
+  echo "💡 Run 'npm run build:force' in your terminal to see detailed errors"
   echo "💡 To skip pre-push checks: git push --no-verify"
   exit 1
 fi
