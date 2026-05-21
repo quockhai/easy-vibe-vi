@@ -8,7 +8,7 @@ import { relatedArticlesMap } from '@theme/data/relatedArticles'
 
 const duration = '约 <strong>3 天</strong>'
 const relatedArticles =
-  relatedArticlesMap['zh-cn/stage-1/complete-project-practice'] ?? []
+  relatedArticlesMap['vi-vn/stage-1/complete-project-practice'] ?? []
 </script>
 
 # 初级五：完整项目实战

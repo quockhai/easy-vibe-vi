@@ -1,6 +1,6 @@
-# NgườI MớI Và Nguyên Mẫu Sản Phẩm
+# Người Mới và Nguyên Mẫu Sản Phẩm
 
-Chào mừng đến với giai đoạn **Quản lý Sản phẩm AI**! Đây là điểm khởi đầu của hướng dẫn Easy-Vibe, được thiết kế cho ngườI học không có kinh nghiệm lập trình.
+Chào mừng đến với giai đoạn **Quản lý Sản phẩm AI**! Đây là điểm khởi đầu của hướng dẫn Easy-Vibe, được thiết kế cho người học không có kinh nghiệm lập trình.
 
 ## Bạn sẽ học được gì
 
@@ -8,7 +8,7 @@ Trong giai đoạn này, bạn sẽ bắt đầu từ con số không và thành
 
 ### Bắt đầu
 
-Phù hợp cho sản phẩm, vận hành và nền tảng phi kỹ thuật. Hiểu logic lập trình AI thông qua trò chơi và xây dựng sự tự tin:
+Phù hợp cho những người có nền tảng sản phẩm, vận hành và phi kỹ thuật. Hiểu logic lập trình AI thông qua trò chơi và xây dựng sự tự tin:
 <NavGrid>
   <NavCard
     href="/vi-vn/stage-1/learning-map/"
@@ -30,7 +30,7 @@ Thành thạo quy trình làm việc Vibe Coding. Học cách phân tách yêu c
   <NavCard
     href="/vi-vn/stage-1/introduction-to-ai-ide/"
     title="Giới thiệu công cụ IDE AI"
-    description="Tìm hiểu các công cụ lập trình AI hiện tại và chọn đối tác phát triển tốt nhất cho bạn"
+    description="Tìm hiểu các công cụ IDE lập trình AI hiện tại và chọn đối tác phát triển tốt nhất cho bạn"
   />
   <NavCard
     href="/vi-vn/stage-1/building-prototype/"
@@ -54,7 +54,7 @@ Thành thạo quy trình làm việc Vibe Coding. Học cách phân tách yêu c
 
 - Quản lý sản phẩm và nhân viên vận hành không có kinh nghiệm lập trình
 - Doanh nhân muốn xác thực ý tưởng nhanh chóng
-- NgườI phi kỹ thuật quan tâm đến lập trình AI
+- Người phi kỹ thuật quan tâm đến lập trình AI
 - Nhà thiết kế muốn cải thiện kỹ năng tạo nguyên mẫu
 
 ## Lộ trình học tập

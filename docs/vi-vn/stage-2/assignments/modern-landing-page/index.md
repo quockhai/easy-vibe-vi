@@ -39,7 +39,7 @@
 后端需要支持以下核心能力：用户鉴权、图片生成任务、OSS 对象存储、积分与套餐支付、图片社交互动、运营数据监控。
 
 ::: tip PRD 入口
-本项目的需求文档在 GitHub： [查看 PRD](https://github.com/datawhalechina/easy-vibe/blob/main/docs/zh-cn/stage-2/assignments/modern-landing-page/PRD.md)
+本项目的需求文档在 GitHub： [查看 PRD](https://github.com/datawhalechina/easy-vibe/blob/main/docs/vi-vn/stage-2/assignments/modern-landing-page/PRD.md)
 :::
 
 <div style="margin: 32px 0;">

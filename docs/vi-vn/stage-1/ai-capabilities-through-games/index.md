@@ -14,7 +14,7 @@ import { relatedArticlesMap } from '@theme/data/relatedArticles'
 
 const duration = '约 <strong>4 小时</strong>，可分多次完成'
 const relatedArticles =
-  relatedArticlesMap['zh-cn/stage-1/ai-capabilities-through-games'] ?? []
+  relatedArticlesMap['vi-vn/stage-1/ai-capabilities-through-games'] ?? []
 </script>
 
 ## 本章导读
@@ -304,7 +304,7 @@ AI 出现之后，第一次给了普通人一个全新的可能：你不需要�
 
 此外，我们还可以要求 LLM 帮你直接生成项目级的提示词。在上一节中，我们只自己写了贪吃蛇游戏的提示词。现在让我们尝试让大模型生成一个带有整体框架和实现路径的提示词（你可以直接用 z.ai 生成）。
 
-如果你想学习如何写出更好的提示词，可以查看[提示词工程附录](/zh-cn/appendix/8-artificial-intelligence/prompt-engineering)。
+如果你想学习如何写出更好的提示词，可以查看[提示词工程附录](/vi-vn/appendix/8-artificial-intelligence/prompt-engineering)。
 
 > 我想让 AI 生成一个网页贪吃蛇游戏，需要一个更完整的提示词，让生成结果更令人印象深刻和有趣。请生成相应的提示词。当前目标是：生成一个贪吃蛇游戏，需要实现吃不同单词生成诗歌的功能，并且应该包含图像生成模块。
 
@@ -643,7 +643,7 @@ z.ai 的回复将会是这样的：
 
 > "用 React 做一个排行榜页面，右侧显示分数列表，点击某行在下方展示玩家详情，风格简洁现代。"
 
-如果你想深入理解 HTML、CSS、JavaScript 等前端基础知识，可以查看[Web 基础附录](/zh-cn/appendix/3-browser-and-frontend/javascript-deep-dive)。想了解前端技术的发展历程，可以查看[前端进化史附录](/zh-cn/appendix/3-browser-and-frontend/frontend-frameworks)。
+如果你想深入理解 HTML、CSS、JavaScript 等前端基础知识，可以查看[Web 基础附录](/vi-vn/appendix/3-browser-and-frontend/javascript-deep-dive)。想了解前端技术的发展历程，可以查看[前端进化史附录](/vi-vn/appendix/3-browser-and-frontend/frontend-frameworks)。
 
 ## <span id="appendix-2">[附录 2：到底什么是 Vibe Coding](#appendix-nav)</span>
 

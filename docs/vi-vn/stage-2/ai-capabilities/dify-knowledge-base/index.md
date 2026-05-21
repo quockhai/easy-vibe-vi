@@ -210,7 +210,7 @@ Dify 是一个用于开发 LLM 应用的开源平台。它提供了直观的界�
 
 本部分内容原本安排在后续课程中详细介绍，但考虑到当前部分学习者可能因网络限制暂时无法访问 Dify 官方网站或云端服务，我们决定提前提供这一可选的学习路径，帮助你顺利推进课程进度。
 
-你需要参考该教程入门 web 部署平台的基本使用方式：[如何部署 Web 应用](/zh-cn/stage-2/backend/zeabur-deployment/)
+你需要参考该教程入门 web 部署平台的基本使用方式：[如何部署 Web 应用](/vi-vn/stage-2/backend/zeabur-deployment/)
 
 ![](images/image13.png)
 

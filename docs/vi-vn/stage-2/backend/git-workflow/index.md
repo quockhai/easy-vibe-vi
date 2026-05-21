@@ -9,14 +9,14 @@
 > 💡 **前置知识**
 > 
 > 在学习 Git 之前，建议你先了解以下概念：
-> - [什么是终端/命令行](/zh-cn/appendix/2-development-tools/command-line-shell) - 学习如何使用命令行与计算机交互
-> - [什么是 Git](/zh-cn/appendix/2-development-tools/git-version-control) - 了解 Git 版本控制系统的核心概念
+> - [什么是终端/命令行](/vi-vn/appendix/2-development-tools/command-line-shell) - 学习如何使用命令行与计算机交互
+> - [什么是 Git](/vi-vn/appendix/2-development-tools/git-version-control) - 了解 Git 版本控制系统的核心概念
 >
 > 本文将重点介绍 GitHub 工作流和实际操作，上述基础知识请参考附录链接。
 
 # Git 快速开始
 
-在开始使用 Git 之前，请确保你已经阅读了附录中关于[命令行](/zh-cn/appendix/2-development-tools/command-line-shell)和[Git 基础](/zh-cn/appendix/2-development-tools/git-version-control)的内容。本文将假设你已经具备这些基础知识，并直接讲解如何安装配置 Git 以及使用 GitHub 进行协作。
+在开始使用 Git 之前，请确保你已经阅读了附录中关于[命令行](/vi-vn/appendix/2-development-tools/command-line-shell)和[Git 基础](/vi-vn/appendix/2-development-tools/git-version-control)的内容。本文将假设你已经具备这些基础知识，并直接讲解如何安装配置 Git 以及使用 GitHub 进行协作。
 
 ## 如何安装 Git
 

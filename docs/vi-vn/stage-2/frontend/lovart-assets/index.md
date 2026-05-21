@@ -1,7 +1,7 @@
 <script setup>
 import { relatedArticlesMap } from '@theme/data/relatedArticles'
 
-const relatedArticles = relatedArticlesMap['zh-cn/stage-2/frontend/lovart-assets'] ?? []
+const relatedArticles = relatedArticlesMap['vi-vn/stage-2/frontend/lovart-assets'] ?? []
 </script>
 
 # 从 NanoBanana 出发，搭建自己的素材生产Agent

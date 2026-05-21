@@ -6,7 +6,7 @@ description: 'Lộ trình học lập trình AI hoàn chỉnh: Từ không có n
 <script setup>
 import { relatedArticlesMap } from '@theme/data/relatedArticles'
 
-const relatedArticles = relatedArticlesMap['zh-cn/stage-1/learning-map'] ?? []
+const relatedArticles = relatedArticlesMap['vi-vn/stage-1/learning-map'] ?? []
 </script>
 
 # Từ ý tưởng đến sản phẩm AI

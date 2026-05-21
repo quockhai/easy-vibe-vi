@@ -58,7 +58,7 @@ async for message in query(
 
 市面上有很多 Agent 框架——LangChain、LlamaIndex、CrewAI、AutoGPT……Claude Agent SDK 和它们相比有什么独特之处？
 
-> 📚 **详细对比请参考附录**：[主流 Agent 框架对比](/zh-cn/appendix/8-artificial-intelligence/ai-agents.html#_7-主流框架对比)
+> 📚 **详细对比请参考附录**：[主流 Agent 框架对比](/vi-vn/appendix/8-artificial-intelligence/ai-agents.html#_7-主流框架对比)
 
 简单来说：
 

@@ -11,7 +11,7 @@
 > 在学习本节之前，建议你先了解以下内容：
 > - [从数据库到 Supabase](../database-supabase/) - 了解数据库和数据模型的概念。
 > - [Git 和 GitHub 工作流](../git-workflow/) - 熟悉如何在项目开发中进行版本控制。
-> - [什么是终端/命令行](/zh-cn/appendix/2-development-tools/command-line-shell) - 项目初始化与启动离不开基础的命令操作。
+> - [什么是终端/命令行](/vi-vn/appendix/2-development-tools/command-line-shell) - 项目初始化与启动离不开基础的命令操作。
 
 # 你将学到
 

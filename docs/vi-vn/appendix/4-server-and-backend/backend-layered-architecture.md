@@ -757,7 +757,7 @@ Robert C. Martin 提出,将系统分为四个同心圆层,依赖只能从外向�
 ### 8.4 推荐阅读
 
 - **单体架构**: 查看本文的姐妹篇 [`backend-project-architecture.md`](./backend-project-architecture.md),了解从脚本到单体的演进
-- **微服务架构**: 查看 [从单体到微服务的演进](/zh-cn/appendix/6-architecture-and-system-design/monolith-to-microservices)
+- **微服务架构**: 查看 [从单体到微服务的演进](/vi-vn/appendix/6-architecture-and-system-design/monolith-to-microservices)
 - **整洁架构**: Robert C. Martin 的《Clean Architecture》— 提出依赖规则和四层同心圆模型的经典著作
 - **企业架构模式**: Martin Fowler 的《Patterns of Enterprise Application Architecture》— 分层架构、领域逻辑组织的权威参考
 

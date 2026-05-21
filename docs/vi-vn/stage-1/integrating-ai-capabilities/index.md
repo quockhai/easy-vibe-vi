@@ -8,7 +8,7 @@ import { relatedArticlesMap } from '@theme/data/relatedArticles'
 
 const duration = '约 <strong>1 天</strong>'
 const relatedArticles =
-  relatedArticlesMap['zh-cn/stage-1/integrating-ai-capabilities'] ?? []
+  relatedArticlesMap['vi-vn/stage-1/integrating-ai-capabilities'] ?? []
 </script>
 
 # 初级四：为原型注入 AI 能力
@@ -58,7 +58,7 @@ API 是计算机领域的一个重要抽象概念，我们可以简单理解为�
 6. **错误处理**：当出现问题时（如API Key错误、请求太频繁等），知道如何排查解决。
 
 ::: info ℹ️ 什么是 API
-对于 API 的更深入的解释，请看附录：[API 入门](/zh-cn/appendix/4-server-and-backend/api-intro)。
+对于 API 的更深入的解释，请看附录：[API 入门](/vi-vn/appendix/4-server-and-backend/api-intro)。
 
 ::: warning 🔐 **API 安全注意事项**
 API Key 是你请求 AI 服务的「通行证」，它是一串密码字符串，用于身份验证和计费。
@@ -93,7 +93,7 @@ API Key 是你请求 AI 服务的「通行证」，它是一串密码字符串�
 在 `1.2 动手做出原型` 里，你已经做出了一个可交互的原型。接下来我们要做的，是把原型里“看起来像 AI 的功能”变成真正可用的能力：**当用户点击按钮时，原型会向外部的 AI 服务发出请求，并把返回的文字展示出来。**
 
 ::: info ℹ️ 原理延伸
-如果你想了解更多原理相关的内容，请查看附录：[大语言模型（LLM）入门](/zh-cn/appendix/8-artificial-intelligence/llm-principles)。
+如果你想了解更多原理相关的内容，请查看附录：[大语言模型（LLM）入门](/vi-vn/appendix/8-artificial-intelligence/llm-principles)。
 ::: details 了解更多：DeepSeek 是什么？
 
 **杭州深度求索人工智能基础技术研究有限公司**（Hangzhou DeepSeek Artificial Intelligence Basic Technology Research Co., Ltd.），以 DeepSeek 为商号，是一家**开发大语言模型（LLMs）的中国人工智能（AI）公司**。DeepSeek 总部位于浙江杭州，由中国对冲基金幻方量化（High-Flyer）拥有并资助。DeepSeek 由幻方量化的联合创始人梁文锋于 2023 年 7 月创立，他也同时担任这两家公司的 CEO。该公司于 2025 年 1 月推出了同名聊天机器人及其 DeepSeek-R1 模型。
@@ -219,7 +219,7 @@ MiniMax 的 API 格式与 DeepSeek 几乎完全一致（都是 OpenAI 兼容格�
 # 3. 接入图像转文字 API：Qwen3 VL
 
 ::: info ℹ️ 原理延伸
-如果你想了解更多原理相关的内容，请查看附录：[视觉语言模型（VLM）入门](/zh-cn/appendix/8-artificial-intelligence/multimodal-models)。
+如果你想了解更多原理相关的内容，请查看附录：[视觉语言模型（VLM）入门](/vi-vn/appendix/8-artificial-intelligence/multimodal-models)。
 
 ::: details 了解更多：Qwen3 VL 是什么？
 
@@ -369,7 +369,7 @@ caption = caption_image(image_path)
 在前面的部分我们主要和文本相关的任务打交道，接下来我们将尝试接入图片生成的功能，支持从文字描述生成图片，或者对图片进行修改。
 
 ::: info ℹ️ 原理延伸
-如果你想了解更多原理相关的内容，请查看附录：[图像生成入门](/zh-cn/appendix/8-artificial-intelligence/image-generation)。
+如果你想了解更多原理相关的内容，请查看附录：[图像生成入门](/vi-vn/appendix/8-artificial-intelligence/image-generation)。
 
 ::: details 了解更多：什么是 [Seedream 即梦](https://seed.bytedance.com/en/seedream4_5)？
 

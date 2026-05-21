@@ -416,7 +416,7 @@ MCP 服务器状态：
 
 ## 常用 MCP 服务器
 
-> 💡 完整的 MCP 服务器列表请参考附录 [MCP 服务器大全](/zh-cn/appendix/mcp-servers/)
+> 💡 完整的 MCP 服务器列表请参考附录 [MCP 服务器大全](/vi-vn/appendix/mcp-servers/)
 
 ### GitHub 服务器
 
@@ -538,7 +538,7 @@ MCP 服务器状态：
 - [零基础构建 MCP 服务器 TypeScript/Python 双语言实战指南](https://m.blog.csdn.net/ztt123654/article/details/150844207)
 - [终极 MCP 服务器构建指南：TypeScript 与 Python 双版本完整教程](https://m.blog.csdn.net/gitblog_00703/article/details/154862128)
 - [使用 TypeScript 构建一个最简单的 MCP 服务器](https://m.blog.csdn.net/weixin_45653525/article/details/148433757)
-- [使用 Azure 容器应用生成 TypeScript MCP 服务器](https://learn.microsoft.com/zh-cn/azure/developer/ai/build-mcp-server-ts)
+- [使用 Azure 容器应用生成 TypeScript MCP 服务器](https://learn.microsoft.com/vi-vn/azure/developer/ai/build-mcp-server-ts)
 
 ### MCP 服务器资源
 
@@ -565,4 +565,4 @@ MCP 服务器状态：
 ### 实际应用案例
 
 - [BlenderMCP - AI 驱动的 3D 建模](https://github.com/Belthur/blender-mcp) - 4,100+ ⭐
-- [MCP 生产环境 15 条最佳实践](https://learn.microsoft.com/zh-cn/azure/azure-functions/scenario-mcp-apps)
+- [MCP 生产环境 15 条最佳实践](https://learn.microsoft.com/vi-vn/azure/azure-functions/scenario-mcp-apps)

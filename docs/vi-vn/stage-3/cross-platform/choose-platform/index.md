@@ -508,42 +508,42 @@ Prettier、ESLint、GitHub Copilot 都是 VS Code 插件。
 
 <NavGrid>
   <NavCard
-    href="/zh-cn/stage-3/cross-platform/wechat-miniprogram/"
+    href="/vi-vn/stage-3/cross-platform/wechat-miniprogram/"
     title="如何构建微信小程序"
     description="从零开始开发微信小程序，掌握小程序开发的核心流程"
   />
   <NavCard
-    href="/zh-cn/stage-3/cross-platform/android-app/"
+    href="/vi-vn/stage-3/cross-platform/android-app/"
     title="如何构建安卓程序"
     description="使用现代跨平台框架构建 Android 原生应用"
   />
   <NavCard
-    href="/zh-cn/stage-3/cross-platform/ios-app/"
+    href="/vi-vn/stage-3/cross-platform/ios-app/"
     title="如何构建 iOS 程序"
     description="开发并发布 iOS 应用，掌握 iOS 生态的开发规范"
   />
   <NavCard
-    href="/zh-cn/stage-3/cross-platform/pwa-local-app/"
+    href="/vi-vn/stage-3/cross-platform/pwa-local-app/"
     title="如何开发 PWA 本地应用"
     description="让网页变成真正的 App，支持离线使用和桌面安装"
   />
   <NavCard
-    href="/zh-cn/stage-3/cross-platform/browser-ai-extension/"
+    href="/vi-vn/stage-3/cross-platform/browser-ai-extension/"
     title="如何开发浏览器 AI 助手插件"
     description="一键总结任意网页，打造你的浏览器 AI 助手"
   />
   <NavCard
-    href="/zh-cn/stage-3/cross-platform/electron-voice-to-text/"
+    href="/vi-vn/stage-3/cross-platform/electron-voice-to-text/"
     title="如何开发跨平台 Electron 桌面程序"
     description="构建语音转文字的桌面应用，支持 Windows、macOS、Linux"
   />
   <NavCard
-    href="/zh-cn/stage-3/cross-platform/vscode-extension/"
+    href="/vi-vn/stage-3/cross-platform/vscode-extension/"
     title="如何开发 VS Code 插件"
     description="打造你的 AI 项目助手，支持多文件问答和自定义快捷键"
   />
   <NavCard
-    href="/zh-cn/stage-3/cross-platform/qt-industrial-hmi/"
+    href="/vi-vn/stage-3/cross-platform/qt-industrial-hmi/"
     title="如何开发 Qt 工业 HMI"
     description="构建工业级人机交互界面，连接真实硬件设备"
   />

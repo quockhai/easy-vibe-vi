@@ -186,7 +186,7 @@ Kubernetes 是容器编排的事实标准，理解它的核心概念是云原生
 
 ## 延伸阅读
 
-- [Kubernetes 官方文档](https://kubernetes.io/zh-cn/docs/) - 最权威的中文参考
+- [Kubernetes 官方文档](https://kubernetes.io/vi-vn/docs/) - 最权威的中文参考
 - [Kubernetes the Hard Way](https://github.com/kelseyhightower/kubernetes-the-hard-way) - 从零手动搭建 K8s 集群
 - [The Illustrated Children's Guide to Kubernetes](https://www.cncf.io/phippy/) - CNCF 出品的趣味入门
 - [Kubernetes Patterns](https://www.oreilly.com/library/view/kubernetes-patterns-2nd/9781098131678/) - K8s 设计模式

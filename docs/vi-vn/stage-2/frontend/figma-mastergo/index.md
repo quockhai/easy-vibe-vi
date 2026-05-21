@@ -3,7 +3,7 @@
 <script setup>
 import { relatedArticlesMap } from '@theme/data/relatedArticles'
 
-const relatedArticles = relatedArticlesMap['zh-cn/stage-2/frontend/figma-mastergo'] ?? []
+const relatedArticles = relatedArticlesMap['vi-vn/stage-2/frontend/figma-mastergo'] ?? []
 </script>
 
 ::: tip 🎯 核心问题
