@@ -1,161 +1,161 @@
-# RAG：检索增强生成
+# RAG: Truy vấn Tăng cường Sinh (Retrieval-Augmented Generation)
 
-::: tip 前言
-**为什么 ChatGPT 有时候会"一本正经地胡说八道"？** 大语言模型的知识来自训练数据，但训练数据有截止日期，也不包含你公司的内部文档。RAG（Retrieval-Augmented Generation，检索增强生成）就是解决这个问题的核心技术——让 AI 在回答之前，先去"查资料"。
+::: tip Lời nói đầu
+**Tại sao ChatGPT đôi khi lại "nói dối một cách nghiêm túc"?** Kiến thức của các mô hình ngôn ngữ lớn đến từ dữ liệu huấn luyện, nhưng dữ liệu huấn luyện có ngày cắt, và cũng không bao gồm các tài liệu nội bộ của công ty bạn. RAG (Retrieval-Augmented Generation) chính là công nghệ cốt lõi để giải quyết vấn đề này – cho phép AI "tra cứu tài liệu" trước khi đưa ra câu trả lời.
 :::
 
-**这篇文章会带你学什么？**
+**Bài viết này sẽ giúp bạn học được gì?**
 
-学完这章后，你将获得：
+Sau khi hoàn thành chương này, bạn sẽ đạt được:
 
-- **核心概念理解**：明白 RAG 是什么、为什么需要它，以及它如何解决大模型的"幻觉"问题
-- **完整流程认知**：掌握从文档加载、分块、向量化到检索、生成的端到端流程
-- **技术选型能力**：了解不同分块策略、检索方法的优劣，能根据场景做出选择
-- **架构演进视角**：理解 RAG 从 Naive 到 Advanced 再到 Modular 的演进路线
-- **实践决策能力**：知道什么时候该用 RAG、什么时候该用微调
+- **Hiểu biết về khái niệm cốt lõi**: Nắm rõ RAG là gì, tại sao cần nó, và cách nó giải quyết vấn đề "ảo giác" của các mô hình lớn
+- **Nhận thức về quy trình hoàn chỉnh**: Nắm vững quy trình end-to-end từ tải tài liệu, phân đoạn (chunking), vector hóa đến truy vấn và sinh nội dung
+- **Khả năng lựa chọn công nghệ**: Hiểu rõ ưu nhược điểm của các chiến lược phân đoạn và phương pháp truy vấn khác nhau, có thể đưa ra lựa chọn phù hợp với từng kịch bản
+- **Góc nhìn về sự phát triển kiến trúc**: Hiểu lộ trình tiến hóa của RAG từ Naive đến Advanced rồi đến Modular
+- **Khả năng ra quyết định thực tiễn**: Biết khi nào nên sử dụng RAG và khi nào nên sử dụng fine-tuning
 
-| 章节 | 内容 | 核心概念 |
+| Chương | Nội dung | Khái niệm cốt lõi |
 |-----|------|---------|
-| **第 1 章** | RAG 基础流程 | 索引、检索、生成三阶段 |
-| **第 2 章** | 文本分块策略 | 固定分块、语义分块、递归分块 |
-| **第 3 章** | 检索技术 | 向量检索、关键词检索、混合检索 |
-| **第 4 章** | 架构演进 | Naive RAG → Advanced RAG → Modular RAG |
-| **第 5 章** | RAG vs 微调 | 两种方案的适用场景对比 |
+| **Chương 1** | Quy trình cơ bản của RAG | Ba giai đoạn: lập chỉ mục, truy vấn, sinh nội dung |
+| **Chương 2** | Chiến lược phân đoạn văn bản | Phân đoạn cố định, phân đoạn ngữ nghĩa, phân đoạn đệ quy |
+| **Chương 3** | Kỹ thuật truy vấn | Truy vấn vector, truy vấn từ khóa, truy vấn kết hợp |
+| **Chương 4** | Tiến hóa kiến trúc | Naive RAG → Advanced RAG → Modular RAG |
+| **Chương 5** | RAG vs Fine-tuning | So sánh kịch bản áp dụng của hai giải pháp |
 
 ---
 
-## 0. 全景图：为什么大模型需要"查资料"？
+## 0. Toàn cảnh: Tại sao các mô hình lớn cần "tra cứu tài liệu"?
 
-想象你是一个博学的教授，读过无数书籍。但如果有人问你"昨天公司的销售数据是多少"，你肯定答不上来——因为这些信息不在你读过的书里。
+Hãy tưởng tượng bạn là một giáo sư uyên bác, đã đọc vô số sách. Nhưng nếu ai đó hỏi bạn "doanh số bán hàng của công ty hôm qua là bao nhiêu", bạn chắc chắn không thể trả lời – vì những thông tin này không có trong sách bạn đã đọc.
 
-大语言模型面临的就是同样的困境：
+Các mô hình ngôn ngữ lớn cũng đối mặt với tình thế khó khăn tương tự:
 
-- **知识有截止日期**：GPT-4 的训练数据截止到某个时间点，之后发生的事它不知道
-- **缺乏私有知识**：你公司的内部文档、产品手册、客户数据，模型从未见过
-- **容易产生幻觉**：当模型不确定答案时，它倾向于"编造"一个看起来合理的回答
+- **Kiến thức có ngày cắt**: Dữ liệu huấn luyện của GPT-4 có ngày cắt nhất định, những sự kiện xảy ra sau đó nó không biết
+- **Thiếu kiến thức riêng tư**: Các tài liệu nội bộ, hướng dẫn sản phẩm, dữ liệu khách hàng của công ty bạn, mô hình chưa bao giờ thấy
+- **Dễ tạo ra ảo giác**: Khi mô hình không chắc chắn về câu trả lời, nó có xu hướng "bịa đặt" một câu trả lời có vẻ hợp lý
 
-::: tip RAG 的核心思想
-RAG 的解决方案非常直觉：**在让模型回答之前，先帮它找到相关的参考资料**。就像开卷考试——你不需要记住所有知识，只需要知道去哪里找、怎么找。
+::: tip Tư tưởng cốt lõi của RAG
+Giải pháp của RAG rất trực quan: **trước khi để mô hình trả lời, hãy giúp nó tìm các tài liệu tham khảo liên quan**. Giống như một kỳ thi mở sách – bạn không cần nhớ tất cả kiến thức, chỉ cần biết tìm ở đâu và tìm như thế nào.
 
-RAG = 检索（Retrieval）+ 增强（Augmented）+ 生成（Generation）
+RAG = Truy vấn (Retrieval) + Tăng cường (Augmented) + Sinh (Generation)
 :::
 
 ---
 
-## 1. RAG 基础流程：索引、检索、生成
+## 1. Quy trình cơ bản của RAG: Lập chỉ mục, Truy vấn, Sinh nội dung
 
-RAG 的工作流程可以分为两个阶段：**离线索引**和**在线查询**。
+Quy trình làm việc của RAG có thể chia thành hai giai đoạn: **lập chỉ mục ngoại tuyến** và **truy vấn trực tuyến**.
 
-离线阶段就像图书馆的编目工作——把所有书籍分类、编号、上架，方便日后查找。在线阶段则是读者来图书馆查资料的过程——根据问题找到相关书籍，然后综合信息给出回答。
+Giai đoạn ngoại tuyến giống như công việc lập danh mục của thư viện – phân loại, đánh số, đưa tất cả sách lên kệ, thuận tiện cho việc tra cứu sau này. Giai đoạn trực tuyến là quá trình độc giả đến thư viện tra cứu tài liệu – tìm sách liên quan dựa trên câu hỏi, sau đó tổng hợp thông tin để đưa ra câu trả lời.
 
 <RAGPipelineDemo />
 
-::: tip 三个核心阶段
-1. **索引阶段（Indexing）**：将原始文档加载、清洗、分块，然后通过嵌入模型转化为向量，存入向量数据库。这是一次性的准备工作。
-2. **检索阶段（Retrieval）**：用户提问时，将问题也转化为向量，在向量数据库中搜索最相似的文档片段。
-3. **生成阶段（Generation）**：将检索到的文档片段和用户问题一起拼接为 Prompt，交给大模型生成最终回答。
+::: tip Ba giai đoạn cốt lõi
+1.  **Giai đoạn lập chỉ mục (Indexing)**: Tải, làm sạch, phân đoạn các tài liệu gốc, sau đó chuyển đổi thành vector thông qua mô hình nhúng (embedding model) và lưu vào cơ sở dữ liệu vector. Đây là công việc chuẩn bị một lần.
+2.  **Giai đoạn truy vấn (Retrieval)**: Khi người dùng đặt câu hỏi, câu hỏi cũng được chuyển đổi thành vector, sau đó tìm kiếm các đoạn tài liệu tương tự nhất trong cơ sở dữ liệu vector.
+3.  **Giai đoạn sinh nội dung (Generation)**: Nối các đoạn tài liệu đã truy vấn được và câu hỏi của người dùng lại với nhau thành một Prompt, sau đó giao cho mô hình ngôn ngữ lớn để tạo ra câu trả lời cuối cùng.
 :::
 
-| 阶段 | 输入 | 输出 | 关键技术 |
+| Giai đoạn | Đầu vào | Đầu ra | Kỹ thuật chính |
 |------|------|------|---------|
-| 索引 | 原始文档 | 向量数据库 | 文本分块、嵌入模型 |
-| 检索 | 用户问题 | Top-K 文档片段 | 向量相似度、重排序 |
-| 生成 | 问题 + 上下文 | 最终回答 | Prompt 工程、LLM |
+| Lập chỉ mục | Tài liệu gốc | Cơ sở dữ liệu vector | Phân đoạn văn bản, mô hình nhúng |
+| Truy vấn | Câu hỏi người dùng | Top-K đoạn tài liệu | Độ tương đồng vector, Reranking |
+| Sinh nội dung | Câu hỏi + Ngữ cảnh | Câu trả lời cuối cùng | Prompt engineering, LLM |
 
 ---
 
-## 2. 文本分块：把大象装进冰箱
+## 2. Phân đoạn văn bản: Đưa voi vào tủ lạnh
 
-文本分块是 RAG 中最容易被忽视、却对效果影响最大的环节。为什么需要分块？因为大模型的上下文窗口有限，我们不可能把整本书塞进去。更重要的是，**分块的质量直接决定了检索的质量**。
+Phân đoạn văn bản là khâu dễ bị bỏ qua nhất trong RAG, nhưng lại có ảnh hưởng lớn nhất đến hiệu quả. Tại sao cần phân đoạn? Bởi vì cửa sổ ngữ cảnh của các mô hình lớn có giới hạn, chúng ta không thể nhét cả một cuốn sách vào đó. Quan trọng hơn, **chất lượng của việc phân đoạn trực tiếp quyết định chất lượng của việc truy vấn**.
 
-想象你在图书馆找一本书的某个知识点。如果整本书是一个"块"，检索到了也没用——你还是得翻遍全书。但如果按章节甚至段落分块，就能精准定位到你需要的内容。
+Hãy tưởng tượng bạn đang tìm một điểm kiến thức cụ thể trong một cuốn sách ở thư viện. Nếu cả cuốn sách là một "đoạn" (chunk), việc truy vấn được cũng vô ích – bạn vẫn phải lật hết cả cuốn sách. Nhưng nếu phân đoạn theo chương hoặc thậm chí đoạn văn, bạn có thể định vị chính xác nội dung mình cần.
 
 <ChunkingStrategyDemo />
 
-::: tip 分块策略的选择
-- **固定大小分块**：按字符数或 token 数切分，简单粗暴但可能切断语义
-- **递归分块**：先按段落分，段落太长再按句子分，保持语义完整性
-- **语义分块**：用嵌入模型判断语义边界，相似度突变处切分
-- **文档结构分块**：利用 Markdown 标题、HTML 标签等结构信息分块
+::: tip Lựa chọn chiến lược phân đoạn
+-   **Phân đoạn kích thước cố định**: Cắt theo số ký tự hoặc số token, đơn giản nhưng có thể cắt đứt ngữ nghĩa
+-   **Phân đoạn đệ quy**: Đầu tiên phân theo đoạn văn, nếu đoạn quá dài thì phân theo câu, giữ nguyên tính toàn vẹn ngữ nghĩa
+-   **Phân đoạn ngữ nghĩa**: Sử dụng mô hình nhúng để xác định ranh giới ngữ nghĩa, cắt tại những điểm thay đổi độ tương đồng đột ngột
+-   **Phân đoạn theo cấu trúc tài liệu**: Sử dụng thông tin cấu trúc như tiêu đề Markdown, thẻ HTML để phân đoạn
 
-没有"最好"的分块策略，只有最适合你数据的策略。一般建议从递归分块开始，chunk 大小 200-500 tokens，overlap 10-20%。
+Không có chiến lược phân đoạn "tốt nhất", chỉ có chiến lược phù hợp nhất với dữ liệu của bạn. Thông thường, nên bắt đầu với phân đoạn đệ quy, kích thước chunk từ 200-500 tokens, overlap 10-20%.
 :::
 
 ---
 
-## 3. 检索技术：如何找到最相关的内容？
+## 3. Kỹ thuật truy vấn: Làm thế nào để tìm nội dung liên quan nhất?
 
-分块完成后，下一个关键问题是：**用户提了一个问题，怎么从成千上万个文档片段中找到最相关的那几个？**
+Sau khi hoàn tất phân đoạn, câu hỏi quan trọng tiếp theo là: **Khi người dùng đặt một câu hỏi, làm thế nào để tìm ra những đoạn tài liệu liên quan nhất từ hàng ngàn đoạn tài liệu?**
 
-这就像在一个巨大的图书馆里找书。你可以按书名关键词搜索（关键词检索），也可以描述你想要的内容让图书管理员帮你找（语义检索），最好的方式是两者结合（混合检索）。
+Điều này giống như việc tìm sách trong một thư viện khổng lồ. Bạn có thể tìm kiếm theo từ khóa tên sách (truy vấn từ khóa), hoặc mô tả bạn muốn nội dung gì để thủ thư giúp bạn tìm (truy vấn ngữ nghĩa), cách tốt nhất là kết hợp cả hai (truy vấn kết hợp).
 
 <RetrievalDemo />
 
-| 检索方式 | 原理 | 优势 | 劣势 |
+| Phương thức truy vấn | Nguyên lý | Ưu điểm | Nhược điểm |
 |---------|------|------|------|
-| 关键词检索（BM25） | 基于词频和逆文档频率 | 精确匹配、速度快 | 无法理解语义、同义词失效 |
-| 向量检索 | 基于嵌入向量的余弦相似度 | 理解语义、支持模糊匹配 | 对专有名词不敏感 |
-| 混合检索 | 融合关键词和向量检索结果 | 兼顾精确和语义 | 需要调权重、复杂度高 |
+| Truy vấn từ khóa (BM25) | Dựa trên tần suất từ và tần suất tài liệu nghịch đảo | Khớp chính xác, tốc độ nhanh | Không thể hiểu ngữ nghĩa, từ đồng nghĩa không hiệu quả |
+| Truy vấn vector | Dựa trên độ tương đồng cosine của vector nhúng | Hiểu ngữ nghĩa, hỗ trợ khớp mờ | Không nhạy cảm với thuật ngữ chuyên ngành |
+| Truy vấn kết hợp | Kết hợp kết quả truy vấn từ khóa và vector | Cân bằng giữa độ chính xác và ngữ nghĩa | Cần điều chỉnh trọng số, độ phức tạp cao |
 
-::: tip 重排序（Reranking）
-检索到候选文档后，通常还需要一步"重排序"。初始检索追求召回率（尽量不遗漏），重排序追求精确率（把最相关的排到最前面）。常用的重排序模型有 Cohere Rerank、BGE Reranker 等，它们使用交叉编码器对 query-document 对进行精细打分。
+::: tip Sắp xếp lại (Reranking)
+Sau khi truy vấn được các tài liệu ứng viên, thường cần thêm một bước "sắp xếp lại". Truy vấn ban đầu ưu tiên độ bao phủ (cố gắng không bỏ sót), sắp xếp lại ưu tiên độ chính xác (đặt những tài liệu liên quan nhất lên đầu). Các mô hình reranking phổ biến bao gồm Cohere Rerank, BGE Reranker, v.v., chúng sử dụng bộ mã hóa chéo (cross-encoder) để chấm điểm chi tiết cho cặp query-document.
 :::
 
 ---
 
-## 4. 架构演进：从简单到智能
+## 4. Tiến hóa kiến trúc: Từ đơn giản đến thông minh
 
-RAG 技术在短短两年内经历了三代演进，每一代都在解决上一代的痛点。
+Công nghệ RAG đã trải qua ba thế hệ tiến hóa chỉ trong hai năm, mỗi thế hệ đều giải quyết các vấn đề của thế hệ trước.
 
 <RAGArchitectureDemo />
 
-::: tip 三代 RAG 架构对比
-- **Naive RAG（2023）**：最基础的"索引→检索→生成"流程，实现简单但效果有限。问题包括：检索质量不稳定、无法处理复杂查询、容易引入噪音上下文。
-- **Advanced RAG（2024）**：在 Naive RAG 基础上增加了查询改写、混合检索、重排序、上下文压缩等优化环节，显著提升了检索精度和生成质量。
-- **Modular RAG（2025）**：将 RAG 拆解为可插拔的模块，支持路由判断、自适应检索、自我反思等高级能力。可根据查询类型动态选择最优处理流程。
+::: tip So sánh ba thế hệ kiến trúc RAG
+-   **Naive RAG (2023)**: Quy trình "lập chỉ mục → truy vấn → sinh nội dung" cơ bản nhất, triển khai đơn giản nhưng hiệu quả hạn chế. Các vấn đề bao gồm: chất lượng truy vấn không ổn định, không thể xử lý các truy vấn phức tạp, dễ đưa vào ngữ cảnh nhiễu.
+-   **Advanced RAG (2024)**: Dựa trên Naive RAG, bổ sung các bước tối ưu hóa như viết lại truy vấn, truy vấn kết hợp, reranking, nén ngữ cảnh, v.v., giúp cải thiện đáng kể độ chính xác của truy vấn và chất lượng sinh nội dung.
+-   **Modular RAG (2025)**: Phân tách RAG thành các module có thể cắm ghép, hỗ trợ các khả năng nâng cao như phán đoán định tuyến, truy vấn thích ứng, tự phản tư. Có thể lựa chọn quy trình xử lý tối ưu một cách linh hoạt dựa trên loại truy vấn.
 :::
 
 ---
 
-## 5. RAG vs 微调：该选哪个？
+## 5. RAG vs Fine-tuning: Nên chọn cái nào?
 
-当你想让大模型掌握特定领域的知识时，通常有两条路：RAG 和微调（Fine-tuning）。它们不是互斥的，而是互补的。
+Khi bạn muốn mô hình ngôn ngữ lớn nắm vững kiến thức trong một lĩnh vực cụ thể, thường có hai con đường: RAG và fine-tuning. Chúng không loại trừ lẫn nhau mà là bổ trợ cho nhau.
 
-打个比方：**微调像是让学生上培训班**，把知识内化到大脑里；**RAG 像是给学生发参考书**，考试时可以翻阅。两种方式各有优劣，关键看你的具体需求。
+Lấy một ví dụ: **fine-tuning giống như cho học sinh đi học thêm**, giúp kiến thức được nội hóa vào não; **RAG giống như phát sách tham khảo cho học sinh**, có thể lật xem khi thi. Cả hai phương pháp đều có ưu nhược điểm riêng, điều quan trọng là nhu cầu cụ thể của bạn.
 
 <RAGvsFineTuningDemo />
 
-| 维度 | RAG | 微调 |
+| Khía cạnh | RAG | Fine-tuning |
 |------|-----|------|
-| 知识更新 | 实时更新，改文档即可 | 需要重新训练 |
-| 成本 | 低（无需 GPU 训练） | 高（需要训练资源） |
-| 可解释性 | 高（可追溯来源） | 低（知识内化在权重中） |
-| 适用场景 | 知识库问答、文档检索 | 风格迁移、特定任务优化 |
-| 幻觉控制 | 较好（有参考依据） | 一般（仍可能幻觉） |
+| Cập nhật kiến thức | Cập nhật theo thời gian thực, chỉ cần sửa tài liệu | Cần huấn luyện lại |
+| Chi phí | Thấp (không cần huấn luyện bằng GPU) | Cao (cần tài nguyên huấn luyện) |
+| Khả năng giải thích | Cao (có thể truy xuất nguồn gốc) | Thấp (kiến thức được nội hóa trong trọng số) |
+| Kịch bản áp dụng | Hỏi đáp cơ sở tri thức, truy vấn tài liệu | Chuyển đổi phong cách, tối ưu hóa tác vụ cụ thể |
+| Kiểm soát ảo giác | Tốt hơn (có cơ sở tham chiếu) | Trung bình (vẫn có thể ảo giác) |
 
-::: tip 实践建议
-大多数场景下，**先试 RAG**。RAG 的优势在于：不需要训练、知识可实时更新、回答可追溯来源。只有当你需要改变模型的"行为模式"（比如输出格式、语言风格、推理方式）时，才考虑微调。最强的方案往往是 **RAG + 微调** 的组合。
+::: tip Lời khuyên thực tiễn
+Trong hầu hết các trường hợp, **hãy thử RAG trước**. Ưu điểm của RAG là: không cần huấn luyện, kiến thức có thể cập nhật theo thời gian thực, câu trả lời có thể truy xuất nguồn gốc. Chỉ khi bạn cần thay đổi "chế độ hành vi" của mô hình (ví dụ: định dạng đầu ra, phong cách ngôn ngữ, cách suy luận), thì mới xem xét fine-tuning. Giải pháp mạnh mẽ nhất thường là sự kết hợp của **RAG + fine-tuning**.
 :::
 
 ---
 
-## 总结
+## Tóm tắt
 
-RAG 是当前让大模型"落地"最实用的技术之一。它的核心价值在于：让模型的回答有据可查、知识可实时更新、幻觉可有效控制。
+RAG là một trong những công nghệ thực tiễn nhất hiện nay để đưa các mô hình ngôn ngữ lớn "vào thực tế". Giá trị cốt lõi của nó nằm ở việc: giúp câu trả lời của mô hình có cơ sở, kiến thức có thể cập nhật theo thời gian thực, và ảo giác có thể được kiểm soát hiệu quả.
 
-回顾本章的关键要点：
+Ôn lại các điểm chính trong chương này:
 
-1. **RAG 解决的核心问题**：大模型知识过时、缺乏私有数据、容易幻觉
-2. **三阶段流程**：索引（离线准备）→ 检索（在线查找）→ 生成（综合回答）
-3. **分块是基础**：分块质量直接决定检索质量，选择合适的分块策略至关重要
-4. **检索是关键**：混合检索 + 重排序是目前效果最好的组合
-5. **架构在演进**：从 Naive RAG 到 Modular RAG，系统越来越智能和灵活
-6. **RAG 和微调互补**：大多数场景先试 RAG，需要改变模型行为时再考虑微调
+1.  **Vấn đề cốt lõi RAG giải quyết**: Kiến thức của mô hình lớn lỗi thời, thiếu dữ liệu riêng tư, dễ ảo giác
+2.  **Quy trình ba giai đoạn**: Lập chỉ mục (chuẩn bị ngoại tuyến) → Truy vấn (tìm kiếm trực tuyến) → Sinh nội dung (tổng hợp câu trả lời)
+3.  **Phân đoạn là nền tảng**: Chất lượng phân đoạn trực tiếp quyết định chất lượng truy vấn, việc lựa chọn chiến lược phân đoạn phù hợp là cực kỳ quan trọng
+4.  **Truy vấn là chìa khóa**: Truy vấn kết hợp + Reranking là sự kết hợp mang lại hiệu quả tốt nhất hiện nay
+5.  **Kiến trúc đang tiến hóa**: Từ Naive RAG đến Modular RAG, hệ thống ngày càng thông minh và linh hoạt
+6.  **RAG và fine-tuning bổ trợ nhau**: Trong hầu hết các trường hợp, hãy thử RAG trước, chỉ khi cần thay đổi hành vi của mô hình thì mới xem xét fine-tuning
 
-## 延伸阅读
+## Đọc thêm
 
-- [LangChain RAG 教程](https://python.langchain.com/docs/tutorials/rag/) - 最流行的 RAG 框架实战指南
-- [LlamaIndex 文档](https://docs.llamaindex.ai/) - 专注于 RAG 的框架，提供丰富的数据连接器
-- [RAG Survey 论文](https://arxiv.org/abs/2312.10997) - 全面的 RAG 技术综述
-- [Chunking Strategies](https://www.pinecone.io/learn/chunking-strategies/) - Pinecone 的分块策略详解
-- [向量数据库对比](https://superlinked.com/vector-db-comparison) - 主流向量数据库的功能对比
+- [Hướng dẫn RAG của LangChain](https://python.langchain.com/docs/tutorials/rag/) - Hướng dẫn thực hành framework RAG phổ biến nhất
+- [Tài liệu LlamaIndex](https://docs.llamaindex.ai/) - Framework tập trung vào RAG, cung cấp nhiều trình kết nối dữ liệu phong phú
+- [Bài báo RAG Survey](https://arxiv.org/abs/2312.10997) - Tổng quan toàn diện về công nghệ RAG
+- [Chunking Strategies](https://www.pinecone.io/learn/chunking-strategies/) - Giải thích chi tiết các chiến lược phân đoạn của Pinecone
+- [So sánh cơ sở dữ liệu vector](https://superlinked.com/vector-db-comparison) - So sánh tính năng của các cơ sở dữ liệu vector phổ biến

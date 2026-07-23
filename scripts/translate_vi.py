@@ -4,6 +4,8 @@ import re
 import time
 import argparse
 
+#AIzaSyCdVFAdIH_5LCmRSTlAWkjthx-nUgiBw9o
+#python3 scripts/translate_vi.py --api-key "AIzaSyCdVFAdIH_5LCmRSTlAWkjthx-nUgiBw9o"
 try:
     import google.generativeai as genai
 except ImportError:

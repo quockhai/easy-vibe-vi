@@ -1,94 +1,94 @@
-# 图像生成原理
-> 💡 **学习指南**：本章节将系统探究生成式视觉大模型的工作机制。我们将从“烧显卡”的高维像素空间难题切入，详细解构变分自编码器（VAE）、扩散模型（Diffusion）以及交叉注意力（Cross-Attention）背后的严谨数学原理。同时，巧妙且生动的交互式组件将确保你——即使毫无 AI 基础，也能迅速领悟这些尖端科技！
+# Nguyên lý tạo ảnh
+> 💡 **Hướng dẫn học tập**: Chương này sẽ khám phá một cách có hệ thống cơ chế hoạt động của các mô hình thị giác tạo sinh lớn. Chúng ta sẽ bắt đầu từ vấn đề không gian pixel chiều cao "đốt card đồ họa", sau đó phân tích chi tiết các nguyên lý toán học chặt chẽ đằng sau Variational Autoencoder (VAE), Diffusion Model và Cross-Attention. Đồng thời, các thành phần tương tác khéo léo và sống động sẽ đảm bảo rằng bạn – ngay cả khi không có kiến thức nền tảng về AI – cũng có thể nhanh chóng nắm bắt những công nghệ tiên tiến này!
 
 <ImageGenQuickStartDemo />
 
-## 0. 引言：直击千万级像素的“维度灾难”
+## 0. Giới thiệu: Đối mặt với "Thảm họa chiều" của hàng triệu pixel
 
-当我们惊叹于 Midjourney 或 Stable Diffusion 生成的极致绚丽大作时，首先要理解计算机在底层所面临的数字压力。
+Khi chúng ta kinh ngạc trước những tác phẩm tuyệt đẹp được tạo ra bởi Midjourney hoặc Stable Diffusion, điều đầu tiên cần hiểu là áp lực số hóa mà máy tính phải đối mặt ở cấp độ thấp nhất.
 
-一张标准的 $1024 \times 1024$ 像素高清图，在标准 RGB 三通道下，需要计算和填充近 **300 多万** 个浮点数值。
-**维度灾难 (Curse of Dimensionality)** 由此而生：如果直接让深度神经网络在这样一个巨大的“欧几里得空间（Euclidean Space）”里联合估算每一颗像素的概率分布该怎么填，它带来的算力开销将是极度毁灭性的，且生成的画面极容易产生恐怖的局部畸变和语义撕裂。
+Một hình ảnh HD $1024 \times 1024$ pixel tiêu chuẩn, với ba kênh RGB tiêu chuẩn, cần tính toán và điền vào gần **hơn 3 triệu** giá trị dấu phẩy động.
+**Thảm họa chiều (Curse of Dimensionality)** từ đó mà sinh ra: nếu trực tiếp để mạng nơ-ron sâu cùng ước tính phân bố xác suất của từng pixel nên được điền như thế nào trong một "không gian Euclid (Euclidean Space)" khổng lồ như vậy, chi phí tính toán sẽ cực kỳ tốn kém, và hình ảnh được tạo ra rất dễ bị biến dạng cục bộ khủng khiếp và xé rách ngữ nghĩa.
 
-因此，现代前沿图像生成算法找到了一个降维打击的避风港：**“不要在宏大无序的原始像素画布上硬算，去高度凝练的特征空间里精准雕刻”。**
+Vì vậy, các thuật toán tạo ảnh tiên tiến hiện đại đã tìm thấy một nơi trú ẩn an toàn để giảm chiều: **“Đừng cố gắng tính toán trên một khung vẽ pixel gốc rộng lớn và vô trật tự, hãy điêu khắc chính xác trong không gian đặc trưng được cô đọng cao độ.”**
 
 ---
 
-## 1. 降维基石：潜空间与 VAE 的魔法压缩
+## 1. Nền tảng giảm chiều: Latent Space và phép nén kỳ diệu của VAE
 
-既然一幅画在宏观结构上有极多冗余连片的部分（比如一片几乎无渐变的纯蓝天空），我们便可以将这些画面特征“打包”。这就需要请出图像生成大基座中的空间转换大师——**变分自编码器 (Variational Autoencoder, VAE)**。
+Vì một bức tranh có rất nhiều phần thừa lặp lại trong cấu trúc vĩ mô (ví dụ: một bầu trời xanh thuần khiết gần như không có chuyển màu), chúng ta có thể "đóng gói" các đặc trưng hình ảnh này. Điều này đòi hỏi sự xuất hiện của bậc thầy chuyển đổi không gian trong nền tảng tạo ảnh lớn – **Bộ mã hóa tự động biến phân (Variational Autoencoder, VAE)**.
 
-VAE 的职责极其单一却又至关重要：
-- **降维压缩 (Encoder)**：将庞大的数百万**像素空间 (Pixel Space)**极限浓缩，提取其长相特征与颜色结构，压进一张尺寸极小的抽象网格中。这片高密度、富含高阶语义信息的网格域，就是大名鼎鼎的 **潜空间 (Latent Space)**。
-- **作画与解压 (Decoder)**：生成神经网络实际上完全是在这张迷你“潜空间网格”中运筹帷幄的。待低维度的特征拼搭定型完毕后，VAE 会将它像泡面吸水一样无损“膨胀还原”，映射回人类肉眼能够欣赏的高清像素面孔。
+Nhiệm vụ của VAE cực kỳ đơn giản nhưng lại vô cùng quan trọng:
+- **Nén giảm chiều (Encoder)**: Cô đọng tối đa hàng triệu **không gian pixel (Pixel Space)** khổng lồ, trích xuất đặc trưng hình dáng và cấu trúc màu sắc của nó, nén vào một lưới trừu tượng có kích thước cực nhỏ. Miền lưới mật độ cao, giàu thông tin ngữ nghĩa cấp cao này chính là **Latent Space** nổi tiếng.
+- **Vẽ và giải nén (Decoder)**: Mạng nơ-ron tạo sinh thực chất hoàn toàn hoạt động trong "lưới Latent Space" mini này. Sau khi các đặc trưng chiều thấp được ghép nối và định hình, VAE sẽ "phồng lên và phục hồi" không mất mát như mì gói hút nước, ánh xạ trở lại khuôn mặt pixel HD mà mắt người có thể thưởng thức.
 
-👇 **动手点点看**：
-拖拽下列空间平面上的红点坐标参数，去直观感受潜空间（Latent Space）里仅仅两个数学坐标维度的毫厘偏移，是如何被解码映射成截然不同的表象特征的！
+👇 **Hãy thử tương tác**:
+Kéo thả các tham số tọa độ điểm đỏ trên mặt phẳng không gian sau, để trực quan cảm nhận sự dịch chuyển nhỏ nhất của chỉ hai chiều tọa độ toán học trong Latent Space được giải mã và ánh xạ thành các đặc trưng bề mặt hoàn toàn khác nhau như thế nào!
 
 <LatentSpaceViz />
 
 ---
 
-## 2. 演化核心：用扩散模型 (Diffusion) 剥离迷雾
+## 2. Cốt lõi tiến hóa: Sử dụng Diffusion Model để gỡ bỏ màn sương
 
-潜空间的画布已经搭好，那模型到底该用怎样的方法凭空生成符合预期的特征？
-目前统治生成式图像领域的绝对霸主架构——**去噪扩散概率模型 (DDPM / Diffusion Model)**，使用了令人拍案叫绝的“逆向雕刻”理念。
+Khung vẽ Latent Space đã được thiết lập, vậy mô hình nên sử dụng phương pháp nào để tạo ra các đặc trưng mong muốn từ hư không?
+Kiến trúc thống trị tuyệt đối trong lĩnh vực tạo ảnh hiện nay – **Mô hình xác suất khuếch tán khử nhiễu (DDPM / Diffusion Model)**, đã sử dụng ý tưởng “điêu khắc ngược” đáng kinh ngạc.
 
-正如米开朗基罗所言：“雕像本来就在石头里，我只是去掉了多余的部分。”Diffusion 的学习分为极其巧妙的首尾两极：
+Như Michelangelo đã nói: “Bức tượng đã có sẵn trong khối đá, tôi chỉ loại bỏ những phần thừa.” Quá trình học của Diffusion được chia thành hai cực kỳ khéo léo:
 
-1. **加噪摧毁 (前向扩散过程 Forward Process)**：这在数学上被定义为一个马尔可夫链式随机破坏过程 (SDE)。系统在训练期，通过噪声调度表（Noise Schedule）向千万级好图里逐步、均匀地融合高斯白噪声，直至图片完全坍缩成失去任何特征信息的各向同性正态分布雪花点。**（模型在此刻死死记住了所有画面的破坏轨迹特征）**。
-2. **重塑秩序 (反向去噪预估 Reverse Denoising Process)**：到了推理生成阶段，我们只给 AI 提供一团纯粹的白噪声基底。强大的 U-Net 或扩散 Transformer (DiT) 估测网络开始发力。它会在每一个细微的计算时间步节点（Step）上去预测：“这堆杂乱信息中，哪一部分才是我们要剥离掉的无效噪声（Score 函数）？”并随之扣除。
+1.  **Thêm nhiễu phá hủy (Quá trình khuếch tán thuận Forward Process)**: Điều này được định nghĩa toán học là một quá trình phá hủy ngẫu nhiên theo chuỗi Markov (SDE). Trong giai đoạn huấn luyện, hệ thống, thông qua bảng điều phối nhiễu (Noise Schedule), dần dần, đồng đều hòa trộn nhiễu trắng Gaussian vào hàng triệu bức ảnh đẹp, cho đến khi hình ảnh hoàn toàn sụp đổ thành các điểm tuyết phân bố chuẩn đẳng hướng, mất đi mọi thông tin đặc trưng. **(Mô hình tại thời điểm này đã ghi nhớ chặt chẽ tất cả các đặc trưng quỹ đạo phá hủy của hình ảnh)**.
+2.  **Tái tạo trật tự (Ước tính khử nhiễu ngược Reverse Denoising Process)**: Đến giai đoạn suy luận tạo sinh, chúng ta chỉ cung cấp cho AI một nền nhiễu trắng thuần túy. Mạng ước tính U-Net hoặc Diffusion Transformer (DiT) mạnh mẽ bắt đầu hoạt động. Nó sẽ ở mỗi bước tính toán nhỏ (Step) để dự đoán: “Trong đống thông tin lộn xộn này, phần nào là nhiễu không hợp lệ mà chúng ta cần loại bỏ (hàm Score)?” và loại bỏ theo đó.
 
-通过成败上千次的反复退火微调剥离，它硬是从一团无序的马赛克里硬生生“预测”出了一幅精美元伦的画面特征。
+Thông qua hàng ngàn lần tinh chỉnh và loại bỏ lặp đi lặp lại, nó đã “dự đoán” một cách mạnh mẽ các đặc trưng hình ảnh tinh xảo và hoàn hảo từ một mớ hỗn độn các khối pixel vô trật tự.
 
 <DiffusionProcessDemo />
 
 ---
 
-## 3. 多模态对齐：听懂人话的关键 (Cross-Attention)
+## 3. Căn chỉnh đa phương thức: Chìa khóa để hiểu ngôn ngữ con người (Cross-Attention)
 
-AI 掌握了作画本领后，如果脱离管控，它只会随心所欲地产出千奇百怪的狂想。如果要让它按人类给定的 Prompt 提示词（“Cyberpunk cat / 赛博朋克猫”）精准作画，必须给双方配备强力的跨模态翻译及照耀枢纽。
+Sau khi AI nắm vững kỹ năng vẽ, nếu thoát khỏi sự kiểm soát, nó sẽ tự do tạo ra những ý tưởng kỳ quái. Để nó vẽ chính xác theo Prompt (từ khóa gợi ý) do con người cung cấp (“Cyberpunk cat / Mèo Cyberpunk”), phải trang bị cho cả hai một trung tâm dịch thuật và chiếu sáng đa phương thức mạnh mẽ.
 
-- **翻译系统 (CLIP)**：一种跨界对比语言网格。它能成功把你的每一句英语描述，对应成可以与画面产生共鸣的数百维数学向量（Embeddings）。
-- **执行指令 (交叉注意力 Cross-Attention)**：这是大模型中的神来之笔。在以上去噪步骤的每一个瞬息循环里，生成图片潜层充当 Query（查询器），向外伸出触手去匹配 CLIP 发来的文本 Key/Value（指令键值）。
-  
-一旦系统进入到勾勒画面轮廓时，“喵星人”这个词的向量权重就会在注意力机制中被几何倍放大激活，并聚焦染色在将要形成动物身体的那片区域网格上。**此时，你的语言化为了手电筒光束，照亮了 AI 理工直男下笔该着重的那些局部细节！**
+-   **Hệ thống dịch thuật (CLIP)**: Một lưới ngôn ngữ đối chiếu đa lĩnh vực. Nó có thể thành công chuyển đổi mỗi mô tả tiếng Anh của bạn, tương ứng thành hàng trăm chiều vector toán học (Embeddings) có thể cộng hưởng với hình ảnh.
+-   **Thực thi lệnh (Cross-Attention)**: Đây là một nét thiên tài trong các mô hình lớn. Trong mỗi chu trình tức thời của bước khử nhiễu, lớp tiềm ẩn của hình ảnh được tạo ra đóng vai trò là Query (bộ truy vấn), vươn xúc tu ra ngoài để khớp với Key/Value (khóa/giá trị lệnh) văn bản do CLIP gửi đến.
+
+Khi hệ thống bắt đầu phác thảo đường nét hình ảnh, trọng số vector của từ “mèo” sẽ được khuếch đại và kích hoạt theo cấp số nhân trong cơ chế chú ý, và tập trung tô màu vào vùng lưới sẽ hình thành cơ thể động vật. **Lúc này, ngôn ngữ của bạn đã biến thành chùm tia đèn pin, chiếu sáng những chi tiết cục bộ mà AI cần tập trung vào khi vẽ!**
 
 <PromptVisualizer />
 
 ---
 
-## 4. 推理质变：流匹配 (Flow Matching) 铺就的高速公路
+## 4. Chuyển đổi chất lượng suy luận: Đường cao tốc được lát bằng Flow Matching
 
-尽管传统的 Diffusion 理论华丽，但致命伤是**运算过慢**。
-正因为它依据高度随机的推演，相当于置于极其崎岖的迷宫内闭门摸索（随机微分推测），生成一张图通常需要模型迭代多达惊人的 50 次步长（Steps）。
+Lý thuyết Diffusion truyền thống tuy hoa mỹ, nhưng điểm yếu chí mạng là **tốc độ tính toán quá chậm**.
+Chính vì nó dựa trên suy luận ngẫu nhiên cao độ, tương đương với việc mò mẫm trong một mê cung cực kỳ gồ ghề (suy đoán vi phân ngẫu nhiên), để tạo ra một hình ảnh, mô hình thường cần lặp lại tới 50 bước (Steps) đáng kinh ngạc.
 
-为了掀起性能革命，最新的顶级多模态模型（如 SD3、黑神话背后的 Flux）全面引入了新的底座核心理论：**流匹配 (Flow Matching / Continuous Normalizing Flows)**。
+Để khởi xướng một cuộc cách mạng về hiệu suất, các mô hình đa phương thức hàng đầu mới nhất (như SD3, Flux đằng sau Black Myth) đã hoàn toàn giới thiệu lý thuyết cốt lõi nền tảng mới: **Flow Matching (Flow Matching / Continuous Normalizing Flows)**.
 
-在解析几何思维的加持下：通过最优传输论 (Optimal Transport, OT) 的极简逻辑引导，模型不再靠纯纯的随机兜圈摸索。**算法被直接强行套入一段解算自源端纯噪声到末端数据目标点之间近似笔直的常微分方程 (ODE) 平滑矢量轨道之中！**
-不绕路了！这也使得应用 流匹配 架构的模型只需要堪称“降维式”的极低步数（仅需 4 至 8 步），即可高速渲染出惊为天人的画面结果！
+Với sự hỗ trợ của tư duy hình học giải tích: thông qua sự dẫn dắt logic tối giản của lý thuyết vận chuyển tối ưu (Optimal Transport, OT), mô hình không còn dựa vào việc mò mẫm ngẫu nhiên. **Thuật toán được trực tiếp ép vào một quỹ đạo vector mượt mà của phương trình vi phân thường (ODE) gần như thẳng tắp, được giải từ điểm nguồn nhiễu thuần túy đến điểm đích dữ liệu cuối cùng!**
+Không còn đi đường vòng nữa! Điều này cũng giúp các mô hình áp dụng kiến trúc Flow Matching chỉ cần số bước cực thấp (chỉ từ 4 đến 8 bước), có thể nói là “giảm chiều”, để nhanh chóng kết xuất ra kết quả hình ảnh tuyệt vời!
 
 <FlowMatchingDemo />
 
 ---
 
-## 5. 架构归纳综述
+## 5. Tổng quan kiến trúc
 
-至此，当你在一款 AI 应用中按下 `<Enter>` 键求取图片的短短几秒内在显卡里运转翻滚的宏大接力便大观毕现：
+Đến đây, khi bạn nhấn phím `<Enter>` trong một ứng dụng AI để tạo hình ảnh, cuộc chạy tiếp sức vĩ đại diễn ra trong card đồ họa chỉ trong vài giây ngắn ngủi sẽ hiện ra rõ ràng:
 
-1. **语言翻译解压桥 (CLIP / Text Encoder)**：严谨地将人类意图向量化铺开向视界输送指导锚点。
-2. **雕刻主心骨运算基盘 (DiT 等搭配 Flow Matching/Diffusion)**：在被抽空的高低频潜度网络表象上，接受交叉注意力 (CrossAttention) 干涉打磨，进行对杂乱干扰高斯信息的高并发抽除洗出工序。
-3. **压缩映射放大镜 (VAE)**：坐镇最后把门，把经过打磨成型而抽象的微小特征矩阵极速解压，最后呈现在千万极素级的大显示屏上。
+1.  **Cầu giải nén dịch thuật ngôn ngữ (CLIP / Text Encoder)**: Biến ý định của con người thành vector một cách nghiêm ngặt, trải rộng và truyền các điểm neo hướng dẫn vào tầm nhìn.
+2.  **Nền tảng tính toán cốt lõi để điêu khắc (DiT kết hợp Flow Matching/Diffusion)**: Trên biểu hiện mạng tiềm ẩn tần số cao và thấp đã được làm trống, chấp nhận sự can thiệp và tinh chỉnh của Cross-Attention, thực hiện quy trình loại bỏ và làm sạch thông tin nhiễu Gaussian hỗn loạn với độ song song cao.
+3.  **Kính lúp ánh xạ nén (VAE)**: Đứng gác ở cuối, giải nén cực nhanh ma trận đặc trưng nhỏ bé, trừu tượng đã được tinh chỉnh và định hình, cuối cùng hiển thị trên màn hình lớn cấp độ hàng triệu pixel.
 
 ---
 
-## 6. 核心术语速查表 (Glossary)
+## 6. Bảng tra cứu nhanh thuật ngữ cốt lõi (Glossary)
 
-| 术语 | 英文全称 | 通俗释义 |
+| Thuật ngữ | Tên tiếng Anh đầy đủ | Giải thích thông thường |
 | :--- | :--- | :--- |
-| **潜空间** | Latent Space | 大幅降低维度的数学分布空间；一张剥离无关累赘后，只有 AI 画师看得懂的高度浓缩“构图草稿”。 |
-| **VAE** | Variational Autoencoder | 极其夸张的尺寸极限转换器。担岗着把亿万像素进行降维压扁以及把完稿图样最终解压放大落位的关键功能。 |
-| **Diffusion** | 扩散概率模型 | 主流的图像特征提取破坏与逆向回归预测恢复算法；依靠逐步去除各向同性的微细随机干扰来使得图案缓慢成型涌现的骨干基建。 |
-| **CLIP** | Contrastive Language-Image Pre-Training | 利用亿万张人类给图写的批注进行对称对比训练而出，解决语言字符和色彩事物应该怎么联想挂钩互通的强力组件。 |
-| **Cross-Attention** | 交叉注意力机制 | 大模型内部进行序列特征混融的方法；通俗说即要求图像自身网格在发生计算时刻，必须以一定权重抬头核对外部下发的语言要求重点的一种照耀映射工具。 |
-| **Flow Matching** | 流匹配算法 | 基于前人随机盲跑基础重修出来的高阶优化连续映射，依靠解方程约束一条平稳的确定直线通路从而让渲染时间被数百倍节省的核心加速路线技巧。 |
+| **Latent Space** | Latent Space | Không gian phân bố toán học với chiều giảm đáng kể; một “bản nháp bố cục” cô đọng cao độ mà chỉ họa sĩ AI mới hiểu được, sau khi đã loại bỏ những chi tiết thừa không liên quan. |
+| **VAE** | Variational Autoencoder | Bộ chuyển đổi kích thước cực kỳ ấn tượng. Đảm nhiệm chức năng quan trọng là nén giảm chiều hàng tỷ pixel và cuối cùng giải nén, phóng to vị trí của hình ảnh hoàn chỉnh. |
+| **Diffusion** | Diffusion Model | Thuật toán chính để trích xuất đặc trưng hình ảnh, phá hủy và phục hồi dự đoán ngược; cơ sở hạ tầng cốt lõi dựa vào việc loại bỏ dần các nhiễu ngẫu nhiên nhỏ đẳng hướng để hình ảnh từ từ hình thành và xuất hiện. |
+| **CLIP** | Contrastive Language-Image Pre-Training | Một thành phần mạnh mẽ được huấn luyện bằng cách so sánh đối xứng hàng tỷ chú thích hình ảnh do con người viết, giải quyết cách các ký tự ngôn ngữ và vật thể màu sắc nên được liên kết và giao tiếp với nhau. |
+| **Cross-Attention** | Cross-Attention Mechanism | Phương pháp trộn lẫn các đặc trưng tuần tự bên trong các mô hình lớn; nói một cách đơn giản, đó là một công cụ ánh xạ chiếu sáng yêu cầu lưới hình ảnh tự thân tại thời điểm tính toán phải kiểm tra các yêu cầu ngôn ngữ trọng tâm được gửi từ bên ngoài với một trọng số nhất định. |
+| **Flow Matching** | Flow Matching Algorithm | Một ánh xạ liên tục được tối ưu hóa cấp cao, được xây dựng lại dựa trên nền tảng chạy ngẫu nhiên trước đây, dựa vào việc giải phương trình để ràng buộc một con đường thẳng xác định, ổn định, từ đó giúp tiết kiệm thời gian kết xuất hàng trăm lần. |

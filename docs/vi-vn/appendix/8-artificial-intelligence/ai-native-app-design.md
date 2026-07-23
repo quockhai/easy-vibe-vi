@@ -1,164 +1,164 @@
-# AI 原生应用设计
+# Thiết kế ứng dụng AI Native
 
-::: tip 前言
-**为什么有些 AI 产品让人惊艳，而有些只是"套壳 ChatGPT"？** 差别不在于用了多强的模型，而在于产品是否从底层就围绕 AI 的特性来设计。AI 原生应用不是在传统应用上"加个聊天框"，而是重新思考用户交互、系统架构和产品逻辑的全新范式。
+::: tip Lời nói đầu
+**Tại sao một số sản phẩm AI lại gây ấn tượng mạnh, trong khi một số khác chỉ là "vỏ bọc ChatGPT"?** Sự khác biệt không nằm ở việc sử dụng mô hình mạnh đến đâu, mà ở chỗ sản phẩm có được thiết kế từ nền tảng xoay quanh các đặc tính của AI hay không. Ứng dụng AI Native không phải là "thêm một hộp chat" vào ứng dụng truyền thống, mà là một mô hình hoàn toàn mới để suy nghĩ lại về tương tác người dùng, kiến trúc hệ thống và logic sản phẩm.
 :::
 
-**这篇文章会带你学什么？**
+**Bài viết này sẽ giúp bạn học được gì?**
 
-学完这章后，你将获得：
+Sau khi hoàn thành chương này, bạn sẽ đạt được:
 
-- **范式认知**：理解 AI 原生应用与传统应用的本质区别
-- **设计原则**：掌握 AI 原生产品设计的核心原则
-- **Prompt 工程**：了解如何设计高质量的 Prompt 来驱动 AI 能力
-- **交互模式**：认识 AI 时代的新型用户交互范式
-- **架构思维**：理解 AI 应用的请求处理流程和系统架构
+-   **Nhận thức về mô hình**: Hiểu được sự khác biệt bản chất giữa ứng dụng AI Native và ứng dụng truyền thống
+-   **Nguyên tắc thiết kế**: Nắm vững các nguyên tắc cốt lõi trong thiết kế sản phẩm AI Native
+-   **Prompt Engineering**: Tìm hiểu cách thiết kế Prompt chất lượng cao để thúc đẩy khả năng của AI
+-   **Mô hình tương tác**: Nhận biết các mô hình tương tác người dùng mới trong kỷ nguyên AI
+-   **Tư duy kiến trúc**: Hiểu quy trình xử lý yêu cầu và kiến trúc hệ thống của ứng dụng AI
 
-| 章节 | 内容 | 核心概念 |
+| Chương | Nội dung | Khái niệm cốt lõi |
 |-----|------|---------|
-| **第 1 章** | 架构对比 | 传统应用 vs AI 原生应用 |
-| **第 2 章** | 设计原则 | AI-First 思维、不确定性设计 |
-| **第 3 章** | Prompt 工程 | 系统提示词、模板设计 |
-| **第 4 章** | 交互模式 | 流式输出、多模态、Agent |
-| **第 5 章** | 请求流程 | AI 应用的完整生命周期 |
+| **Chương 1** | So sánh kiến trúc | Ứng dụng truyền thống vs ứng dụng AI Native |
+| **Chương 2** | Nguyên tắc thiết kế | Tư duy AI-First, thiết kế bất định |
+| **Chương 3** | Prompt Engineering | System Prompt, thiết kế template |
+| **Chương 4** | Mô hình tương tác | Streaming, Multimodal, Agent |
+| **Chương 5** | Quy trình yêu cầu | Vòng đời hoàn chỉnh của ứng dụng AI |
 
 ---
 
-## 0. 全景图：从"加个 AI"到"AI 原生"
+## 0. Toàn cảnh: Từ "thêm AI" đến "AI Native"
 
-过去几年，很多产品的 AI 化路径是这样的：有一个现成的应用，然后在某个角落加一个"AI 助手"按钮。这种做法就像在马车上装一个引擎——能跑，但远不如从头设计一辆汽车。
+Trong vài năm qua, con đường AI hóa của nhiều sản phẩm thường là: có một ứng dụng hiện có, sau đó thêm một nút "trợ lý AI" ở một góc nào đó. Cách làm này giống như lắp một động cơ vào xe ngựa – nó có thể chạy, nhưng kém xa so với việc thiết kế một chiếc ô tô từ đầu.
 
-**AI 原生应用**是一种全新的产品思维：从第一行代码开始，就把 AI 作为核心能力来设计，而不是事后附加的功能。
+**Ứng dụng AI Native** là một tư duy sản phẩm hoàn toàn mới: từ dòng code đầu tiên, AI đã được thiết kế như một khả năng cốt lõi, chứ không phải là một tính năng bổ sung sau này.
 
-::: tip 传统应用 vs AI 原生应用
-- **传统应用**：用户操作 → 确定性逻辑 → 确定性结果。每次点击"提交订单"，流程完全一样。
-- **AI 原生应用**：用户意图 → AI 理解 → 概率性结果。同样的问题，每次回答可能略有不同。
-- **核心转变**：从"编写规则"到"描述意图"，从"确定性"到"概率性"，从"操作界面"到"对话界面"。
+::: tip Ứng dụng truyền thống vs ứng dụng AI Native
+-   **Ứng dụng truyền thống**: Thao tác người dùng → logic xác định → kết quả xác định. Mỗi lần nhấp "gửi đơn hàng", quy trình hoàn toàn giống nhau.
+-   **Ứng dụng AI Native**: Ý định người dùng → AI hiểu → kết quả mang tính xác suất. Cùng một câu hỏi, mỗi lần trả lời có thể hơi khác nhau.
+-   **Chuyển đổi cốt lõi**: Từ "viết quy tắc" sang "mô tả ý định", từ "xác định" sang "xác suất", từ "giao diện thao tác" sang "giao diện hội thoại".
 :::
 
 ---
 
-## 1. 架构对比：两种完全不同的世界
+## 1. So sánh kiến trúc: Hai thế giới hoàn toàn khác biệt
 
-传统应用的架构是"请求-响应"模型：用户点击按钮，后端执行确定性逻辑，返回确定性结果。整个过程可预测、可测试、可复现。
+Kiến trúc của ứng dụng truyền thống là mô hình "request-response": người dùng nhấp vào nút, backend thực thi logic xác định, trả về kết quả xác định. Toàn bộ quá trình có thể dự đoán, kiểm thử và tái hiện.
 
-AI 原生应用则引入了一个全新的角色——**大语言模型**。它像一个"智能中间层"，接收自然语言输入，输出自然语言结果。这带来了架构上的根本性变化。
+Ứng dụng AI Native lại giới thiệu một vai trò hoàn toàn mới – **Large Language Model (LLM)**. Nó giống như một "lớp trung gian thông minh", nhận đầu vào ngôn ngữ tự nhiên và xuất ra kết quả ngôn ngữ tự nhiên. Điều này mang lại những thay đổi cơ bản về kiến trúc.
 
 <AINativeArchDemo />
 
-| 维度 | 传统应用 | AI 原生应用 |
+| Chiều | Ứng dụng truyền thống | Ứng dụng AI Native |
 |------|---------|------------|
-| 输入方式 | 表单、按钮、下拉框 | 自然语言、图片、语音 |
-| 处理逻辑 | if-else、规则引擎 | LLM 推理、Prompt 驱动 |
-| 输出特性 | 确定性、可复现 | 概率性、每次可能不同 |
-| 延迟特征 | 毫秒级 | 秒级（需要流式输出） |
-| 错误处理 | 明确的错误码 | 幻觉、拒绝回答、答非所问 |
-| 成本模型 | 固定计算资源 | 按 token 计费，成本波动大 |
+| Cách thức nhập | Form, nút, dropdown | Ngôn ngữ tự nhiên, hình ảnh, giọng nói |
+| Logic xử lý | if-else, rule engine | Suy luận LLM, Prompt driven |
+| Đặc tính đầu ra | Xác định, có thể tái hiện | Xác suất, mỗi lần có thể khác |
+| Đặc điểm độ trễ | Mili giây | Giây (cần Streaming) |
+| Xử lý lỗi | Mã lỗi rõ ràng | Ảo giác, từ chối trả lời, trả lời sai trọng tâm |
+| Mô hình chi phí | Tài nguyên tính toán cố định | Tính phí theo token, chi phí biến động lớn |
 
-::: tip 架构演进的三个阶段
-1. **AI 增强型**：在现有应用中嵌入 AI 功能（如自动补全、智能推荐）
-2. **AI 协作型**：AI 作为核心交互方式，但仍有传统 UI 兜底（如 Notion AI、GitHub Copilot）
-3. **AI 原生型**：整个产品围绕 AI 构建，去掉 AI 产品就不成立（如 ChatGPT、Cursor、Midjourney）
+::: tip Ba giai đoạn tiến hóa của kiến trúc
+1.  **AI Enhanced**: Nhúng tính năng AI vào ứng dụng hiện có (ví dụ: tự động hoàn thành, đề xuất thông minh)
+2.  **AI Collaborative**: AI là phương thức tương tác cốt lõi, nhưng vẫn có UI truyền thống hỗ trợ (ví dụ: Notion AI, GitHub Copilot)
+3.  **AI Native**: Toàn bộ sản phẩm được xây dựng xoay quanh AI, nếu bỏ AI thì sản phẩm không còn tồn tại (ví dụ: ChatGPT, Cursor, Midjourney)
 :::
 
 ---
 
-## 2. 设计原则：AI 原生产品的"宪法"
+## 2. Nguyên tắc thiết kế: "Hiến pháp" của sản phẩm AI Native
 
-设计 AI 原生应用不能照搬传统软件的设计思路。AI 的概率性、延迟性和不可预测性，要求我们建立一套全新的设计原则。
+Thiết kế ứng dụng AI Native không thể sao chép tư duy thiết kế phần mềm truyền thống. Tính xác suất, độ trễ và sự khó đoán của AI đòi hỏi chúng ta phải xây dựng một bộ nguyên tắc thiết kế hoàn toàn mới.
 
 <AIDesignPrincipleDemo />
 
-::: tip 五大核心设计原则
-1. **拥抱不确定性**：AI 的输出不是 100% 可靠的，产品设计必须考虑"AI 可能出错"的情况。提供编辑、重试、反馈机制，让用户始终拥有控制权。
-2. **渐进式信任**：不要一开始就让 AI 做高风险决策。先从低风险场景建立用户信任，再逐步扩展 AI 的自主权。
-3. **透明可解释**：让用户知道 AI 在做什么、为什么这么做。展示推理过程、引用来源、标注置信度。
-4. **人机协作**：AI 不是替代人，而是增强人。最好的设计是让 AI 做初稿，人做终审。
-5. **优雅降级**：当 AI 服务不可用或结果不理想时，产品仍然可用。永远有 Plan B。
+::: tip Năm nguyên tắc thiết kế cốt lõi
+1.  **Chấp nhận sự bất định**: Đầu ra của AI không đáng tin cậy 100%, thiết kế sản phẩm phải tính đến trường hợp "AI có thể mắc lỗi". Cung cấp cơ chế chỉnh sửa, thử lại, phản hồi, để người dùng luôn có quyền kiểm soát.
+2.  **Niềm tin tăng dần**: Đừng để AI đưa ra các quyết định rủi ro cao ngay từ đầu. Hãy bắt đầu từ các kịch bản rủi ro thấp để xây dựng lòng tin của người dùng, sau đó dần dần mở rộng quyền tự chủ của AI.
+3.  **Minh bạch và giải thích được**: Cho người dùng biết AI đang làm gì, tại sao lại làm như vậy. Hiển thị quá trình suy luận, trích dẫn nguồn, chú thích độ tin cậy.
+4.  **Hợp tác giữa người và máy**: AI không thay thế con người, mà là tăng cường khả năng của con người. Thiết kế tốt nhất là để AI làm bản nháp, con người làm bản cuối cùng.
+5.  **Giảm cấp một cách linh hoạt (Graceful Degradation)**: Khi dịch vụ AI không khả dụng hoặc kết quả không như mong muốn, sản phẩm vẫn có thể sử dụng được. Luôn có Plan B.
 :::
 
 ---
 
-## 3. Prompt 工程：AI 应用的"编程语言"
+## 3. Prompt Engineering: "Ngôn ngữ lập trình" của ứng dụng AI
 
-在传统应用中，你用代码告诉计算机做什么。在 AI 原生应用中，你用 Prompt 告诉模型做什么。**Prompt 就是 AI 时代的编程语言**——写得好，AI 表现惊艳；写得差，AI 胡说八道。
+Trong ứng dụng truyền thống, bạn dùng code để nói cho máy tính biết phải làm gì. Trong ứng dụng AI Native, bạn dùng Prompt để nói cho mô hình biết phải làm gì. **Prompt chính là ngôn ngữ lập trình của kỷ nguyên AI** – viết tốt, AI thể hiện xuất sắc; viết kém, AI nói lung tung.
 
 <PromptDesignDemo />
 
-::: tip Prompt 设计的四层结构
-1. **系统提示词（System Prompt）**：定义 AI 的角色、能力边界和行为规范。这是"宪法"级别的指令，用户看不到但始终生效。
-2. **上下文注入（Context）**：通过 RAG 检索到的相关文档、用户历史记录等，为 AI 提供回答所需的背景信息。
-3. **用户输入（User Message）**：用户的实际问题或指令。
-4. **输出格式约束（Format）**：指定 AI 的输出格式（JSON、Markdown、特定模板），确保结果可被程序解析。
+::: tip Cấu trúc bốn lớp của thiết kế Prompt
+1.  **System Prompt**: Định nghĩa vai trò, giới hạn khả năng và quy tắc hành vi của AI. Đây là chỉ thị cấp "hiến pháp", người dùng không thấy nhưng luôn có hiệu lực.
+2.  **Context Injection**: Thông qua các tài liệu liên quan được truy xuất bằng RAG, lịch sử người dùng, v.v., cung cấp thông tin nền tảng cần thiết cho AI để trả lời.
+3.  **User Message**: Câu hỏi hoặc chỉ thị thực tế của người dùng.
+4.  **Output Format Constraint**: Chỉ định định dạng đầu ra của AI (JSON, Markdown, template cụ thể), đảm bảo kết quả có thể được chương trình phân tích.
 :::
 
-| Prompt 技巧 | 说明 | 效果 |
+| Kỹ thuật Prompt | Giải thích | Hiệu quả |
 |------------|------|------|
-| 角色设定 | "你是一个资深前端工程师" | 提升专业领域回答质量 |
-| Few-shot 示例 | 给出 2-3 个输入输出示例 | 让模型理解期望的格式和风格 |
-| 思维链（CoT） | "请一步步思考" | 提升复杂推理的准确性 |
-| 输出约束 | "用 JSON 格式回答" | 确保输出可被程序解析 |
-| 负面指令 | "不要编造不确定的信息" | 减少幻觉和错误信息 |
+| Đặt vai trò | "Bạn là một Frontend Engineer cấp cao" | Nâng cao chất lượng trả lời trong lĩnh vực chuyên môn |
+| Few-shot Example | Đưa ra 2-3 ví dụ input-output | Giúp mô hình hiểu định dạng và phong cách mong muốn |
+| Chain-of-Thought (CoT) | "Hãy suy nghĩ từng bước một" | Nâng cao độ chính xác của suy luận phức tạp |
+| Ràng buộc đầu ra | "Trả lời bằng định dạng JSON" | Đảm bảo đầu ra có thể được chương trình phân tích |
+| Chỉ thị phủ định | "Đừng bịa đặt thông tin không chắc chắn" | Giảm ảo giác và thông tin sai lệch |
 
 ---
 
-## 4. 交互模式：AI 时代的用户体验
+## 4. Mô hình tương tác: Trải nghiệm người dùng trong kỷ nguyên AI
 
-AI 原生应用催生了一批全新的交互模式。传统应用的交互是"点击-等待-查看"，而 AI 应用的交互更像是"对话-观察-调整"。
+Ứng dụng AI Native đã tạo ra một loạt các mô hình tương tác hoàn toàn mới. Tương tác của ứng dụng truyền thống là "nhấp - chờ - xem", trong khi tương tác của ứng dụng AI giống như "đối thoại - quan sát - điều chỉnh".
 
 <AIUXPatternDemo />
 
-::: tip 四种核心交互模式
-1. **流式输出（Streaming）**：AI 生成内容时逐字显示，而不是等全部生成完再展示。这大幅降低了用户的感知等待时间，也让用户可以在生成过程中判断方向是否正确。
-2. **多轮对话（Multi-turn）**：通过上下文记忆实现连续对话，用户可以逐步细化需求。关键挑战是上下文窗口管理和对话历史压缩。
-3. **多模态交互（Multimodal）**：支持文本、图片、语音、文件等多种输入方式，AI 也能输出图片、代码、表格等多种格式。
-4. **Agent 模式（Agentic）**：AI 不只是回答问题，而是自主规划、执行多步骤任务。用户给出目标，AI 自行拆解步骤并逐一完成。
+::: tip Bốn mô hình tương tác cốt lõi
+1.  **Streaming**: AI hiển thị nội dung từng chữ một khi đang tạo, thay vì đợi tạo xong toàn bộ rồi mới hiển thị. Điều này giúp giảm đáng kể thời gian chờ đợi nhận thức của người dùng, và cũng cho phép người dùng đánh giá xem hướng đi có đúng không trong quá trình tạo.
+2.  **Multi-turn Conversation**: Thực hiện hội thoại liên tục thông qua bộ nhớ ngữ cảnh, người dùng có thể dần dần tinh chỉnh yêu cầu. Thử thách chính là quản lý cửa sổ ngữ cảnh và nén lịch sử hội thoại.
+3.  **Multimodal Interaction**: Hỗ trợ nhiều phương thức nhập liệu như văn bản, hình ảnh, giọng nói, tệp, và AI cũng có thể xuất ra nhiều định dạng như hình ảnh, code, bảng.
+4.  **Agent Mode**: AI không chỉ trả lời câu hỏi mà còn tự chủ lập kế hoạch, thực hiện các tác vụ đa bước. Người dùng đưa ra mục tiêu, AI tự phân tách các bước và hoàn thành từng bước một.
 :::
 
 ---
 
-## 5. 请求流程：一次 AI 调用的完整生命周期
+## 5. Quy trình yêu cầu: Vòng đời hoàn chỉnh của một lời gọi AI
 
-当用户在 AI 应用中发送一条消息，背后发生了什么？理解这个完整流程，是构建可靠 AI 应用的基础。
+Khi người dùng gửi một tin nhắn trong ứng dụng AI, điều gì đã xảy ra đằng sau? Hiểu quy trình hoàn chỉnh này là nền tảng để xây dựng ứng dụng AI đáng tin cậy.
 
 <AIAppFlowDemo />
 
-::: tip 请求处理的六个阶段
-1. **输入预处理**：校验用户输入、内容安全审核、敏感信息脱敏
-2. **上下文组装**：拼接系统提示词、检索相关文档（RAG）、加载对话历史
-3. **模型调用**：将组装好的 Prompt 发送给 LLM API，开启流式响应
-4. **输出后处理**：格式化输出、内容安全过滤、结构化数据提取
-5. **结果缓存**：对常见问题缓存结果，降低成本和延迟
-6. **监控记录**：记录 token 用量、响应时间、用户反馈，用于持续优化
+::: tip Sáu giai đoạn xử lý yêu cầu
+1.  **Tiền xử lý đầu vào**: Xác thực đầu vào người dùng, kiểm duyệt an toàn nội dung, ẩn danh thông tin nhạy cảm
+2.  **Ghép nối ngữ cảnh**: Nối System Prompt, truy xuất tài liệu liên quan (RAG), tải lịch sử hội thoại
+3.  **Gọi mô hình**: Gửi Prompt đã ghép nối đến LLM API, bắt đầu phản hồi Streaming
+4.  **Hậu xử lý đầu ra**: Định dạng đầu ra, lọc an toàn nội dung, trích xuất dữ liệu có cấu trúc
+5.  **Lưu cache kết quả**: Lưu cache kết quả cho các câu hỏi phổ biến, giảm chi phí và độ trễ
+6.  **Giám sát ghi lại**: Ghi lại mức sử dụng token, thời gian phản hồi, phản hồi người dùng, để tối ưu hóa liên tục
 :::
 
-| 阶段 | 关键考量 | 常见问题 |
+| Giai đoạn | Cân nhắc chính | Vấn đề thường gặp |
 |------|---------|---------|
-| 输入预处理 | 注入攻击防护、长度限制 | Prompt 注入、越狱攻击 |
-| 上下文组装 | token 预算分配、信息优先级 | 上下文溢出、关键信息被截断 |
-| 模型调用 | 超时处理、重试策略、流式传输 | API 限流、网络超时 |
-| 输出后处理 | 格式校验、幻觉检测 | 输出格式不符预期 |
-| 缓存策略 | 语义缓存 vs 精确缓存 | 缓存命中率低 |
-| 监控告警 | 成本监控、质量评估 | token 成本失控 |
+| Tiền xử lý đầu vào | Bảo vệ chống Prompt Injection, giới hạn độ dài | Prompt Injection, tấn công Jailbreak |
+| Ghép nối ngữ cảnh | Phân bổ ngân sách token, ưu tiên thông tin | Ngữ cảnh tràn, thông tin quan trọng bị cắt |
+| Gọi mô hình | Xử lý timeout, chiến lược thử lại, truyền Streaming | API rate limit, network timeout |
+| Hậu xử lý đầu ra | Xác thực định dạng, phát hiện ảo giác | Định dạng đầu ra không như mong đợi |
+| Chiến lược cache | Semantic cache vs Exact cache | Tỷ lệ cache hit thấp |
+| Giám sát cảnh báo | Giám sát chi phí, đánh giá chất lượng | Chi phí token vượt tầm kiểm soát |
 
 ---
 
-## 总结
+## Tóm tắt
 
-AI 原生应用设计不是简单地在传统应用上叠加 AI 功能，而是从架构、交互、工程实践等维度进行全面重构。
+Thiết kế ứng dụng AI Native không chỉ đơn giản là thêm tính năng AI vào ứng dụng truyền thống, mà là tái cấu trúc toàn diện từ kiến trúc, tương tác, đến các thực hành kỹ thuật.
 
-回顾本章的关键要点：
+Ôn lại các điểm chính của chương này:
 
-1. **架构转变**：从确定性逻辑到概率性推理，AI 原生应用需要全新的架构思维
-2. **设计原则**：拥抱不确定性、渐进式信任、透明可解释、人机协作、优雅降级
-3. **Prompt 是核心**：Prompt 工程是 AI 应用的"编程语言"，直接决定产品质量
-4. **交互革新**：流式输出、多轮对话、多模态、Agent 模式重新定义了用户体验
-5. **全链路思维**：从输入预处理到监控告警，每个环节都需要针对 AI 特性专门设计
+1.  **Chuyển đổi kiến trúc**: Từ logic xác định sang suy luận xác suất, ứng dụng AI Native cần tư duy kiến trúc hoàn toàn mới
+2.  **Nguyên tắc thiết kế**: Chấp nhận sự bất định, niềm tin tăng dần, minh bạch và giải thích được, hợp tác giữa người và máy, giảm cấp một cách linh hoạt
+3.  **Prompt là cốt lõi**: Prompt Engineering là "ngôn ngữ lập trình" của ứng dụng AI, trực tiếp quyết định chất lượng sản phẩm
+4.  **Đổi mới tương tác**: Streaming, Multi-turn Conversation, Multimodal, Agent Mode định nghĩa lại trải nghiệm người dùng
+5.  **Tư duy toàn chuỗi**: Từ tiền xử lý đầu vào đến giám sát cảnh báo, mỗi giai đoạn đều cần được thiết kế đặc biệt cho các đặc tính của AI
 
-## 延伸阅读
+## Đọc thêm
 
-- [Google PAIR Guidelines](https://pair.withgoogle.com/) - Google 的人机交互 AI 设计指南
-- [OpenAI Prompt Engineering Guide](https://platform.openai.com/docs/guides/prompt-engineering) - 官方 Prompt 工程最佳实践
-- [Anthropic Prompt Engineering](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering) - Claude 的 Prompt 设计指南
-- [Nielsen Norman Group: AI UX](https://www.nngroup.com/topic/artificial-intelligence/) - AI 用户体验研究
-- [Building LLM Applications](https://www.oreilly.com/library/view/building-llm-powered/9781835462317/) - 构建 LLM 应用的实战指南
+-   [Google PAIR Guidelines](https://pair.withgoogle.com/) - Hướng dẫn thiết kế AI tương tác giữa người và máy của Google
+-   [OpenAI Prompt Engineering Guide](https://platform.openai.com/docs/guides/prompt-engineering) - Các thực hành tốt nhất về Prompt Engineering chính thức
+-   [Anthropic Prompt Engineering](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering) - Hướng dẫn thiết kế Prompt của Claude
+-   [Nielsen Norman Group: AI UX](https://www.nngroup.com/topic/artificial-intelligence/) - Nghiên cứu trải nghiệm người dùng AI
+-   [Building LLM Applications](https://www.oreilly.com/library/view/building-llm-powered/9781835462317/) - Hướng dẫn thực hành xây dựng ứng dụng LLM

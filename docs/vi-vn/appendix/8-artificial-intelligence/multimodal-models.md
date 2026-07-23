@@ -1,202 +1,202 @@
-# 多模态模型（视觉 / 音频 / 视频）
-> 💡 **学习指南**：本章节无需深厚的计算机视觉背景，通过交互式演示带你理解 AI 是如何拥有“眼睛”的。我们将揭秘 GPT-4V、Qwen-VL 等模型背后的核心原理。
+# Mô hình Đa phương thức (Thị giác / Âm thanh / Video)
+> 💡 **Hướng dẫn học tập**: Chương này không yêu cầu kiến thức chuyên sâu về thị giác máy tính. Thông qua các bản demo tương tác, bạn sẽ hiểu cách AI có được "đôi mắt". Chúng ta sẽ khám phá các nguyên lý cốt lõi đằng sau các mô hình như GPT-4V, Qwen-VL.
 
 <VlmQuickStartDemo />
 
-## 0. 引言：给大脑装上眼睛
+## 0. Giới thiệu: Gắn đôi mắt cho bộ não
 
-在 [大语言模型入门](./llm-intro) 中，我们知道 LLM 本质上是一个被关在黑盒子里、只能通过**文字**来了解世界的“大脑”。
+Trong [Giới thiệu về Mô hình Ngôn ngữ Lớn](./llm-intro), chúng ta đã biết rằng LLM về bản chất là một "bộ não" bị nhốt trong hộp đen, chỉ có thể hiểu thế giới thông qua **văn bản**.
 
-**多模态大模型 (VLM)** 的出现，相当于给这个大脑装上了一双**眼睛**。
+Sự xuất hiện của **Mô hình Đa phương thức Lớn (VLM)** tương đương với việc gắn một đôi **mắt** cho bộ não này.
 
-但这并不容易。因为：
+Nhưng điều này không hề dễ dàng. Bởi vì:
 
-- **大脑 (LLM)** 只懂**文字**（准确说是 Token ID）。
-- **眼睛 (摄像头)** 看到的是**像素**（RGB 颜色数值）。
+- **Bộ não (LLM)** chỉ hiểu **văn bản** (chính xác hơn là Token ID).
+- **Đôi mắt (camera)** nhìn thấy **pixel** (giá trị màu RGB).
 
-VLM 的核心任务，就是**把“像素信号”翻译成“文字信号”**，让 LLM 觉得看图就像读文章一样简单。
+Nhiệm vụ cốt lõi của VLM là **dịch "tín hiệu pixel" thành "tín hiệu văn bản"**, khiến LLM cảm thấy việc xem hình ảnh cũng đơn giản như đọc một bài viết.
 
 ---
 
-## 1. 第一步：把图片变成“单词” (Visual Tokenization)
+## 1. Bước một: Biến hình ảnh thành "từ" (Visual Tokenization)
 
-想象一下，你正在电话里给朋友描述一副拼图。你不可能一口气说完，你得一块一块地描述。
-计算机看图也是一样的道理。
+Hãy tưởng tượng bạn đang mô tả một bức tranh ghép cho bạn bè qua điện thoại. Bạn không thể nói hết một lúc, bạn phải mô tả từng mảnh một.
+Máy tính nhìn hình ảnh cũng tương tự như vậy.
 
-### 1.1 切块 (Patchify) —— 制作视觉单词
+### 1.1 Cắt lát (Patchify) – Tạo ra các từ thị giác
 
-我们知道，大语言模型 (LLM) 处理文本时，会把句子拆解成一个个的词元 (Token)。如果你想让 LLM “读懂”图片，最直观的方法就是把图片也变成类似 Token 的形式。
+Chúng ta biết rằng, khi xử lý văn bản, Mô hình Ngôn ngữ Lớn (LLM) sẽ phân tách câu thành từng từ (Token). Nếu bạn muốn LLM "đọc hiểu" hình ảnh, cách trực quan nhất là biến hình ảnh thành dạng tương tự như Token.
 
-为了配合大模型这种“习惯读单词”的特性，我们需要一种能将连续的二维图像转换为离散片段的技术，这就引出了**视觉流形切片 (Patchify)** 的概念：我们把一张完整的二维图片，像切豆腐一样，切成一个个固定的网格小方块（称为 Patch）。
+Để phù hợp với đặc tính "quen đọc từ" của các mô hình lớn, chúng ta cần một kỹ thuật có thể chuyển đổi hình ảnh hai chiều liên tục thành các đoạn rời rạc, điều này dẫn đến khái niệm **cắt lát hình ảnh (Patchify)**: chúng ta cắt một hình ảnh hai chiều hoàn chỉnh, giống như cắt đậu phụ, thành từng ô vuông nhỏ cố định (gọi là Patch).
 
-- **原始图片** = 一篇完整的文章
-- **图片切块 (Patch)** = 文章里的一个单词 (Token)
+- **Hình ảnh gốc** = một bài viết hoàn chỉnh
+- **Cắt lát hình ảnh (Patch)** = một từ (Token) trong bài viết
 
-在工程实践中，我们通常会把图片按照固定的尺寸（比如 $16 \times 16$ 或 $14 \times 14$ 像素）进行无缝切分。例如，一张常见的 $224 \times 224$ 像素的输入图片，切分后就会变成 $14 \times 14 = 196$ 个独立的图像方块。
-通过这个操作，原本连续完整的二维像素阵列，就被物理切割成了 196 个离散的“视觉单词本”。
+Trong thực tế kỹ thuật, chúng ta thường chia hình ảnh thành các kích thước cố định (ví dụ: $16 \times 16$ hoặc $14 \times 14$ pixel) một cách liền mạch. Ví dụ, một hình ảnh đầu vào phổ biến $224 \times 224$ pixel, sau khi cắt sẽ trở thành $14 \times 14 = 196$ khối hình ảnh độc lập.
+Thông qua thao tác này, mảng pixel hai chiều liên tục ban đầu được cắt vật lý thành 196 "từ thị giác" rời rạc.
 
-> 🕹️ **交互演示**：点击下方按钮，体验原始图像是如何被规则的网格切割成一个个独立 Patch 的。
+> 🕹️ **Bản demo tương tác**: Nhấp vào nút bên dưới để trải nghiệm cách hình ảnh gốc được cắt thành từng Patch độc lập bằng lưới ô vuông đều đặn.
 
 <PatchifyDemo />
 
-### 1.2 序列化 (Flatten) —— 排成一句话
+### 1.2 Tuần tự hóa (Flatten) – Xếp thành một câu
 
-完成上一步切块后，我们现在手头拥有的是一个 $14 \times 14$ 的二维方阵。然而，无论是传统的 Transformer 还是现代的 LLM，它们在底层架构上大多只接受**一维的序列输入**（也就是从左到右排成一排的线性数据结构）。
+Sau khi hoàn thành bước cắt lát ở trên, chúng ta hiện có một ma trận hai chiều $14 \times 14$. Tuy nhiên, cả Transformer truyền thống lẫn LLM hiện đại, về kiến trúc cơ bản, chúng chủ yếu chỉ chấp nhận **đầu vào tuần tự một chiều** (tức là cấu trúc dữ liệu tuyến tính được xếp thành một hàng từ trái sang phải).
 
-为了兼容大模型的输入规范，我们必须进行**序列化 (Flatten) 与线性投影 (Linear Projection)**：
-1. **拍扁摊平 (Flatten)**：把多行的图像块首尾相接，将二维矩阵“拍扁”成一条只有前后顺序的一维长轴。
-2. **特征拉伸 (Projection)**：这 196 个方块目前还只是红绿蓝像素堆叠的“生肉”。我们需要用一个小型的神经网络（通常是一个全连接层）对每个方块进行处理，把它们分别压缩和转换成一段固定长度的特征向量（比如长度为 768 的数字列表）。
+Để tương thích với quy tắc đầu vào của mô hình lớn, chúng ta phải thực hiện **tuần tự hóa (Flatten) và chiếu tuyến tính (Linear Projection)**:
+1.  **Làm phẳng (Flatten)**: Nối các khối hình ảnh từ nhiều hàng lại với nhau, "làm phẳng" ma trận hai chiều thành một trục dài một chiều chỉ có thứ tự trước sau.
+2.  **Kéo dài đặc trưng (Projection)**: 196 khối này hiện tại chỉ là "thịt sống" được xếp chồng từ các pixel đỏ, xanh lá, xanh dương. Chúng ta cần sử dụng một mạng nơ-ron nhỏ (thường là một lớp kết nối đầy đủ) để xử lý từng khối, nén và chuyển đổi chúng thành một vector đặc trưng có độ dài cố định (ví dụ: một danh sách số có độ dài 768).
 
-经过这一步操作，一张图片才真正变成了一串“视觉单词序列”（Visual Token Sequence）。
+Sau bước này, một hình ảnh mới thực sự trở thành một chuỗi "tuần tự từ thị giác" (Visual Token Sequence).
 
-> 🕹️ **交互演示**：观察下方动画，了解**一个单纯的像素块 (Patch)** 是如何经历矩阵拉伸，最终被映射成一个包含丰富特征维度的高维**向量 (Vector)** 的。
+> 🕹️ **Bản demo tương tác**: Quan sát hoạt ảnh bên dưới để hiểu cách **một khối pixel đơn thuần (Patch)** trải qua quá trình kéo dài ma trận, cuối cùng được ánh xạ thành một **vector** đa chiều chứa các chiều đặc trưng phong phú.
 
 <LinearProjectionDemo />
 
 ---
 
-## 2. 第二步：跨物种翻译 (Projection)
+## 2. Bước hai: Dịch chéo loài (Projection)
 
-此时，虽然图片已经被转化成了一维连续的“视觉单词”序列，但这串序列对于最后的 LLM 来说，依然是一堆不可读的乱码。
+Lúc này, mặc dù hình ảnh đã được chuyển đổi thành một chuỗi "từ thị giác" liên tục một chiều, nhưng chuỗi này đối với LLM cuối cùng vẫn là một đống mã hỗn loạn không thể đọc được.
 
-为什么读不懂呢？因为**特征空间不同**（也就是它们说的语言不同）。
-视觉编码器（如 ViT）提取出来的是**空间像素特征**（比如它只能告诉你“这是一个由很多弯曲黑色线条组成的东西”、“这里是大片红色”）；而 LLM 内部理解的是**深层语义特征**（例如概念上的“猫”、“树木”、“危险”等）。
+Tại sao không đọc được? Bởi vì **không gian đặc trưng khác nhau** (tức là chúng nói các ngôn ngữ khác nhau).
+Bộ mã hóa thị giác (như ViT) trích xuất **đặc trưng pixel không gian** (ví dụ, nó chỉ có thể cho bạn biết "đây là một thứ được tạo thành từ nhiều đường cong màu đen", "đây là một vùng màu đỏ lớn"); trong khi LLM bên trong hiểu **đặc trưng ngữ nghĩa sâu sắc** (ví dụ, các khái niệm như "mèo", "cây", "nguy hiểm").
 
-在这两种截然不同的话语体系之间，我们需要架设一座桥梁，也就是我们的跨模态翻译官：**Projector (投射器/适配器)**。
+Giữa hai hệ thống ngôn ngữ hoàn toàn khác biệt này, chúng ta cần xây dựng một cây cầu, đó chính là phiên dịch viên đa phương thức của chúng ta: **Projector (Bộ chiếu/Bộ điều hợp)**.
 
-### 2.1 翻译官的作用 (Latent Space Alignment)
+### 2.1 Vai trò của phiên dịch viên (Latent Space Alignment)
 
-Projector 的学术本质是实现**特征隐空间的对齐 (Latent Space Alignment)**。这就像是现实生活中的同声传译员：
+Bản chất học thuật của Projector là thực hiện **sự căn chỉnh không gian ẩn đặc trưng (Latent Space Alignment)**. Điều này giống như một phiên dịch viên đồng thời trong đời thực:
 
-- **输入 (Source)**：ViT 吐出的“视觉特征”（侧重于几何、颜色、纹理规律等连续的高维特征表示）。
-- **处理 (Translation)**：Projector 利用一个神经网络结构（可能是几层简单的线性变换层，或是复杂的注意力层），在这个过程中找到两种语言之间的数学对应关系。
-- **输出 (Target)**：输出完全符合 LLM 口味和预期的“LLM 语言”（由图片特征转换而成的等价文本嵌入 Token，使得图像拥有了可以对话的意义）。
+-   **Đầu vào (Source)**: "Đặc trưng thị giác" do ViT tạo ra (tập trung vào các biểu diễn đặc trưng đa chiều liên tục như hình học, màu sắc, quy luật kết cấu).
+-   **Xử lý (Translation)**: Projector sử dụng một cấu trúc mạng nơ-ron (có thể là vài lớp biến đổi tuyến tính đơn giản, hoặc các lớp attention phức tạp) để tìm ra mối quan hệ toán học giữa hai ngôn ngữ trong quá trình này.
+-   **Đầu ra (Target)**: Tạo ra "ngôn ngữ LLM" hoàn toàn phù hợp với khẩu vị và kỳ vọng của LLM (Token nhúng văn bản tương đương được chuyển đổi từ đặc trưng hình ảnh, làm cho hình ảnh có ý nghĩa có thể đối thoại).
 
-通过这层翻译过滤，大模型就会惊奇地发现：“咦？传进来的这段数字串，不就是我平时读的那些带有描述性质的单词组合吗！”，从而顺理成章地将图片特征与自然语言共同处理。
+Thông qua lớp dịch và lọc này, mô hình lớn sẽ ngạc nhiên phát hiện ra: "Ồ? Chuỗi số được truyền vào này, chẳng phải là sự kết hợp của những từ mang tính mô tả mà mình thường đọc sao!", từ đó xử lý đặc trưng hình ảnh và ngôn ngữ tự nhiên một cách hợp lý.
 
 <ProjectorDemo />
 
-### 2.2 不同的翻译流派
+### 2.2 Các trường phái dịch thuật khác nhau
 
-为了让特征对齐这道“翻译工序”做得更快、更准，学术界和工业界衍生出了几种极具代表性的硬件连接设计方案：
+Để quá trình "dịch thuật" căn chỉnh đặc trưng này diễn ra nhanh hơn và chính xác hơn, giới học thuật và công nghiệp đã phát triển một số giải pháp thiết kế kết nối phần cứng mang tính đại diện cao:
 
-1.  **直译派 (Linear Projection)**：
-    - **做法**：极其简单粗暴，仅用一层或几十层多层感知机 (MLP / 线性投影层) 进行直接的数学矩阵变换透传。
-    - **特点**：**信息损耗极低，保留图像原汁原味细节**；但缺陷是将刚才切分的百上千个视觉词元毫无保留地全塞给语言模型，会导致后续计算量暴增。
-    - **代表**：LLaVA 系列。
+1.  **Trường phái dịch thẳng (Linear Projection)**:
+    -   **Cách làm**: Cực kỳ đơn giản và trực tiếp, chỉ sử dụng một hoặc vài chục lớp mạng đa lớp (MLP / lớp chiếu tuyến tính) để thực hiện biến đổi ma trận toán học trực tiếp.
+    -   **Đặc điểm**: **Tổn thất thông tin cực thấp, giữ nguyên chi tiết hình ảnh gốc**; nhưng nhược điểm là truyền toàn bộ hàng trăm đến hàng nghìn visual Token đã cắt cho mô hình ngôn ngữ, dẫn đến tăng vọt khối lượng tính toán sau này.
+    -   **Đại diện**: Dòng LLaVA.
 
-2.  **意译派 (Q-Former / Resampler)**：
-    - **做法**：并不是原样透传，而是在中间引入一个具有抽象总结能力的“小型侦察兵网络”。这个中间代理人先全盘快速理解一遍图片，提纯出几十个高度凝缩的核心要点。
-    - **特点**：**信息高度精简提纯，Token 少，大大节省 LLM 思考理解的性能算力**；缺陷是有可能会在提纯过程中抛去原始图片边缘里极其细微的观察线索。
-    - **代表**：BLIP-2, Gemini (部分机制类似)。
+2.  **Trường phái dịch ý (Q-Former / Resampler)**:
+    -   **Cách làm**: Không truyền nguyên bản, mà đưa vào giữa một "mạng trinh sát nhỏ" có khả năng tóm tắt trừu tượng. Đại lý trung gian này trước tiên nhanh chóng hiểu toàn bộ hình ảnh, sau đó tinh lọc ra vài chục điểm cốt lõi được cô đọng cao.
+    -   **Đặc điểm**: **Thông tin được tinh gọn và cô đọng cao, ít Token, tiết kiệm đáng kể hiệu suất tính toán của LLM**; nhược điểm là có thể bỏ qua những manh mối quan sát cực kỳ nhỏ ở rìa hình ảnh gốc trong quá trình tinh lọc.
+    -   **Đại diện**: BLIP-2, Gemini (một phần cơ chế tương tự).
 
-3.  **折中派 (C-Abstractor / Pooling)**：
-    - **做法**：借助卷积池化或局部区域重整，把相邻的 $2 \times 2$ 或更大像素块压缩打包合并重组为一个完整的表达元。
-    - **特点**：既合理压缩了词元的长度上限，又依然留存了部分相互依存的局部和空间感。
-    - **代表**：Qwen-VL-Max。
+3.  **Trường phái dung hòa (C-Abstractor / Pooling)**:
+    -   **Cách làm**: Sử dụng pooling tích chập hoặc tái cấu trúc vùng cục bộ, nén và đóng gói các khối pixel $2 \times 2$ hoặc lớn hơn liền kề thành một đơn vị biểu đạt hoàn chỉnh.
+    -   **Đặc điểm**: Vừa nén hợp lý giới hạn độ dài của Token, vừa giữ lại một phần cảm giác cục bộ và không gian phụ thuộc lẫn nhau.
+    -   **Đại diện**: Qwen-VL-Max.
 
 ---
 
-## 3. 第三步：合体 (The Architecture)
+## 3. Bước ba: Hợp thể (The Architecture)
 
-有了零件、有了对接标准，接下来我们看它是如何完成全身武装的。主流的多模态视觉语言模型 (Vision-Language Model) 基本都遵循统一的**“三段式”架构模型**。
+Có các bộ phận, có tiêu chuẩn kết nối, bây giờ chúng ta hãy xem nó hoàn thành việc trang bị toàn thân như thế nào. Các mô hình ngôn ngữ thị giác đa phương thức (Vision-Language Model) chính thống về cơ bản đều tuân theo **kiến trúc "ba giai đoạn"** thống nhất.
 
-### 3.1 VLM 的身体结构
+### 3.1 Cấu trúc cơ thể của VLM
 
 <ModelArchitectureComparisonDemo />
 
-一个典型范式下的 VLM 实体，主要由以下三大部分协同运转：
+Một thực thể VLM theo mô hình điển hình chủ yếu bao gồm ba phần sau đây hoạt động phối hợp:
 
-1.  **特征感知的“眼睛” (Vision Encoder - 视觉编码器)**：
-    - **功能**：作为图片输入的第一道关卡，负责看图并抽象出高维视觉特征。
-    - **选型**：大多数厂商不会从零开始训练眼睛，而是直接借用在数亿张「图像-文本配对」数据上预训练好的成熟组件（如 OpenAI 的 CLIP 模型视觉塔，或者是谷歌的 SigLIP 模型）。
-    - *形象类比：这就是生物体高度特化的视网膜感光细胞区域。*
+1.  **"Đôi mắt" nhận biết đặc trưng (Vision Encoder - Bộ mã hóa thị giác)**:
+    -   **Chức năng**: Là cửa ngõ đầu tiên của đầu vào hình ảnh, chịu trách nhiệm xem hình ảnh và trừu tượng hóa các đặc trưng thị giác đa chiều.
+    -   **Lựa chọn**: Hầu hết các nhà sản xuất sẽ không huấn luyện đôi mắt từ đầu, mà trực tiếp sử dụng các thành phần trưởng thành đã được huấn luyện trước trên hàng trăm triệu cặp dữ liệu "hình ảnh-văn bản" (như tháp thị giác của mô hình CLIP của OpenAI, hoặc mô hình SigLIP của Google).
+    -   *Ví von hình ảnh: Đây chính là vùng tế bào cảm quang võng mạc chuyên biệt hóa cao của cơ thể sinh vật.*
 
-2.  **信号转换的“视神经” (Projector - 模态投射器)**：
-    - **功能**：对接编码器和语言基座，负责信号维度的压缩、打通和多模态语义翻译。
-    - **选型**：这是整个多模态系统后续训练的**重中之重**。它自身的参数量通常不大（相对 LLM 而言），但决定了“文字”和“图片”之间能否心意相通。
-    - *形象类比：它就像负责将电信号转换传递到大脑皮层的视觉神经中枢。*
+2.  **"Dây thần kinh thị giác" chuyển đổi tín hiệu (Projector - Bộ chiếu phương thức)**:
+    -   **Chức năng**: Kết nối bộ mã hóa và nền tảng ngôn ngữ, chịu trách nhiệm nén chiều tín hiệu, kết nối và dịch ngữ nghĩa đa phương thức.
+    -   **Lựa chọn**: Đây là **trọng tâm của quá trình huấn luyện tiếp theo** của toàn bộ hệ thống đa phương thức. Số lượng tham số của nó thường không lớn (so với LLM), nhưng nó quyết định liệu "văn bản" và "hình ảnh" có thể hiểu nhau hay không.
+    -   *Ví von hình ảnh: Nó giống như trung tâm thần kinh thị giác chịu trách nhiệm chuyển đổi và truyền tín hiệu điện đến vỏ não.*
 
-3.  **认知引擎“大脑” (LLM Backbone - 语言模型基座)**：
-    - **功能**：承担最终的观察、常识调用、深度逻辑推理以及拟人化答复的生成工作。
-    - **选型**：通常采用业内智商最高的开源大语言模型作为挂载点（如 Qwen, Llama 3, Vicuna 等）。
-    - *形象类比：这是具备世界知识库的大脑语言和决策中序，它对视神经传来的加工后信号做出高阶思维判读。*
+3.  **"Bộ não" động cơ nhận thức (LLM Backbone - Nền tảng mô hình ngôn ngữ)**:
+    -   **Chức năng**: Đảm nhận công việc quan sát cuối cùng, gọi kiến thức thông thường, suy luận logic sâu sắc và tạo ra phản hồi giống người.
+    -   **Lựa chọn**: Thường sử dụng các mô hình ngôn ngữ lớn mã nguồn mở thông minh nhất trong ngành làm điểm gắn kết (như Qwen, Llama 3, Vicuna, v.v.).
+    -   *Ví von hình ảnh: Đây là trung tâm ngôn ngữ và ra quyết định của bộ não với kho kiến thức thế giới, nó đưa ra phán đoán tư duy cấp cao dựa trên tín hiệu đã được xử lý từ dây thần kinh thị giác.*
 
 ---
 
-## 4. 它是怎么学会看图的？(Training)
+## 4. Nó học cách nhìn hình ảnh như thế nào? (Training)
 
-好，现在身体各部分已经缝合在一起。但是在正式接客之前，刚组装好的 VLM 实际上是处于类似于新生儿的“失明与混乱”状态的——因为新增的视神经 (Projector) 是一张白纸，里边全是没有意义的随机数值。
+Tốt, bây giờ các bộ phận cơ thể đã được ghép lại với nhau. Nhưng trước khi chính thức "tiếp khách", VLM vừa được lắp ráp thực tế đang ở trạng thái "mù lòa và hỗn loạn" giống như trẻ sơ sinh – bởi vì dây thần kinh thị giác mới (Projector) là một tờ giấy trắng, bên trong toàn là những giá trị ngẫu nhiên vô nghĩa.
 
-想要让这个拼接的怪物具备看图说话的能力，科学界总结出了一套高效的**“两阶段训练法则 (Two-Stage Training)”**。
+Để con quái vật được ghép nối này có khả năng nhìn hình ảnh và nói chuyện, giới khoa học đã tổng kết một bộ **"quy tắc huấn luyện hai giai đoạn (Two-Stage Training)"** hiệu quả.
 
-### 阶段一：认物 (Feature Alignment —— 认物预训练)
+### Giai đoạn một: Nhận diện vật thể (Feature Alignment – Huấn luyện trước nhận diện vật thể)
 
-这一阶段，主要任务是让随机的 Projector 建立起初步的跨模态映射关系。过程非常像教婴儿用“认知闪卡”强行记单词。
+Giai đoạn này, nhiệm vụ chính là để Projector ngẫu nhiên thiết lập mối quan hệ ánh xạ đa phương thức ban đầu. Quá trình này rất giống việc dạy trẻ sơ sinh dùng "thẻ nhận thức" để ghi nhớ từ vựng một cách cưỡng bức.
 
-- **给它看 (训练输入)**：大批量（往往上亿张）包含单个突出主体的极简配对图文（例如白底的“猫”照片）。
-- **告诉它 (目标输出)**：附带简短的标签词汇（“一只橘猫”）。
-- **优化目标**：强制驱使 Projector 学会通过矩阵变化，让这只猫的对应视觉特征（经过翻译后），和自然语言里的“猫”词元向量尽可能重合对齐。
-- **参数控制状态 (Freeze Strategy)**：为了防止破坏原有模型的智慧，在这个阶段研究人员会重度**冻结 (Freeze)** “眼睛”(ViT) 和 “大脑”(LLM) 的几十上百亿参数，**仅仅只开启“视神经”(Projector) 本身的几百万参数训练**。
+-   **Cho nó xem (đầu vào huấn luyện)**: Hàng loạt (thường là hàng trăm triệu) cặp hình ảnh-văn bản cực kỳ đơn giản chứa một chủ thể nổi bật duy nhất (ví dụ: ảnh "mèo" trên nền trắng).
+-   **Nói cho nó biết (đầu ra mục tiêu)**: Kèm theo các từ khóa ngắn gọn ("một con mèo vàng").
+-   **Mục tiêu tối ưu hóa**: Buộc Projector học cách thông qua biến đổi ma trận, làm cho đặc trưng thị giác tương ứng của con mèo (sau khi được dịch) và vector Token "mèo" trong ngôn ngữ tự nhiên trùng khớp và căn chỉnh càng nhiều càng tốt.
+-   **Trạng thái kiểm soát tham số (Freeze Strategy)**: Để tránh làm hỏng trí tuệ của mô hình gốc, trong giai đoạn này, các nhà nghiên cứu sẽ **đóng băng (Freeze)** hàng chục đến hàng trăm tỷ tham số của "mắt" (ViT) và "não" (LLM) một cách nghiêm ngặt, **chỉ kích hoạt huấn luyện vài triệu tham số của chính "dây thần kinh thị giác" (Projector)**.
 
 <FeatureAlignmentDemo />
 
-### 阶段二：对话 (Visual Instruction Tuning —— 对话演练)
+### Giai đoạn hai: Đối thoại (Visual Instruction Tuning – Thực hành đối thoại)
 
-如果第一阶段只会让模型变成报菜名似的认字机，那么第二阶段的任务就是激发它的高级智商，让它真正能根据上下文解答人类复杂的图文结合指令。
+Nếu giai đoạn đầu tiên chỉ khiến mô hình trở thành một cỗ máy nhận diện từ như đọc danh sách, thì nhiệm vụ của giai đoạn thứ hai là kích thích trí thông minh cấp cao của nó, để nó thực sự có thể giải đáp các chỉ dẫn phức tạp kết hợp hình ảnh và văn bản của con người dựa trên ngữ cảnh.
 
-- **给它看 (训练输入)**：精心设计的高质量问答训练对。比如提供一张复杂的城市交通全景图。
-- **要求它答 (目标输出)**：User 提问：“`<图片>` 左下角那个骑白色自行车的男人有没有戴头盔？” Assistant 回答：“没有，他头上什么都没戴，这在城市里是很危险的行为。”
-- **优化目标**：让大模型不仅能接收视觉线索，还能结合从前的文明常识积淀，将文本逻辑与多模态表征彻底融汇贯通并做出推理。
-- **参数控制状态 (Freeze Strategy)**：此时视神经已经基本调通。在这个精调阶段，一般会继续冻结一部分视觉编码器底层权重，同时**彻底解冻开启 LLM 和 Projector**（或采用 LoRA 配置），进行全局大规模的联合反向传播调校。
+-   **Cho nó xem (đầu vào huấn luyện)**: Các cặp hỏi đáp huấn luyện chất lượng cao được thiết kế cẩn thận. Ví dụ, cung cấp một bức ảnh toàn cảnh giao thông thành phố phức tạp.
+-   **Yêu cầu nó trả lời (đầu ra mục tiêu)**: Người dùng hỏi: "`<img>` Người đàn ông đi xe đạp màu trắng ở góc dưới bên trái có đội mũ bảo hiểm không?" Trợ lý trả lời: "Không, anh ấy không đội gì trên đầu, đây là hành vi rất nguy hiểm trong thành phố."
+-   **Mục tiêu tối ưu hóa**: Để mô hình lớn không chỉ có thể tiếp nhận các manh mối thị giác, mà còn có thể kết hợp với kiến thức thông thường tích lũy từ trước, hòa nhập hoàn toàn logic văn bản với biểu diễn đa phương thức và đưa ra suy luận.
+-   **Trạng thái kiểm soát tham số (Freeze Strategy)**: Lúc này, dây thần kinh thị giác đã cơ bản được điều chỉnh. Trong giai đoạn tinh chỉnh này, thông thường sẽ tiếp tục đóng băng một phần trọng số lớp dưới của bộ mã hóa thị giác, đồng thời **hoàn toàn giải phóng và kích hoạt LLM và Projector** (hoặc sử dụng cấu hình LoRA), để thực hiện điều chỉnh lan truyền ngược quy mô lớn toàn cầu.
 
 <VLMInferenceDemo />
 
 ---
 
-## 5. 进阶：看得更清 (Advanced Tricks)
+## 5. Nâng cao: Nhìn rõ hơn (Advanced Tricks)
 
-虽然以上架构支撑起了最初的多模态范式，但第一代 VLM 模型存在一个非常令人头疼的基础硬伤——**近视眼（视力先天不足）**。
+Mặc dù kiến trúc trên đã hỗ trợ mô hình đa phương thức ban đầu, nhưng các mô hình VLM thế hệ đầu tiên tồn tại một nhược điểm cơ bản rất đau đầu – **cận thị (thị lực bẩm sinh kém)**.
 
-早期的视觉编码器 ViT 因为历史设计原因，天生只能处理例如 $224 \times 224$ 或 $336 \times 336$ 这种极其低分辨率的方寸小图。这就像是强行通过一个模糊、低质的几十万像素复古摄像头去观察世界，图里面稍微小一点的文字牌匾等细节完全会糊成一团像素点，大脑就算再聪明也是“巧妇难为无米之炊”。
+Các bộ mã hóa thị giác ViT đời đầu, do lý do thiết kế lịch sử, bẩm sinh chỉ có thể xử lý các hình ảnh nhỏ với độ phân giải cực thấp như $224 \times 224$ hoặc $336 \times 336$. Điều này giống như việc cố gắng quan sát thế giới thông qua một camera cổ điển vài trăm nghìn pixel mờ, chất lượng thấp; các chi tiết nhỏ hơn như biển báo văn bản trong hình ảnh sẽ hoàn toàn bị nhòe thành một đống pixel, dù bộ não có thông minh đến mấy cũng "khó mà làm nên cơm cháo" (thiếu nguyên liệu).
 
-为了攻克低清病症，前沿的模型厂商（如 Qwen-VL 团队，LLaVA-NeXT 等）用了一些非常精妙的工程手段：
+Để khắc phục căn bệnh "mờ mắt", các nhà sản xuất mô hình tiên tiến (như nhóm Qwen-VL, LLaVA-NeXT, v.v.) đã sử dụng một số kỹ thuật kỹ thuật rất tinh xảo:
 
-### 5.1 动态高分辨率切分布局 (Dynamic High-Resolution Mapping)
+### 5.1 Bố cục cắt lát độ phân giải cao động (Dynamic High-Resolution Mapping)
 
-如果直接输入大图会导致显存爆满，而粗暴缩小又会丢光所有细节，该如何破局？目前的解法是：**“局部特写 + 全局鸟瞰”的双视角策略**。
+Nếu trực tiếp nhập hình ảnh lớn sẽ dẫn đến tràn bộ nhớ GPU, còn thu nhỏ một cách thô bạo lại làm mất hết chi tiết, vậy làm thế nào để phá vỡ bế tắc? Giải pháp hiện tại là: **chiến lược "cận cảnh cục bộ + toàn cảnh tổng thể" với hai góc nhìn**.
 
-1. **整体概览**：首先把巨大的原版高清图直接缩小压到 $336 \times 336$，送给眼睛看一眼。这让模型掌握画面的**总体宏观布局结构**（天空在哪？地面在哪？）。
-2. **切片放大看**：把高清原图切成好几十个独立、$336 \times 336$ 的无损局部特写切分块（Slice）。
-3. **逐一审视与空间回拼**：让视觉引擎挨个用放大镜去扫描这几十个无损切面收集高清细节。随后，Projector 会像拼图一样把这些细节块的语义与初始的总览语境相互缝合。
+1.  **Tổng quan toàn bộ**: Đầu tiên, thu nhỏ trực tiếp hình ảnh gốc độ phân giải cao khổng lồ xuống $336 \times 336$, rồi đưa cho "mắt" xem. Điều này giúp mô hình nắm bắt **cấu trúc bố cục vĩ mô tổng thể** của hình ảnh (bầu trời ở đâu? mặt đất ở đâu?).
+2.  **Cắt lát và phóng to**: Cắt hình ảnh gốc độ phân giải cao thành hàng chục khối cắt lát cận cảnh cục bộ độc lập, không mất dữ liệu, kích thước $336 \times 336$ (Slice).
+3.  **Kiểm tra từng phần và ghép lại không gian**: Để bộ máy thị giác lần lượt dùng kính lúp quét qua hàng chục mặt cắt không mất dữ liệu này để thu thập chi tiết độ phân giải cao. Sau đó, Projector sẽ ghép các khối chi tiết này lại với ngữ cảnh tổng thể ban đầu như một trò chơi xếp hình.
 
-这种做法，就好比是你拿手机给一份报纸全景拍了一张照（看全貌版面布局），接着又端着手机贴近报纸连续拍下了几十张段落特写的组合过程。
+Cách làm này giống như bạn dùng điện thoại chụp toàn cảnh một tờ báo (để xem bố cục trang), sau đó lại dí điện thoại sát tờ báo và liên tục chụp hàng chục bức ảnh cận cảnh từng đoạn.
 
-### 5.2 换个天生的大眼睛 (Scaling the Vision Encoder)
+### 5.2 Thay một đôi mắt lớn bẩm sinh (Scaling the Vision Encoder)
 
-另一种纯粹展现暴力美学的做法就是：既然原始的眼睛天生基因有缺陷，那我就重头炼制一颗最惊世骇俗的超级眼睛。
+Một cách làm khác thuần túy thể hiện vẻ đẹp bạo lực là: vì đôi mắt ban đầu bẩm sinh có khuyết tật gen, vậy thì tôi sẽ luyện chế lại từ đầu một đôi mắt siêu việt nhất.
 
-以国内优秀的开源模型 **InternVL** 为经典代表，它摒弃了常用的小规格视觉模型，从底向上直接耗费海量资源单独训练了一个参数量高达几十亿（如 60 亿参数的 InternViT-6B）的罕见超巨型视觉编码器前置基座。
-凭借极强的数据吸收能力，它生来就是原生支持高分辨率无缝输入的“哈勃空间望远镜”。这种设计大大降低了系统为了切图拼图而引入的复杂工程开销和特征错位风险，直接实现“一览无遗”的高清视觉感知。
-
----
-
-## 6. 总结
-
-多模态大模型 (VLM) 并没有什么魔法。它只是做了一件事：
-
-**把“图像”这种外语，翻译成了“文本”这种母语，然后喂给了 LLM。**
-
-只要理解了这一点，你就理解了 VLM 的一切。
+Với mô hình mã nguồn mở xuất sắc của Trung Quốc là **InternVL** làm đại diện kinh điển, nó đã từ bỏ các mô hình thị giác quy mô nhỏ thường dùng, mà trực tiếp tiêu tốn lượng lớn tài nguyên để huấn luyện riêng một nền tảng bộ mã hóa thị giác tiền xử lý siêu khổng lồ với số lượng tham số lên đến hàng tỷ (ví dụ: InternViT-6B với 6 tỷ tham số) từ dưới lên.
+Nhờ khả năng hấp thụ dữ liệu cực mạnh, nó sinh ra đã là một "kính viễn vọng không gian Hubble" hỗ trợ đầu vào độ phân giải cao liền mạch. Thiết kế này đã giảm đáng kể chi phí kỹ thuật phức tạp và rủi ro sai lệch đặc trưng do hệ thống phải cắt và ghép hình ảnh, trực tiếp đạt được khả năng nhận thức thị giác độ nét cao "nhìn rõ mọi thứ".
 
 ---
 
-## 7. 名词速查表 (Glossary)
+## 6. Tóm tắt
 
-| 名词          | 全称                  | 解释                                                       |
+Mô hình đa phương thức lớn (VLM) không có phép thuật gì. Nó chỉ làm một việc:
+
+**Dịch "hình ảnh" - một ngoại ngữ, thành "văn bản" - tiếng mẹ đẻ, rồi đưa cho LLM.**
+
+Chỉ cần hiểu được điều này, bạn đã hiểu tất cả về VLM.
+
+---
+
+## 7. Bảng tra cứu thuật ngữ (Glossary)
+
+| Tên gọi        | Tên đầy đủ             | Giải thích                                                       |
 | :------------ | :-------------------- | :--------------------------------------------------------- |
-| **VLM**       | Vision-Language Model | **多模态大模型**。能看懂图的 GPT。                         |
-| **ViT**       | Vision Transformer    | **视觉模型**。VLM 的“眼睛”，负责把像素变成向量。           |
-| **Patch**     | -                     | **图像块**。图片被切成的小方块，相当于“视觉单词”。         |
-| **Projector** | -                     | **投射器/翻译官**。连接眼睛和大脑的桥梁。                  |
-| **Alignment** | -                     | **对齐**。让图像特征和文本特征在同一个空间里“互相听得懂”。 |
+| **VLM**       | Vision-Language Model | **Mô hình đa phương thức lớn**. GPT có thể hiểu hình ảnh.   |
+| **ViT**       | Vision Transformer    | **Mô hình thị giác**. "Đôi mắt" của VLM, chịu trách nhiệm biến pixel thành vector. |
+| **Patch**     | -                     | **Khối hình ảnh**. Các ô vuông nhỏ được cắt từ hình ảnh, tương đương với "từ thị giác". |
+| **Projector** | -                     | **Bộ chiếu/Phiên dịch viên**. Cây cầu nối giữa mắt và não.  |
+| **Alignment** | -                     | **Căn chỉnh**. Làm cho đặc trưng hình ảnh và đặc trưng văn bản "hiểu nhau" trong cùng một không gian. |

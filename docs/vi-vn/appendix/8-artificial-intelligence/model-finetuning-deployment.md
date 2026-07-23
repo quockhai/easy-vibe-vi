@@ -1,173 +1,173 @@
-# 模型微调与部署
+# Tinh chỉnh và Triển khai Mô hình
 
-::: tip 前言
-**大模型很强，但它不懂你的业务。** GPT-4 能写诗、能编程，但它不知道你公司的产品术语、不了解你行业的专业规范。微调（Fine-tuning）就是让通用大模型"学会"你的专业知识的过程——就像给一个博学的通才做岗前培训，让它变成你的领域专家。
+::: tip Lời nói đầu
+**Các mô hình lớn rất mạnh, nhưng chúng không hiểu nghiệp vụ của bạn.** GPT-4 có thể làm thơ, có thể lập trình, nhưng nó không biết các thuật ngữ sản phẩm của công ty bạn, không hiểu các quy tắc chuyên môn trong ngành của bạn. Tinh chỉnh (Fine-tuning) là quá trình giúp các mô hình lớn tổng quát "học" kiến thức chuyên môn của bạn – giống như đào tạo trước khi nhận việc cho một người đa tài uyên bác, để biến họ thành chuyên gia trong lĩnh vực của bạn.
 :::
 
-**这篇文章会带你学什么？**
+**Bài viết này sẽ giúp bạn học được gì?**
 
-学完这章后，你将获得：
+Sau khi hoàn thành chương này, bạn sẽ đạt được:
 
-- **流程认知**：掌握从数据准备到模型上线的完整微调流水线
-- **数据工程**：了解微调数据的格式要求和质量标准
-- **高效微调**：理解 LoRA 等参数高效微调技术的原理和优势
-- **模型压缩**：掌握量化技术如何让大模型在消费级硬件上运行
-- **部署实践**：了解模型服务的主流架构和选型策略
+-   **Nhận thức quy trình**: Nắm vững quy trình tinh chỉnh hoàn chỉnh từ chuẩn bị dữ liệu đến triển khai mô hình
+-   **Kỹ thuật dữ liệu**: Hiểu các yêu cầu về định dạng và tiêu chuẩn chất lượng của dữ liệu tinh chỉnh
+-   **Tinh chỉnh hiệu quả**: Hiểu nguyên lý và lợi ích của các kỹ thuật tinh chỉnh hiệu quả về tham số như LoRA
+-   **Nén mô hình**: Nắm vững cách kỹ thuật lượng tử hóa giúp các mô hình lớn chạy trên phần cứng tiêu dùng
+-   **Thực hành triển khai**: Hiểu các kiến trúc dịch vụ mô hình phổ biến và chiến lược lựa chọn
 
-| 章节 | 内容 | 核心概念 |
-|-----|------|---------|
-| **第 1 章** | 微调流水线 | 数据→训练→评估→部署 |
-| **第 2 章** | 训练数据 | 数据格式、质量控制 |
-| **第 3 章** | LoRA 微调 | 低秩适配、参数高效 |
-| **第 4 章** | 模型量化 | FP16、INT8、INT4 |
-| **第 5 章** | 模型部署 | 推理服务、API 网关 |
+| Chương | Nội dung | Khái niệm cốt lõi |
+|-------|----------|------------------|
+| **Chương 1** | Quy trình tinh chỉnh | Dữ liệu → Huấn luyện → Đánh giá → Triển khai |
+| **Chương 2** | Dữ liệu huấn luyện | Định dạng dữ liệu, kiểm soát chất lượng |
+| **Chương 3** | Tinh chỉnh LoRA | Thích ứng hạng thấp, hiệu quả tham số |
+| **Chương 4** | Lượng tử hóa mô hình | FP16, INT8, INT4 |
+| **Chương 5** | Triển khai mô hình | Dịch vụ suy luận, API Gateway |
 
 ---
 
-## 0. 全景图：为什么需要微调？
+## 0. Tổng quan: Tại sao cần tinh chỉnh?
 
-大语言模型的训练分为两个阶段：**预训练**和**微调**。预训练是在海量通用数据上学习语言能力，微调是在特定任务数据上学习专业能力。
+Huấn luyện các mô hình ngôn ngữ lớn được chia thành hai giai đoạn: **tiền huấn luyện** và **tinh chỉnh**. Tiền huấn luyện là học khả năng ngôn ngữ trên lượng lớn dữ liệu tổng quát, còn tinh chỉnh là học khả năng chuyên môn trên dữ liệu của một tác vụ cụ thể.
 
-打个比方：预训练像是上大学——学习通识知识，什么都懂一点；微调像是入职培训——针对具体岗位学习专业技能。
+Ví dụ: Tiền huấn luyện giống như đi học đại học – học kiến thức tổng quát, biết một chút về mọi thứ; tinh chỉnh giống như đào tạo trước khi nhận việc – học các kỹ năng chuyên môn cho một vị trí cụ thể.
 
-::: tip 什么时候需要微调？
-- **特定输出格式**：需要模型始终以固定 JSON 格式输出
-- **专业领域知识**：医疗、法律、金融等领域的专业术语和规范
-- **语言风格迁移**：让模型用特定的语气、风格回答（如客服话术）
-- **小众语言支持**：提升模型在特定语言上的表现
-- **成本优化**：用小模型微调替代大模型调用，降低推理成本
+::: tip Khi nào cần tinh chỉnh?
+-   **Định dạng đầu ra cụ thể**: Cần mô hình luôn xuất ra định dạng JSON cố định
+-   **Kiến thức chuyên ngành**: Các thuật ngữ và quy tắc chuyên môn trong lĩnh vực y tế, pháp luật, tài chính
+-   **Chuyển đổi phong cách ngôn ngữ**: Giúp mô hình trả lời bằng giọng điệu, phong cách cụ thể (ví dụ: lời thoại của nhân viên chăm sóc khách hàng)
+-   **Hỗ trợ ngôn ngữ ít phổ biến**: Nâng cao hiệu suất của mô hình trên các ngôn ngữ cụ thể
+-   **Tối ưu chi phí**: Sử dụng mô hình nhỏ được tinh chỉnh thay vì gọi mô hình lớn, giảm chi phí suy luận
 :::
 
 ---
 
-## 1. 微调流水线：从数据到上线的完整旅程
+## 1. Quy trình tinh chỉnh: Hành trình hoàn chỉnh từ dữ liệu đến triển khai
 
-微调不是"把数据丢给模型就完事"。它是一个严谨的工程流程，每个环节都会影响最终效果。
+Tinh chỉnh không phải là "chỉ cần đưa dữ liệu cho mô hình là xong". Đó là một quy trình kỹ thuật nghiêm ngặt, mỗi khâu đều ảnh hưởng đến kết quả cuối cùng.
 
 <FinetuningPipelineDemo />
 
-::: tip 微调的五个阶段
-1. **数据准备**：收集、清洗、标注训练数据，这是最耗时也最关键的环节
-2. **模型选择**：选择合适的基座模型（Base Model），如 Llama 3、Qwen、Mistral
-3. **训练配置**：设置学习率、batch size、epoch 数等超参数
-4. **训练执行**：在 GPU 上运行训练，监控 loss 曲线和评估指标
-5. **评估上线**：在测试集上评估效果，通过后部署为 API 服务
+::: tip Năm giai đoạn của tinh chỉnh
+1.  **Chuẩn bị dữ liệu**: Thu thập, làm sạch, gán nhãn dữ liệu huấn luyện, đây là khâu tốn thời gian và quan trọng nhất
+2.  **Lựa chọn mô hình**: Chọn mô hình nền tảng (Base Model) phù hợp, như Llama 3, Qwen, Mistral
+3.  **Cấu hình huấn luyện**: Thiết lập các siêu tham số như learning rate, batch size, số epoch
+4.  **Thực thi huấn luyện**: Chạy huấn luyện trên GPU, theo dõi đường cong loss và các chỉ số đánh giá
+5.  **Đánh giá và triển khai**: Đánh giá hiệu quả trên tập kiểm thử, sau khi đạt yêu cầu sẽ triển khai thành dịch vụ API
 :::
 
-| 阶段 | 关键动作 | 常见陷阱 |
-|------|---------|---------|
-| 数据准备 | 清洗、去重、格式化 | 数据质量差导致模型"学坏" |
-| 模型选择 | 评估基座模型能力 | 模型太大训练不动，太小效果差 |
-| 训练配置 | 调整超参数 | 学习率过高导致灾难性遗忘 |
-| 训练执行 | 监控 loss 和指标 | 过拟合、训练不收敛 |
-| 评估上线 | A/B 测试、灰度发布 | 测试集泄漏导致评估虚高 |
+| Giai đoạn | Hành động chính | Cạm bẫy thường gặp |
+|-----------|-----------------|--------------------|
+| Chuẩn bị dữ liệu | Làm sạch, loại bỏ trùng lặp, định dạng | Chất lượng dữ liệu kém khiến mô hình "học sai" |
+| Lựa chọn mô hình | Đánh giá khả năng của mô hình nền tảng | Mô hình quá lớn không thể huấn luyện, quá nhỏ thì hiệu quả kém |
+| Cấu hình huấn luyện | Điều chỉnh siêu tham số | Learning rate quá cao dẫn đến quên lãng thảm khốc |
+| Thực thi huấn luyện | Theo dõi loss và các chỉ số | Overfitting, huấn luyện không hội tụ |
+| Đánh giá và triển khai | A/B testing, triển khai theo giai đoạn (gray release) | Rò rỉ tập kiểm thử dẫn đến đánh giá quá cao |
 
 ---
 
-## 2. 训练数据：微调效果的天花板
+## 2. Dữ liệu huấn luyện: Giới hạn trên của hiệu quả tinh chỉnh
 
-在微调中有一句老话：**"Garbage in, garbage out"**。训练数据的质量直接决定了微调效果的上限。100 条高质量数据的效果，往往好过 10000 条低质量数据。
+Trong tinh chỉnh có một câu nói cũ: **"Garbage in, garbage out"** (Rác vào, rác ra). Chất lượng dữ liệu huấn luyện trực tiếp quyết định giới hạn trên của hiệu quả tinh chỉnh. Hiệu quả của 100 mẫu dữ liệu chất lượng cao thường tốt hơn 10000 mẫu dữ liệu chất lượng thấp.
 
 <TrainingDataDemo />
 
-::: tip 微调数据的三种常见格式
-1. **指令格式（Instruction）**：最常用的格式，包含 instruction（指令）、input（输入）、output（期望输出）三个字段。适合训练模型遵循指令。
-2. **对话格式（Chat）**：多轮对话形式，包含 system、user、assistant 角色的消息列表。适合训练聊天机器人。
-3. **补全格式（Completion）**：简单的 prompt-completion 对，适合文本生成、代码补全等场景。
+::: tip Ba định dạng phổ biến của dữ liệu tinh chỉnh
+1.  **Định dạng hướng dẫn (Instruction)**: Định dạng được sử dụng phổ biến nhất, bao gồm ba trường: instruction (hướng dẫn), input (đầu vào), output (đầu ra mong muốn). Phù hợp để huấn luyện mô hình tuân thủ hướng dẫn.
+2.  **Định dạng hội thoại (Chat)**: Dạng hội thoại nhiều lượt, bao gồm danh sách tin nhắn của các vai trò system, user, assistant. Phù hợp để huấn luyện chatbot.
+3.  **Định dạng hoàn thành (Completion)**: Cặp prompt-completion đơn giản, phù hợp cho các kịch bản tạo văn bản, hoàn thành mã.
 :::
 
-| 数据质量维度 | 说明 | 检查方法 |
-|------------|------|---------|
-| 准确性 | 答案必须正确无误 | 人工审核、专家校验 |
-| 一致性 | 相似问题的回答风格一致 | 抽样对比检查 |
-| 多样性 | 覆盖足够多的场景和变体 | 统计问题类型分布 |
-| 去重 | 避免重复样本导致过拟合 | 文本去重、语义去重 |
-| 数据量 | 通常 500~5000 条高质量数据即可 | 从少量开始，逐步增加 |
+| Khía cạnh chất lượng dữ liệu | Mô tả | Phương pháp kiểm tra |
+|-----------------------------|-------|----------------------|
+| Độ chính xác | Câu trả lời phải chính xác | Kiểm tra thủ công, xác minh bởi chuyên gia |
+| Tính nhất quán | Phong cách trả lời cho các câu hỏi tương tự phải nhất quán | Kiểm tra so sánh mẫu |
+| Tính đa dạng | Bao phủ đủ các kịch bản và biến thể | Thống kê phân bố loại câu hỏi |
+| Loại bỏ trùng lặp | Tránh các mẫu trùng lặp dẫn đến overfitting | Loại bỏ trùng lặp văn bản, loại bỏ trùng lặp ngữ nghĩa |
+| Lượng dữ liệu | Thường 500~5000 mẫu dữ liệu chất lượng cao là đủ | Bắt đầu với số lượng nhỏ, tăng dần |
 
 ---
 
-## 3. LoRA：用 1% 的参数实现 90% 的效果
+## 3. LoRA: Đạt 90% hiệu quả với 1% tham số
 
-全量微调（Full Fine-tuning）需要更新模型的所有参数——对于一个 70B 参数的模型，这意味着需要数百 GB 的显存和大量的 GPU 算力。对大多数团队来说，这不现实。
+Tinh chỉnh toàn bộ (Full Fine-tuning) yêu cầu cập nhật tất cả các tham số của mô hình – đối với một mô hình có 70B tham số, điều này có nghĩa là cần hàng trăm GB VRAM và lượng lớn sức mạnh tính toán của GPU. Đối với hầu hết các nhóm, điều này là không thực tế.
 
-LoRA（Low-Rank Adaptation）提供了一个优雅的解决方案：**冻结原始模型参数，只训练一小组新增的低秩矩阵**。这些矩阵的参数量通常只有原模型的 0.1%~1%，但能达到接近全量微调的效果。
+LoRA (Low-Rank Adaptation) cung cấp một giải pháp thanh lịch: **đóng băng các tham số mô hình gốc và chỉ huấn luyện một nhóm nhỏ các ma trận hạng thấp mới được thêm vào**. Lượng tham số của các ma trận này thường chỉ chiếm 0.1%~1% so với mô hình gốc, nhưng có thể đạt được hiệu quả gần bằng tinh chỉnh toàn bộ.
 
 <LoRADemo />
 
-::: tip LoRA 的核心思想
-原始模型的权重矩阵 W 是一个巨大的矩阵（如 4096×4096）。LoRA 不直接修改 W，而是在旁边加一个"旁路"：W' = W + BA，其中 B 和 A 是两个小矩阵（如 4096×8 和 8×4096）。训练时只更新 B 和 A，原始 W 保持不变。
-- **秩（Rank）**：r 值越大，表达能力越强，但参数量也越多。通常 r=8~64 就够用
-- **合并部署**：训练完成后，可以把 BA 合并回 W，推理时零额外开销
+::: tip Ý tưởng cốt lõi của LoRA
+Ma trận trọng số W của mô hình gốc là một ma trận khổng lồ (ví dụ: 4096×4096). LoRA không trực tiếp sửa đổi W, mà thêm một "đường vòng" bên cạnh: W' = W + BA, trong đó B và A là hai ma trận nhỏ (ví dụ: 4096×8 và 8×4096). Khi huấn luyện chỉ cập nhật B và A, W gốc vẫn giữ nguyên.
+-   **Hạng (Rank)**: Giá trị r càng lớn, khả năng biểu đạt càng mạnh, nhưng lượng tham số cũng càng nhiều. Thường r=8~64 là đủ dùng
+-   **Triển khai hợp nhất**: Sau khi huấn luyện xong, có thể hợp nhất BA trở lại W, không tốn thêm chi phí khi suy luận
 :::
 
-| 微调方式 | 可训练参数 | 显存需求 | 训练速度 | 效果 |
-|---------|-----------|---------|---------|------|
-| 全量微调 | 100% | 极高 | 慢 | 最好 |
-| LoRA | 0.1%~1% | 低 | 快 | 接近全量 |
-| QLoRA | 0.1%~1% | 更低 | 中等 | 略低于 LoRA |
-| Prompt Tuning | < 0.01% | 极低 | 很快 | 有限 |
+| Phương pháp tinh chỉnh | Tham số có thể huấn luyện | Yêu cầu VRAM | Tốc độ huấn luyện | Hiệu quả |
+|------------------------|--------------------------|---------------|-------------------|----------|
+| Tinh chỉnh toàn bộ | 100% | Rất cao | Chậm | Tốt nhất |
+| LoRA | 0.1%~1% | Thấp | Nhanh | Gần bằng toàn bộ |
+| QLoRA | 0.1%~1% | Thấp hơn | Trung bình | Hơi thấp hơn LoRA |
+| Prompt Tuning | < 0.01% | Rất thấp | Rất nhanh | Hạn chế |
 
 ---
 
-## 4. 模型量化：让大模型"瘦身"
+## 4. Lượng tử hóa mô hình: Giúp mô hình lớn "giảm cân"
 
-一个 70B 参数的模型，如果用 FP32（32 位浮点数）存储，需要 280GB 显存——没有几块顶级 GPU 根本跑不起来。量化（Quantization）技术通过降低数值精度来压缩模型体积，让大模型能在消费级硬件上运行。
+Một mô hình 70B tham số, nếu lưu trữ bằng FP32 (số dấu phẩy động 32 bit), sẽ cần 280GB VRAM – không có vài chiếc GPU hàng đầu thì không thể chạy được. Kỹ thuật lượng tử hóa (Quantization) nén kích thước mô hình bằng cách giảm độ chính xác số học, cho phép các mô hình lớn chạy trên phần cứng tiêu dùng.
 
 <ModelQuantizationDemo />
 
-::: tip 量化的核心权衡
-量化本质上是**精度换空间**的权衡。FP32 → FP16 几乎无损，INT8 有轻微损失，INT4 会有明显但通常可接受的质量下降。关键是找到你场景下的最佳平衡点。
-- **FP16（半精度）**：体积减半，质量几乎无损，是训练和推理的默认选择
-- **INT8（8 位整数）**：体积再减半，质量损失很小，适合大多数推理场景
-- **INT4（4 位整数）**：体积仅为 FP32 的 1/8，质量有一定损失，适合资源受限场景
+::: tip Sự đánh đổi cốt lõi của lượng tử hóa
+Lượng tử hóa về bản chất là sự đánh đổi **độ chính xác lấy không gian**. FP32 → FP16 gần như không mất mát, INT8 có mất mát nhẹ, INT4 sẽ có sự suy giảm chất lượng rõ rệt nhưng thường có thể chấp nhận được. Điều quan trọng là tìm ra điểm cân bằng tốt nhất cho trường hợp của bạn.
+-   **FP16 (bán chính xác)**: Kích thước giảm một nửa, chất lượng gần như không mất mát, là lựa chọn mặc định cho huấn luyện và suy luận
+-   **INT8 (số nguyên 8 bit)**: Kích thước giảm thêm một nửa, mất mát chất lượng rất nhỏ, phù hợp cho hầu hết các kịch bản suy luận
+-   **INT4 (số nguyên 4 bit)**: Kích thước chỉ bằng 1/8 của FP32, có mất mát chất lượng nhất định, phù hợp cho các kịch bản tài nguyên hạn chế
 :::
 
-| 精度 | 每参数字节 | 70B 模型体积 | 质量损失 | 适用场景 |
-|------|-----------|-------------|---------|---------|
-| FP32 | 4 字节 | ~280 GB | 无 | 训练基准 |
-| FP16 | 2 字节 | ~140 GB | 几乎无 | 标准训练和推理 |
-| INT8 | 1 字节 | ~70 GB | 很小 | 生产推理 |
-| INT4 | 0.5 字节 | ~35 GB | 可接受 | 边缘设备、本地部署 |
+| Độ chính xác | Byte mỗi tham số | Kích thước mô hình 70B | Mất mát chất lượng | Trường hợp áp dụng |
+|--------------|-------------------|------------------------|--------------------|--------------------|
+| FP32 | 4 byte | ~280 GB | Không | Tiêu chuẩn huấn luyện |
+| FP16 | 2 byte | ~140 GB | Gần như không | Huấn luyện và suy luận tiêu chuẩn |
+| INT8 | 1 byte | ~70 GB | Rất nhỏ | Suy luận sản xuất |
+| INT4 | 0.5 byte | ~35 GB | Có thể chấp nhận | Thiết bị biên, triển khai cục bộ |
 
 ---
 
-## 5. 模型部署：从实验室到生产环境
+## 5. Triển khai mô hình: Từ phòng thí nghiệm đến môi trường sản xuất
 
-模型训练好了，量化压缩了，最后一步是把它部署成可供调用的服务。模型部署不只是"把模型跑起来"，还涉及并发处理、负载均衡、成本控制等工程问题。
+Mô hình đã được huấn luyện, đã được lượng tử hóa và nén, bước cuối cùng là triển khai nó thành một dịch vụ có thể gọi được. Triển khai mô hình không chỉ là "chạy mô hình", mà còn liên quan đến các vấn đề kỹ thuật như xử lý đồng thời, cân bằng tải, kiểm soát chi phí.
 
 <ModelServingDemo />
 
-::: tip 三种主流部署方案
-1. **API 服务商**：直接使用 OpenAI、Anthropic 等厂商的 API。零运维，按 token 付费，适合快速验证和中小规模使用。
-2. **自托管推理服务**：用 vLLM、TGI 等框架在自己的 GPU 服务器上部署。成本可控，数据不出域，适合有隐私要求或大规模调用的场景。
-3. **Serverless 推理**：使用 AWS SageMaker、Replicate 等平台，按请求付费，自动扩缩容。适合流量波动大的场景。
+::: tip Ba giải pháp triển khai phổ biến
+1.  **Nhà cung cấp dịch vụ API**: Trực tiếp sử dụng API của các nhà cung cấp như OpenAI, Anthropic. Không cần vận hành, tính phí theo token, phù hợp cho việc xác minh nhanh và sử dụng quy mô vừa và nhỏ.
+2.  **Dịch vụ suy luận tự host**: Sử dụng các framework như vLLM, TGI để triển khai trên máy chủ GPU của riêng bạn. Chi phí có thể kiểm soát, dữ liệu không rời khỏi miền, phù hợp cho các kịch bản có yêu cầu về quyền riêng tư hoặc gọi API quy mô lớn.
+3.  **Suy luận Serverless**: Sử dụng các nền tảng như AWS SageMaker, Replicate, tính phí theo yêu cầu, tự động mở rộng/thu hẹp. Phù hợp cho các kịch bản có lưu lượng truy cập biến động lớn.
 :::
 
-| 部署方案 | 成本模型 | 延迟 | 运维复杂度 | 适用场景 |
-|---------|---------|------|-----------|---------|
-| API 服务商 | 按 token 计费 | 中等 | 零 | 快速原型、中小规模 |
-| vLLM 自部署 | GPU 租赁费用 | 低 | 高 | 大规模、隐私敏感 |
-| Serverless | 按请求计费 | 冷启动较高 | 低 | 流量波动大 |
-| 边缘部署 | 硬件一次性投入 | 极低 | 中 | 离线场景、IoT |
+| Giải pháp triển khai | Mô hình chi phí | Độ trễ | Độ phức tạp vận hành | Trường hợp áp dụng |
+|----------------------|-----------------|--------|---------------------|--------------------|
+| Nhà cung cấp dịch vụ API | Tính phí theo token | Trung bình | Không | Tạo mẫu nhanh, quy mô vừa và nhỏ |
+| vLLM tự triển khai | Chi phí thuê GPU | Thấp | Cao | Quy mô lớn, nhạy cảm về quyền riêng tư |
+| Serverless | Tính phí theo yêu cầu | Khởi động nguội cao | Thấp | Lưu lượng truy cập biến động lớn |
+| Triển khai biên | Đầu tư phần cứng một lần | Rất thấp | Trung bình | Trường hợp ngoại tuyến, IoT |
 
 ---
 
-## 总结
+## Tóm tắt
 
-模型微调与部署是让大模型从"通用工具"变成"专业助手"的关键环节。从数据准备到模型上线，每一步都需要工程化的思维和实践。
+Tinh chỉnh và triển khai mô hình là các khâu then chốt giúp biến các mô hình lớn từ "công cụ tổng quát" thành "trợ lý chuyên nghiệp". Từ chuẩn bị dữ liệu đến triển khai mô hình, mỗi bước đều đòi hỏi tư duy và thực hành kỹ thuật.
 
-回顾本章的关键要点：
+Điểm chính của chương này:
 
-1. **微调是岗前培训**：让通用模型学会特定领域的知识和行为模式
-2. **数据质量决定上限**：100 条高质量数据胜过 10000 条低质量数据
-3. **LoRA 是效率之王**：用不到 1% 的参数实现接近全量微调的效果
-4. **量化是部署利器**：INT4 量化让 70B 模型在单卡上运行成为可能
-5. **部署方案因地制宜**：快速验证用 API，大规模用自部署，波动大用 Serverless
+1.  **Tinh chỉnh là đào tạo trước khi nhận việc**: Giúp mô hình tổng quát học kiến thức và hành vi của một lĩnh vực cụ thể
+2.  **Chất lượng dữ liệu quyết định giới hạn trên**: 100 mẫu dữ liệu chất lượng cao tốt hơn 10000 mẫu dữ liệu chất lượng thấp
+3.  **LoRA là vua hiệu quả**: Đạt được hiệu quả gần bằng tinh chỉnh toàn bộ với chưa đến 1% tham số
+4.  **Lượng tử hóa là công cụ triển khai hữu hiệu**: Lượng tử hóa INT4 giúp mô hình 70B chạy trên một card đồ họa duy nhất
+5.  **Giải pháp triển khai tùy thuộc vào tình hình thực tế**: Xác minh nhanh dùng API, quy mô lớn dùng tự triển khai, lưu lượng biến động dùng Serverless
 
-## 延伸阅读
+## Đọc thêm
 
-- [Hugging Face PEFT 文档](https://huggingface.co/docs/peft) - 参数高效微调库官方文档
-- [vLLM 文档](https://docs.vllm.ai/) - 高性能 LLM 推理引擎
-- [Unsloth](https://github.com/unslothai/unsloth) - 2x 加速的 LoRA 微调框架
-- [GGUF 格式说明](https://github.com/ggerganov/ggml/blob/master/docs/gguf.md) - llama.cpp 使用的量化模型格式
-- [OpenAI Fine-tuning Guide](https://platform.openai.com/docs/guides/fine-tuning) - OpenAI 官方微调指南
+-   [Hugging Face PEFT 文档](https://huggingface.co/docs/peft) - Tài liệu chính thức của thư viện tinh chỉnh hiệu quả tham số
+-   [vLLM 文档](https://docs.vllm.ai/) - Công cụ suy luận LLM hiệu suất cao
+-   [Unsloth](https://github.com/unslothai/unsloth) - Framework tinh chỉnh LoRA tăng tốc 2 lần
+-   [GGUF 格式说明](https://github.com/ggerganov/ggml/blob/master/docs/gguf.md) - Định dạng mô hình lượng tử hóa được sử dụng bởi llama.cpp
+-   [OpenAI Fine-tuning Guide](https://platform.openai.com/docs/guides/fine-tuning) - Hướng dẫn tinh chỉnh chính thức của OpenAI

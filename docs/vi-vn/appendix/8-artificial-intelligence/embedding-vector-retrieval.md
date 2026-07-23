@@ -1,193 +1,188 @@
-# Embedding 与向量检索
+# Embedding và Truy vấn Vector
 
-::: tip 前言
-**计算机怎么理解"猫和狗很像，但和汽车不像"这件事？** 对人类来说这是常识，但对计算机来说，"猫"、"狗"、"汽车"不过是三个毫无关联的字符串。Embedding（嵌入）技术就是解决这个问题的关键——它把文字变成数字向量，让计算机也能理解语义上的"远近亲疏"。
+::: tip Lời nói đầu
+**Máy tính làm thế nào để hiểu rằng "mèo và chó rất giống nhau, nhưng không giống ô tô"?** Đối với con người, đây là kiến thức thông thường, nhưng đối với máy tính, "mèo", "chó", "ô tô" chỉ là ba chuỗi ký tự không liên quan gì đến nhau. Công nghệ Embedding (nhúng) chính là chìa khóa để giải quyết vấn đề này – nó biến văn bản thành các vector số, giúp máy tính cũng có thể hiểu được sự "gần gũi, thân thiết" về mặt ngữ nghĩa.
 :::
 
-**这篇文章会带你学什么？**
+**Bài viết này sẽ giúp bạn học được gì?**
 
-学完这章后，你将获得：
+Sau khi hoàn thành chương này, bạn sẽ có được:
 
-- **直觉理解**：明白 Embedding 是什么，为什么"猫"和"狗"的向量会靠近
-- **相似度计算**：掌握余弦相似度、欧氏距离等核心度量方法
-- **索引原理**：理解向量数据库如何在百万级数据中毫秒级检索
-- **技术选型**：了解主流向量数据库的特点和适用场景
-- **端到端流程**：掌握从文本到向量到检索的完整 Pipeline
+-   **Hiểu trực quan**: Nắm rõ Embedding là gì, tại sao vector của "mèo" và "chó" lại gần nhau
+-   **Tính toán độ tương đồng**: Nắm vững các phương pháp đo lường cốt lõi như Cosine Similarity, Euclidean Distance
+-   **Nguyên lý lập chỉ mục**: Hiểu cách cơ sở dữ liệu vector truy vấn hàng triệu dữ liệu trong mili giây
+-   **Lựa chọn công nghệ**: Tìm hiểu đặc điểm và kịch bản ứng dụng của các cơ sở dữ liệu vector phổ biến
+-   **Quy trình đầu cuối**: Nắm vững Pipeline hoàn chỉnh từ văn bản đến vector đến truy vấn
 
-| 章节 | 内容 | 核心概念 |
-|-----|------|---------|
-| **第 1 章** | Embedding 概念 | 语义空间、向量表示 |
-| **第 2 章** | 相似度计算 | 余弦相似度、欧氏距离 |
-| **第 3 章** | 向量索引 | 暴力搜索 vs ANN |
-| **第 4 章** | 向量数据库 | Pinecone、Milvus、Chroma |
-| **第 5 章** | 端到端 Pipeline | 文本→向量→存储→查询 |
+| Chương | Nội dung | Khái niệm cốt lõi |
+|-------|----------|-----------------|
+| **Chương 1** | Khái niệm Embedding | Không gian ngữ nghĩa, biểu diễn vector |
+| **Chương 2** | Tính toán độ tương đồng | Cosine Similarity, Euclidean Distance |
+| **Chương 3** | Lập chỉ mục vector | Tìm kiếm vét cạn vs ANN |
+| **Chương 4** | Cơ sở dữ liệu vector | Pinecone, Milvus, Chroma |
+| **Chương 5** | Pipeline đầu cuối | Văn bản → Vector → Lưu trữ → Truy vấn |
 
 ---
 
-## 0. 全景图：从文字到数字的桥梁
+## 0. Toàn cảnh: Cầu nối từ văn bản đến con số
 
-在自然语言处理的世界里，有一个根本性的挑战：**计算机只认识数字，不认识文字**。
+Trong thế giới Xử lý ngôn ngữ tự nhiên, có một thách thức cơ bản: **máy tính chỉ nhận biết các con số, không nhận biết văn bản**.
 
-早期的做法是给每个词分配一个编号（One-Hot 编码），比如"猫"=001，"狗"=010，"汽车"=100。但这样做有个致命问题：**所有词之间的距离都一样远**。"猫"到"狗"的距离和"猫"到"汽车"的距离完全相同——这显然不符合我们的直觉。
+Cách làm ban đầu là gán cho mỗi từ một mã số (One-Hot encoding), ví dụ "mèo"=001, "chó"=010, "ô tô"=100. Nhưng cách này có một vấn đề chí mạng: **khoảng cách giữa tất cả các từ đều như nhau**. Khoảng cách từ "mèo" đến "chó" hoàn toàn giống với khoảng cách từ "mèo" đến "ô tô" – điều này rõ ràng không phù hợp với trực giác của chúng ta.
 
-Embedding 的革命性在于：它把每个词映射到一个**稠密的低维向量空间**，让语义相近的词自然聚集在一起。在这个空间里，"猫"和"狗"靠得很近，而"汽车"则在远处——计算机终于能"理解"语义了。
+Sự cách mạng của Embedding nằm ở chỗ: nó ánh xạ mỗi từ vào một **không gian vector mật độ thấp, dày đặc**, khiến các từ có ngữ nghĩa tương tự tự nhiên tập hợp lại với nhau. Trong không gian này, "mèo" và "chó" nằm rất gần nhau, trong khi "ô tô" lại ở xa – máy tính cuối cùng đã có thể "hiểu" ngữ nghĩa.
 
-::: tip 从 One-Hot 到 Embedding 的飞跃
-- **One-Hot**：维度 = 词表大小（可能几万维），每个向量只有一个 1，其余全是 0，稀疏且无语义
-- **Embedding**：维度通常 768~1536，每个数字都有意义，稠密且富含语义信息
-- **关键突破**：Word2Vec（2013）证明了"词的含义可以用它的上下文来定义"，开启了 Embedding 时代
+::: tip Bước nhảy vọt từ One-Hot đến Embedding
+-   **One-Hot**: Chiều = kích thước từ vựng (có thể vài chục nghìn chiều), mỗi vector chỉ có một số 1, còn lại là 0, thưa thớt và không có ngữ nghĩa
+-   **Embedding**: Chiều thường là 768~1536, mỗi con số đều có ý nghĩa, dày đặc và chứa nhiều thông tin ngữ nghĩa
+-   **Đột phá quan trọng**: Word2Vec (2013) đã chứng minh rằng "ý nghĩa của một từ có thể được định nghĩa bằng ngữ cảnh của nó", mở ra kỷ nguyên Embedding
 :::
 
 ---
 
-## 1. Embedding 概念：把文字变成坐标
+## 1. Khái niệm Embedding: Biến văn bản thành tọa độ
 
-Embedding 的核心思想可以用一句话概括：**用一组数字（向量）来表示一个词或句子的含义**。
+Ý tưởng cốt lõi của Embedding có thể tóm tắt trong một câu: **Sử dụng một tập hợp các con số (vector) để biểu diễn ý nghĩa của một từ hoặc một câu**.
 
-想象一个二维坐标系。我们把"猫"放在坐标 (0.2, 0.7)，"狗"放在 (0.3, 0.6)，"汽车"放在 (0.9, 0.1)。你会发现"猫"和"狗"的坐标很接近，而"汽车"离它们很远。这就是 Embedding 的直觉——**语义相似度变成了空间距离**。
+Hãy tưởng tượng một hệ tọa độ hai chiều. Chúng ta đặt "mèo" tại tọa độ (0.2, 0.7), "chó" tại (0.3, 0.6), "ô tô" tại (0.9, 0.1). Bạn sẽ thấy tọa độ của "mèo" và "chó" rất gần nhau, trong khi "ô tô" lại cách xa chúng. Đây chính là trực giác của Embedding – **độ tương đồng ngữ nghĩa biến thành khoảng cách không gian**.
 
 <EmbeddingConceptDemo />
 
-::: tip Embedding 的三个关键特性
-1. **语义聚类**：相似含义的词会自动聚集在一起（动物一簇、食物一簇、科技一簇）
-2. **类比关系**：向量运算可以表达语义关系，经典例子：king - man + woman ≈ queen
-3. **维度含义**：每个维度隐式编码了某种语义特征（如"是否是动物"、"大小"、"情感倾向"等）
+::: tip Ba đặc tính quan trọng của Embedding
+1.  **Phân cụm ngữ nghĩa**: Các từ có ý nghĩa tương tự sẽ tự động tập hợp lại với nhau (một cụm động vật, một cụm thức ăn, một cụm công nghệ)
+2.  **Quan hệ tương tự**: Các phép toán vector có thể biểu diễn quan hệ ngữ nghĩa, ví dụ kinh điển: king - man + woman ≈ queen
+3.  **Ý nghĩa chiều**: Mỗi chiều ẩn chứa một đặc trưng ngữ nghĩa nào đó (như "có phải là động vật không", "kích thước", "khuynh hướng cảm xúc", v.v.)
 :::
 
-| 编码方式 | 维度 | 语义信息 | 典型应用 |
-|---------|------|---------|---------|
-| One-Hot | 词表大小（~50000） | 无 | 传统 NLP |
-| Word2Vec | 100~300 | 词级语义 | 词相似度、类比推理 |
-| BERT Embedding | 768 | 上下文语义 | 句子理解、问答 |
-| OpenAI text-embedding-3 | 1536~3072 | 深层语义 | RAG、语义搜索 |
+| Phương pháp mã hóa | Chiều | Thông tin ngữ nghĩa | Ứng dụng điển hình |
+|--------------------|-------|--------------------|--------------------|
+| One-Hot            | Kích thước từ vựng (~50000) | Không               | NLP truyền thống     |
+| Word2Vec           | 100~300 | Ngữ nghĩa cấp từ    | Độ tương đồng từ, suy luận tương tự |
+| BERT Embedding     | 768   | Ngữ nghĩa ngữ cảnh | Hiểu câu, hỏi đáp   |
+| OpenAI text-embedding-3 | 1536~3072 | Ngữ nghĩa sâu sắc   | RAG, tìm kiếm ngữ nghĩa |
 
 ---
 
-## 2. 相似度计算：向量之间有多"近"？
+## 2. Tính toán độ tương đồng: Các vector giữa nhau "gần" đến mức nào?
 
-有了向量表示，下一个问题自然是：**怎么衡量两个向量有多相似？** 这就像在地图上衡量两个城市有多近——你可以量直线距离，也可以看方向是否一致。
+Khi đã có biểu diễn vector, câu hỏi tiếp theo tự nhiên là: **làm thế nào để đo lường mức độ tương đồng giữa hai vector?** Điều này giống như đo khoảng cách giữa hai thành phố trên bản đồ – bạn có thể đo khoảng cách đường thẳng, hoặc xem hướng có giống nhau không.
 
 <VectorSimilarityDemo />
 
-::: tip 两种核心度量
-- **余弦相似度（Cosine Similarity）**：衡量两个向量的**方向**是否一致，值域 [-1, 1]。1 表示方向完全相同，0 表示正交（无关），-1 表示完全相反。文本语义比较的首选，因为它不受向量长度影响。
-- **欧氏距离（Euclidean Distance）**：衡量两个向量端点之间的**直线距离**，值域 [0, ∞)。0 表示完全重合，值越大越不相似。适合需要考虑"绝对大小"的场景。
+::: tip Hai phương pháp đo lường cốt lõi
+-   **Cosine Similarity**: Đo lường **hướng** của hai vector có giống nhau không, giá trị trong khoảng [-1, 1]. 1 nghĩa là hướng hoàn toàn giống nhau, 0 nghĩa là trực giao (không liên quan), -1 nghĩa là hoàn toàn ngược lại. Là lựa chọn hàng đầu để so sánh ngữ nghĩa văn bản vì nó không bị ảnh hưởng bởi độ dài vector.
+-   **Euclidean Distance**: Đo lường **khoảng cách đường thẳng** giữa hai điểm cuối của vector, giá trị trong khoảng [0, ∞). 0 nghĩa là hoàn toàn trùng khớp, giá trị càng lớn càng không tương đồng. Phù hợp với các kịch bản cần xem xét "kích thước tuyệt đối".
 :::
 
-| 度量方式 | 公式直觉 | 值域 | 适用场景 |
-|---------|---------|------|---------|
-| 余弦相似度 | 看方向，忽略长度 | [-1, 1] | 文本语义搜索、推荐系统 |
-| 欧氏距离 | 看端点直线距离 | [0, ∞) | 图像特征、聚类分析 |
-| 点积 | 方向 × 长度 | (-∞, +∞) | 归一化向量的快速计算 |
-| 曼哈顿距离 | 沿坐标轴走的距离 | [0, ∞) | 高维稀疏向量 |
+| Phương pháp đo lường | Trực giác công thức | Khoảng giá trị | Kịch bản áp dụng |
+|----------------------|--------------------|----------------|------------------|
+| Cosine Similarity    | Xem hướng, bỏ qua độ dài | [-1, 1]        | Tìm kiếm ngữ nghĩa văn bản, hệ thống gợi ý |
+| Euclidean Distance   | Xem khoảng cách đường thẳng giữa các điểm cuối | [0, ∞)         | Đặc trưng hình ảnh, phân tích cụm |
+| Dot Product          | Hướng × Độ dài     | (-∞, +∞)       | Tính toán nhanh cho vector đã được chuẩn hóa |
+| Manhattan Distance   | Khoảng cách di chuyển dọc theo các trục tọa độ | [0, ∞)         | Vector thưa thớt chiều cao |
 
 ---
 
-## 3. 向量索引：如何在百万向量中毫秒检索？
+## 3. Lập chỉ mục vector: Truy vấn hàng triệu vector trong mili giây như thế nào?
 
-假设你有 100 万条文档，每条都转成了 1536 维的向量。用户提了一个问题，你需要找到最相似的 10 条。最直接的方法是逐一计算相似度——但这意味着要做 100 万次 1536 维的向量运算，太慢了。
+Giả sử bạn có 1 triệu tài liệu, mỗi tài liệu đã được chuyển thành vector 1536 chiều. Người dùng đặt một câu hỏi, bạn cần tìm 10 tài liệu tương tự nhất. Phương pháp trực tiếp nhất là tính toán độ tương đồng từng cái một – nhưng điều này có nghĩa là phải thực hiện 1 triệu phép toán vector 1536 chiều, quá chậm.
 
-这就是**向量索引**要解决的问题：**用空间换时间，通过预处理建立索引结构，让检索速度从 O(n) 降到近似 O(log n)**。
+Đây chính là vấn đề mà **lập chỉ mục vector** cần giải quyết: **đánh đổi không gian lấy thời gian, thông qua tiền xử lý để xây dựng cấu trúc chỉ mục, giúp tốc độ truy vấn giảm từ O(n) xuống xấp xỉ O(log n)**.
 
 <VectorIndexDemo />
 
-::: tip 暴力搜索 vs 近似最近邻（ANN）
-- **暴力搜索（Flat）**：逐一比较，100% 准确但速度慢。适合数据量小（< 10 万）的场景。
-- **IVF（倒排文件索引）**：先把向量空间划分成若干区域（聚类），查询时只搜索最近的几个区域。像是把图书馆按主题分区，找书时只去相关区域。
-- **HNSW（分层可导航小世界图）**：构建多层图结构，从粗粒度到细粒度逐层导航。像是先看世界地图定位到国家，再看省级地图，最后看街道地图。
-- **PQ（乘积量化）**：把高维向量压缩成短编码，牺牲少量精度换取大幅内存节省。适合超大规模数据集。
+::: tip Tìm kiếm vét cạn vs. Approximate Nearest Neighbor (ANN)
+-   **Tìm kiếm vét cạn (Flat)**: So sánh từng cái một, độ chính xác 100% nhưng tốc độ chậm. Phù hợp với dữ liệu nhỏ (< 100 nghìn).
+-   **IVF (Inverted File Index)**: Đầu tiên chia không gian vector thành nhiều vùng (phân cụm), khi truy vấn chỉ tìm kiếm trong vài vùng gần nhất. Giống như chia thư viện theo chủ đề, khi tìm sách chỉ đến khu vực liên quan.
+-   **HNSW (Hierarchical Navigable Small World Graph)**: Xây dựng cấu trúc đồ thị đa lớp, điều hướng từng lớp từ thô đến mịn. Giống như trước tiên xem bản đồ thế giới để định vị quốc gia, sau đó xem bản đồ cấp tỉnh, cuối cùng xem bản đồ đường phố.
+-   **PQ (Product Quantization)**: Nén vector chiều cao thành mã ngắn, hy sinh một chút độ chính xác để tiết kiệm đáng kể bộ nhớ. Phù hợp với tập dữ liệu siêu lớn.
 :::
 
-| 索引类型 | 构建速度 | 查询速度 | 召回率 | 内存占用 | 适用规模 |
-|---------|---------|---------|-------|---------|---------|
-| Flat（暴力） | 无需构建 | 慢 | 100% | 高 | < 10 万 |
-| IVF | 中等 | 快 | 95%+ | 中 | 10 万~1000 万 |
-| HNSW | 慢 | 很快 | 99%+ | 高 | 10 万~1000 万 |
-| PQ | 中等 | 快 | 90%+ | 很低 | > 1000 万 |
-| IVF-PQ | 中等 | 快 | 92%+ | 低 | > 1 亿 |
+| Loại chỉ mục | Tốc độ xây dựng | Tốc độ truy vấn | Tỷ lệ thu hồi | Chiếm dụng bộ nhớ | Quy mô áp dụng |
+|--------------|-----------------|-----------------|---------------|-------------------|-----------------|
+| Flat (vét cạn) | Không cần xây dựng | Chậm            | 100%          | Cao               | < 100 nghìn     |
+| IVF          | Trung bình      | Nhanh           | 95%+          | Trung bình        | 100 nghìn~10 triệu |
+| HNSW         | Chậm            | Rất nhanh       | 99%+          | Cao               | 100 nghìn~10 triệu |
+| PQ           | Trung bình      | Nhanh           | 90%+          | Rất thấp          | > 10 triệu      |
+| IVF-PQ       | Trung bình      | Nhanh           | 92%+          | Thấp              | > 100 triệu     |
 
 ---
 
-## 4. 向量数据库：专为向量而生的存储引擎
+## 4. Cơ sở dữ liệu vector: Công cụ lưu trữ chuyên biệt cho vector
 
-有了向量和索引算法，你需要一个地方来存储和管理它们。传统数据库（MySQL、PostgreSQL）擅长处理结构化数据，但对高维向量的相似度搜索力不从心。**向量数据库**就是为这个场景专门设计的。
+Với các thuật toán vector và chỉ mục, bạn cần một nơi để lưu trữ và quản lý chúng. Các cơ sở dữ liệu truyền thống (MySQL, PostgreSQL) giỏi xử lý dữ liệu có cấu trúc, nhưng lại yếu trong việc tìm kiếm độ tương đồng của vector chiều cao. **Cơ sở dữ liệu vector** được thiết kế đặc biệt cho kịch bản này.
 
 <VectorDatabaseDemo />
 
-::: tip 向量数据库的核心能力
-1. **高效存储**：针对高维浮点向量优化的存储格式
-2. **ANN 检索**：内置多种近似最近邻索引算法（HNSW、IVF 等）
-3. **元数据过滤**：支持在向量搜索的同时按标签、时间等条件过滤
-4. **实时更新**：支持动态增删改向量，无需重建整个索引
-5. **水平扩展**：分布式架构支持亿级向量规模
+::: tip Khả năng cốt lõi của cơ sở dữ liệu vector
+1.  **Lưu trữ hiệu quả**: Định dạng lưu trữ được tối ưu hóa cho vector dấu phẩy động chiều cao
+2.  **Truy vấn ANN**: Tích hợp nhiều thuật toán chỉ mục Approximate Nearest Neighbor (HNSW, IVF, v.v.)
+3.  **Lọc siêu dữ liệu**: Hỗ trợ lọc đồng thời theo nhãn, thời gian và các điều kiện khác trong khi tìm kiếm vector
+4.  **Cập nhật thời gian thực**: Hỗ trợ thêm, xóa, sửa vector động, không cần xây dựng lại toàn bộ chỉ mục
+5.  **Mở rộng theo chiều ngang**: Kiến trúc phân tán hỗ trợ quy mô hàng tỷ vector
 :::
 
-| 数据库 | 类型 | 特点 | 适用场景 |
-|-------|------|------|---------|
-| Pinecone | 全托管云服务 | 零运维、开箱即用 | 快速原型、中小规模生产 |
-| Milvus | 开源分布式 | 高性能、可扩展 | 大规模生产环境 |
-| Chroma | 开源轻量 | 嵌入式、API 简洁 | 本地开发、小型项目 |
-| Weaviate | 开源云原生 | 内置向量化、GraphQL | 需要自动向量化的场景 |
-| Qdrant | 开源高性能 | Rust 实现、过滤强 | 需要复杂过滤的场景 |
-| pgvector | PG 扩展 | 复用现有 PG 基础设施 | 已有 PostgreSQL 的团队 |
+| Cơ sở dữ liệu | Loại           | Đặc điểm           | Kịch bản áp dụng |
+|---------------|----------------|--------------------|------------------|
+| Pinecone      | Dịch vụ đám mây được quản lý hoàn toàn | Không cần vận hành, sẵn sàng sử dụng | Tạo mẫu nhanh, sản xuất quy mô vừa và nhỏ |
+| Milvus        | Phân tán mã nguồn mở | Hiệu suất cao, có thể mở rộng | Môi trường sản xuất quy mô lớn |
+| Chroma        | Mã nguồn mở nhẹ | Nhúng, API đơn giản | Phát triển cục bộ, dự án nhỏ |
+| Weaviate      | Mã nguồn mở Cloud-native | Tích hợp vector hóa, GraphQL | Kịch bản cần vector hóa tự động |
+| Qdrant        | Mã nguồn mở hiệu suất cao | Triển khai bằng Rust, lọc mạnh mẽ | Kịch bản cần lọc phức tạp |
+| pgvector      | Tiện ích mở rộng của PG | Tái sử dụng cơ sở hạ tầng PG hiện có | Các nhóm đã có PostgreSQL |
 
 ---
 
-## 5. 端到端 Pipeline：从文本到检索的完整流程
+## 5. Pipeline đầu cuối: Quy trình hoàn chỉnh từ văn bản đến truy vấn
 
-理解了各个组件后，让我们把它们串起来，看看一个完整的向量检索系统是怎么工作的。
+Sau khi hiểu các thành phần, hãy kết nối chúng lại để xem một hệ thống truy vấn vector hoàn chỉnh hoạt động như thế nào.
 
-整个流程分为两条线：**离线写入**（把文档变成向量存起来）和**在线查询**（把问题变成向量去搜索）。
+Toàn bộ quy trình được chia thành hai luồng: **ghi ngoại tuyến** (biến tài liệu thành vector và lưu trữ) và **truy vấn trực tuyến** (biến câu hỏi thành vector và tìm kiếm).
 
 <EmbeddingPipelineDemo />
 
-::: tip 离线写入流程
-1. **文档加载**：从各种来源（PDF、网页、数据库）读取原始文本
-2. **文本预处理**：清洗、去噪、标准化（去掉 HTML 标签、特殊字符等）
-3. **文本分块**：按策略将长文本切分为合适大小的片段（200~500 tokens）
-4. **向量化**：调用嵌入模型（如 OpenAI text-embedding-3-small）将每个片段转为向量
-5. **存入向量数据库**：将向量和原始文本、元数据一起写入数据库
+::: tip Quy trình ghi ngoại tuyến
+1.  **Tải tài liệu**: Đọc văn bản gốc từ nhiều nguồn khác nhau (PDF, trang web, cơ sở dữ liệu)
+2.  **Tiền xử lý văn bản**: Làm sạch, loại bỏ nhiễu, chuẩn hóa (loại bỏ thẻ HTML, ký tự đặc biệt, v.v.)
+3.  **Phân đoạn văn bản**: Chia văn bản dài thành các đoạn có kích thước phù hợp theo chiến lược (200~500 tokens)
+4.  **Vector hóa**: Gọi mô hình Embedding (như OpenAI text-embedding-3-small) để chuyển mỗi đoạn thành vector
+5.  **Lưu vào cơ sở dữ liệu vector**: Ghi vector cùng với văn bản gốc và siêu dữ liệu vào cơ sở dữ liệu
 :::
 
-::: tip 在线查询流程
-1. **接收查询**：用户输入自然语言问题
-2. **查询向量化**：用同一个嵌入模型将问题转为向量
-3. **相似度检索**：在向量数据库中搜索 Top-K 最相似的文档片段
-4. **后处理**：重排序、去重、元数据过滤
-5. **返回结果**：将最相关的文档片段返回给调用方（或交给 LLM 生成回答）
+::: tip Quy trình truy vấn trực tuyến
+1.  **Tiếp nhận truy vấn**: Người dùng nhập câu hỏi bằng ngôn ngữ tự nhiên
+2.  **Vector hóa truy vấn**: Sử dụng cùng một mô hình Embedding để chuyển câu hỏi thành vector
+3.  **Truy vấn độ tương đồng**: Tìm kiếm Top-K đoạn tài liệu tương tự nhất trong cơ sở dữ liệu vector
+4.  **Hậu xử lý**: Sắp xếp lại, loại bỏ trùng lặp, lọc siêu dữ liệu
+5.  **Trả về kết quả**: Trả về các đoạn tài liệu liên quan nhất cho bên gọi (hoặc chuyển cho LLM để tạo câu trả lời)
 :::
 
-| 环节 | 关键选择 | 推荐方案 |
-|------|---------|---------|
-| 嵌入模型 | 精度 vs 成本 vs 速度 | OpenAI text-embedding-3-small（性价比高） |
-| 分块策略 | 粒度 vs 语义完整性 | 递归分块，200~500 tokens |
-| 向量数据库 | 规模 vs 运维成本 | 小项目用 Chroma，生产用 Pinecone/Milvus |
-| 相似度度量 | 语义 vs 精确 | 余弦相似度（文本场景首选） |
-| Top-K 值 | 召回率 vs 噪音 | 先检索 20 条，重排序后取 Top 5 |
+| Giai đoạn | Lựa chọn quan trọng | Giải pháp đề xuất |
+|-----------|--------------------|-------------------|
+| Mô hình Embedding | Độ chính xác vs. Chi phí vs. Tốc độ | OpenAI text-embedding-3-small (hiệu suất/chi phí tốt) |
+| Chiến lược phân đoạn | Độ chi tiết vs. Tính toàn vẹn ngữ nghĩa | Phân đoạn đệ quy, 200~500 tokens |
+| Cơ sở dữ liệu vector | Quy mô vs. Chi phí vận hành | Dự án nhỏ dùng Chroma, sản xuất dùng Pinecone/Milvus |
+| Đo lường độ tương đồng | Ngữ nghĩa vs. Chính xác | Cosine Similarity (lựa chọn hàng đầu cho kịch bản văn bản) |
+| Giá trị Top-K | Tỷ lệ thu hồi vs. Nhiễu | Đầu tiên truy vấn 20 mục, sau khi sắp xếp lại lấy Top 5 |
 
 ---
 
-## 总结
+## Tóm tắt
 
-Embedding 与向量检索是连接"人类语言"和"机器理解"的桥梁，也是 RAG、语义搜索、推荐系统等 AI 应用的基础设施。
+Embedding và truy vấn vector là cầu nối giữa "ngôn ngữ con người" và "sự hiểu biết của máy móc", đồng thời là cơ sở hạ tầng cho các ứng dụng AI như RAG, tìm kiếm ngữ nghĩa, hệ thống gợi ý.
 
-回顾本章的关键要点：
+Ôn lại các điểm chính của chương này:
 
-1. **Embedding 的本质**：把文本映射到高维向量空间，让语义相似度变成空间距离
-2. **相似度度量**：余弦相似度关注方向（适合文本），欧氏距离关注绝对距离
-3. **索引是性能关键**：HNSW 和 IVF 让百万级向量的检索降到毫秒级
-4. **向量数据库选型**：小项目用 Chroma/pgvector，生产环境用 Pinecone/Milvus
-5. **端到端思维**：从文档加载到最终检索，每个环节的选择都会影响最终效果
+1.  **Bản chất của Embedding**: Ánh xạ văn bản vào không gian vector chiều cao, biến độ tương đồng ngữ nghĩa thành khoảng cách không gian
+2.  **Đo lường độ tương đồng**: Cosine Similarity tập trung vào hướng (phù hợp với văn bản), Euclidean Distance tập trung vào khoảng cách tuyệt đối
+3.  **Chỉ mục là chìa khóa hiệu suất**: HNSW và IVF giúp truy vấn hàng triệu vector trong mili giây
+4.  **Lựa chọn cơ sở dữ liệu vector**: Dự án nhỏ dùng Chroma/pgvector, môi trường sản xuất dùng Pinecone/Milvus
+5.  **Tư duy đầu cuối**: Từ tải tài liệu đến truy vấn cuối cùng, lựa chọn ở mỗi giai đoạn đều ảnh hưởng đến kết quả cuối cùng
 
-## 延伸阅读
+## Đọc thêm
 
-- [OpenAI Embeddings 文档](https://platform.openai.com/docs/guides/embeddings) - 官方嵌入模型使用指南
-- [Pinecone Learning Center](https://www.pinecone.io/learn/) - 向量数据库和检索的系统教程
-- [FAISS Wiki](https://github.com/facebookresearch/faiss/wiki) - Facebook 开源的向量检索库文档
-- [Word2Vec 原始论文](https://arxiv.org/abs/1301.3781) - Embedding 时代的开山之作
-- [MTEB 排行榜](https://huggingface.co/spaces/mteb/leaderboard) - 嵌入模型性能对比排行榜
-
-
-
-
-
+-   [Tài liệu OpenAI Embeddings](https://platform.openai.com/docs/guides/embeddings) - Hướng dẫn sử dụng mô hình Embedding chính thức
+-   [Trung tâm học tập Pinecone](https://www.pinecone.io/learn/) - Hướng dẫn hệ thống về cơ sở dữ liệu vector và truy vấn
+-   [FAISS Wiki](https://github.com/facebookresearch/faiss/wiki) - Tài liệu thư viện truy vấn vector mã nguồn mở của Facebook
+-   [Bài báo gốc Word2Vec](https://arxiv.org/abs/1301.3781) - Tác phẩm mở đầu kỷ nguyên Embedding
+-   [Bảng xếp hạng MTEB](https://huggingface.co/spaces/mteb/leaderboard) - Bảng so sánh hiệu suất mô hình Embedding

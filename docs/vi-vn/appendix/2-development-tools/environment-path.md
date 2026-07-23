@@ -1,94 +1,94 @@
-# 环境变量与 PATH
+# Biến môi trường và PATH
 
-> 💡 **学习指南**：每次你在终端输入 `git` 或 `python`，系统都要去找这个程序在哪里。每次你的代码调用大模型 API，程序要知道用哪个密钥。这两件事背后都是同一套机制——**环境变量**。
+> 💡 **Hướng dẫn học tập**: Mỗi khi bạn nhập `git` hoặc `python` vào terminal, hệ thống cần tìm xem chương trình đó nằm ở đâu. Mỗi khi code của bạn gọi API của mô hình lớn, chương trình cần biết sử dụng khóa API nào. Đằng sau hai việc này là cùng một cơ chế – **biến môi trường**.
 
 ---
 
-## 0. 每个程序身边都带着一组配置
+## 0. Mỗi chương trình đều mang theo một bộ cấu hình
 
-运行中的每个程序，都持有一组「键=值」配置，叫做**环境变量**。程序可以随时读取这些配置，用来了解当前的运行环境。
+Mỗi chương trình đang chạy đều giữ một bộ cấu hình "khóa=giá trị", được gọi là **biến môi trường**. Chương trình có thể đọc các cấu hình này bất cứ lúc nào để hiểu môi trường chạy hiện tại.
 
-点击下方列表里的任意变量，在终端里"查看"它的值：
+Nhấp vào bất kỳ biến nào trong danh sách dưới đây và "xem" giá trị của nó trong terminal:
 
 <EnvVarOverviewDemo />
 
 ---
 
-## 1. PATH：Shell 怎么找到你输入的命令
+## 1. PATH: Cách Shell tìm thấy lệnh bạn nhập
 
-`PATH` 是一个特殊的环境变量，存着一串目录路径（用冒号分隔）。你输入 `git` 时，Shell 就按这串目录的顺序，一个一个地进去找名叫 `git` 的可执行文件——找到第一个就立刻停止。
+`PATH` là một biến môi trường đặc biệt, chứa một chuỗi các đường dẫn thư mục (phân tách bằng dấu hai chấm). Khi bạn nhập `git`, Shell sẽ theo thứ tự của chuỗi thư mục này, lần lượt đi vào từng thư mục để tìm file thực thi có tên `git` – tìm thấy cái đầu tiên sẽ dừng ngay lập tức.
 
 ```bash
 $ echo $PATH
 /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 ```
 
-选择一个命令，观察 Shell 逐目录搜索的过程：
+Chọn một lệnh, quan sát quá trình Shell tìm kiếm từng thư mục:
 
 <PathSearchDemo />
 
-**三个关键规律**：
-- 目录在 PATH 里越靠前，优先级越高
-- 找到第一个就停止，不会继续搜索
-- 所有目录都没有 → `command not found`
+**Ba quy tắc quan trọng**:
+- Thư mục càng nằm ở đầu trong PATH, độ ưu tiên càng cao
+- Tìm thấy cái đầu tiên sẽ dừng, không tiếp tục tìm kiếm
+- Không tìm thấy ở bất kỳ thư mục nào → `command not found`
 
 ---
 
-## 2. 为什么安装工具后要重启终端？
+## 2. Tại sao phải khởi động lại terminal sau khi cài đặt công cụ?
 
-安装 nvm、Homebrew、conda 这类工具时，安装脚本会自动在 `~/.zshrc` 里追加一行，把自己的目录加入 PATH：
+Khi cài đặt các công cụ như nvm, Homebrew, conda, script cài đặt sẽ tự động thêm một dòng vào `~/.zshrc` để đưa thư mục của nó vào PATH:
 
 ```bash
-# 安装脚本自动写入的内容（示例）
+# Nội dung được script cài đặt tự động ghi (ví dụ)
 export PATH="/usr/local/opt/python@3.12/bin:$PATH"
 ```
 
-这行代码只在**新 Shell 启动时**才执行。已经打开的终端窗口不受影响，所以：
+Dòng code này chỉ được thực thi khi **Shell mới khởi động**. Các cửa sổ terminal đã mở sẽ không bị ảnh hưởng, vì vậy:
 
 ```bash
-# 不重启也能立刻生效
+# Có thể có hiệu lực ngay lập tức mà không cần khởi động lại
 source ~/.zshrc
 ```
 
-**AI 开发工具常见情况**：
+**Các trường hợp phổ biến với công cụ phát triển AI**:
 
 ```bash
-# Ollama / pipx 装完报 command not found
-which ollama          # 查实际安装位置
+# Ollama / pipx cài xong báo command not found
+which ollama          # Kiểm tra vị trí cài đặt thực tế
 
-# pip 安装的 CLI 工具路径（加入 PATH）
-# macOS：~/Library/Python/3.x/bin
-# Linux：~/.local/bin
+# Đường dẫn công cụ CLI được cài đặt bằng pip (thêm vào PATH)
+# macOS: ~/Library/Python/3.x/bin
+# Linux: ~/.local/bin
 export PATH="$PATH:$HOME/.local/bin"
 
-# 推荐用 pipx 安装命令行工具，自动管理 PATH
+# Nên dùng pipx để cài đặt công cụ dòng lệnh, tự động quản lý PATH
 pipx install aider-chat
 ```
 
 ---
 
-## 3. 变量的作用域：谁能看见这个变量？
+## 3. Phạm vi của biến: Ai có thể nhìn thấy biến này?
 
-环境变量不是广播给所有程序的——每个进程持有**自己的一份副本**，从父进程继承而来，修改自己的副本不会影响父进程。
+Biến môi trường không được phát sóng cho tất cả các chương trình – mỗi tiến trình giữ **một bản sao riêng** của mình, được kế thừa từ tiến trình cha, việc sửa đổi bản sao của mình sẽ không ảnh hưởng đến tiến trình cha.
 
-下图展示三个层级。在「用户级」里 export 一个新变量，看它是否出现在「进程级」：
+Biểu đồ dưới đây minh họa ba cấp độ. Trong "cấp người dùng", hãy `export` một biến mới và xem liệu nó có xuất hiện ở "cấp tiến trình" không:
 
 <EnvScopeDemo />
 
 ---
 
-## 4. export：决定子进程能不能读到这个变量
+## 4. export: Quyết định liệu tiến trình con có thể đọc biến này không
 
-设置变量时，加不加 `export` 是完全不同的两件事：
+Khi thiết lập biến, việc có thêm `export` hay không là hai việc hoàn toàn khác nhau:
 
 <EnvExportDemo />
 
-要让变量跨会话永久存在，把 `export` 写入配置文件：
+Để biến tồn tại vĩnh viễn qua các phiên, hãy ghi `export` vào file cấu hình:
 
 ```bash
 # macOS (zsh)
 echo 'export MY_VAR="value"' >> ~/.zshrc
-source ~/.zshrc       # 立刻生效，不用重开终端
+source ~/.zshrc       # Có hiệu lực ngay lập tức, không cần mở lại terminal
 
 # Linux (bash)
 echo 'export MY_VAR="value"' >> ~/.bashrc
@@ -97,83 +97,83 @@ source ~/.bashrc
 
 ---
 
-## 5. API 密钥：绝对不能写进代码
+## 5. Khóa API: Tuyệt đối không được viết vào code
 
-调用 OpenAI、Anthropic、DeepSeek 等 API 时，密钥就是你的「身份证 + 信用卡」。泄露了，别人可以用你的额度消费，费用由你承担。
+Khi gọi các API như OpenAI, Anthropic, DeepSeek, khóa API chính là "chứng minh thư + thẻ tín dụng" của bạn. Nếu bị lộ, người khác có thể sử dụng hạn mức của bạn để tiêu dùng, và bạn sẽ phải chịu chi phí.
 
-最常见的错误是把密钥直接写在代码里：
+Lỗi phổ biến nhất là viết trực tiếp khóa API vào code:
 
 <ApiKeyDangerDemo />
 
 ---
 
-## 6. 本地开发：用 .env 文件管密钥
+## 6. Phát triển cục bộ: Dùng file .env để quản lý khóa API
 
-本地开发时，把密钥放在项目根目录的 `.env` 文件里，代码通过 dotenv 库读取。`.env` 必须加入 `.gitignore`，不能提交到 Git。
+Khi phát triển cục bộ, hãy đặt khóa API vào file `.env` trong thư mục gốc của dự án, code sẽ đọc thông qua thư viện dotenv. File `.env` phải được thêm vào `.gitignore`, không được commit lên Git.
 
-左边写配置，右边读取——切换语言看两种写法：
+Bên trái viết cấu hình, bên phải đọc – chuyển đổi ngôn ngữ để xem hai cách viết:
 
 <DotEnvDemo />
 
 ---
 
-## 7. 生产环境：让运行平台注入密钥
+## 7. Môi trường sản xuất: Để nền tảng vận hành tự động inject khóa API
 
-`.env` 是开发阶段的便利工具。服务器和云平台上，应该由**运行环境**负责注入密钥，代码本身完全不感知密钥放在哪里：
+`.env` là một công cụ tiện lợi trong giai đoạn phát triển. Trên máy chủ và nền tảng đám mây, **môi trường vận hành** phải chịu trách nhiệm inject khóa API, bản thân code hoàn toàn không cần biết khóa API được đặt ở đâu:
 
 <ServerSecretDemo />
 
 ---
 
-## 8. 实战排错
+## 8. Xử lý sự cố thực tế
 
 ### `command not found`
 
 ```bash
-# 第一步：确认是否在 PATH 里
-which python3         # 有输出说明找到了
+# Bước 1: Xác nhận xem có trong PATH không
+which python3         # Nếu có output nghĩa là đã tìm thấy
 
-# 第二步：找到程序实际位置（macOS）
+# Bước 2: Tìm vị trí thực tế của chương trình (macOS)
 brew list python | grep bin
 
-# 第三步：把目录加入 PATH
-export PATH="/找到的路径:$PATH"
-source ~/.zshrc       # 写入配置文件后记得 source
+# Bước 3: Thêm thư mục vào PATH
+export PATH="/đường_dẫn_tìm_thấy:$PATH"
+source ~/.zshrc       # Sau khi ghi vào file cấu hình nhớ source
 ```
 
-### 装了两个版本，用的不是我想要的
+### Cài đặt hai phiên bản, nhưng lại dùng phiên bản không mong muốn
 
 ```bash
 which python
-# /usr/bin/python ← 系统旧版，在 PATH 靠前
+# /usr/bin/python ← Phiên bản cũ của hệ thống, nằm ở đầu PATH
 
-# 把新版目录放到 PATH 最前面
+# Đặt thư mục của phiên bản mới lên đầu PATH
 export PATH="/usr/local/bin:$PATH"
 
 which python
-# /usr/local/bin/python ← 新版，现在优先了
+# /usr/local/bin/python ← Phiên bản mới, bây giờ được ưu tiên
 ```
 
-### 变量明明设置了，程序却读不到
+### Biến đã được thiết lập, nhưng chương trình không đọc được
 
-| 原因 | 解决 |
+| Nguyên nhân | Giải pháp |
 |:---|:---|
-| 忘了 `export` | 加上 `export` 再试 |
-| 改了 `~/.zshrc` 没生效 | `source ~/.zshrc` |
-| 用了 `.env` 但没装 dotenv | `pip install python-dotenv` / `npm install dotenv` |
-| 服务器上只在 SSH 会话有效 | 改用 systemd `EnvironmentFile` |
+| Quên `export` | Thêm `export` rồi thử lại |
+| Đã sửa `~/.zshrc` nhưng chưa có hiệu lực | `source ~/.zshrc` |
+| Đã dùng `.env` nhưng chưa cài dotenv | `pip install python-dotenv` / `npm install dotenv` |
+| Trên máy chủ chỉ có hiệu lực trong phiên SSH | Thay bằng systemd `EnvironmentFile` |
 
 ---
 
-## 名词速查
+## Tra cứu thuật ngữ nhanh
 
-| 术语 | 含义 |
+| Thuật ngữ | Ý nghĩa |
 |:---|:---|
-| **PATH** | 存储 Shell 搜索可执行文件的目录列表，冒号分隔，顺序决定优先级 |
-| **export** | 将变量标记为可继承，子进程启动时自动获得副本 |
-| **source** | 在当前 Shell 重新执行配置文件，使修改立即生效 |
-| **which** | 显示某命令对应的可执行文件路径（PATH 搜索的结果） |
-| **.env** | 项目本地配置文件，存开发用密钥，必须加入 `.gitignore` |
-| **.env.example** | 变量名完整、值留空的模板，可以安全提交到 Git |
-| **chmod 600** | 文件权限：只有所有者可读写，适合保护密钥文件 |
-| **Secret Scanner** | GitHub 等平台自动扫描密钥泄露，发现后通知厂商吊销 |
+| **PATH** | Lưu trữ danh sách các thư mục Shell tìm kiếm file thực thi, phân tách bằng dấu hai chấm, thứ tự quyết định độ ưu tiên |
+| **export** | Đánh dấu biến là có thể kế thừa, tiến trình con tự động nhận bản sao khi khởi động |
+| **source** | Thực thi lại file cấu hình trong Shell hiện tại, làm cho thay đổi có hiệu lực ngay lập tức |
+| **which** | Hiển thị đường dẫn file thực thi tương ứng với một lệnh (kết quả tìm kiếm của PATH) |
+| **.env** | File cấu hình cục bộ của dự án, lưu trữ khóa API dùng cho phát triển, phải được thêm vào `.gitignore` |
+| **.env.example** | Mẫu với tên biến đầy đủ, giá trị để trống, có thể commit an toàn lên Git |
+| **chmod 600** | Quyền file: Chỉ chủ sở hữu có thể đọc và ghi, phù hợp để bảo vệ file khóa API |
+| **Secret Scanner** | Các nền tảng như GitHub tự động quét rò rỉ khóa API, sau khi phát hiện sẽ thông báo cho nhà cung cấp để thu hồi |

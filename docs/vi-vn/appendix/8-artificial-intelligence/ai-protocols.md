@@ -1,318 +1,318 @@
-# AI Agent 协议（MCP & A2A）
+# Giao thức AI Agent (MCP & A2A)
 
-::: tip 核心问题
-**AI Agent 如何与外部世界"对话"？** 就像互联网需要 HTTP 协议，AI Agent 也需要标准化的通信协议。本章介绍两个最主流的 Agent 协议：MCP 和 A2A，它们分别解决了 AI 与工具、Agent 与 Agent 之间的通信问题。
+::: tip Vấn đề cốt lõi
+**AI Agent giao tiếp với thế giới bên ngoài như thế nào?** Giống như internet cần giao thức HTTP, AI Agent cũng cần các giao thức truyền thông được tiêu chuẩn hóa. Chương này giới thiệu hai giao thức Agent phổ biến nhất: MCP và A2A, chúng lần lượt giải quyết các vấn đề giao tiếp giữa AI với công cụ và giữa Agent với Agent.
 :::
 
 ---
 
-## 0. 什么是协议？
+## 0. Giao thức là gì?
 
-在计算机领域，**协议（Protocol）** 是一套标准化的规则和约定，让不同的系统、程序能够相互"理解"和"通信"。
+Trong lĩnh vực máy tính, **giao thức (Protocol)** là một bộ quy tắc và quy ước được tiêu chuẩn hóa, cho phép các hệ thống và chương trình khác nhau có thể "hiểu" và "giao tiếp" với nhau.
 
-### 0.1 为什么需要协议？
+### 0.1 Tại sao cần giao thức?
 
-想象一个场景：你给朋友寄快递，需要填写地址。如果每个人写的地址格式都不一样，快递员就没法投递。协议就是规定了"地址怎么写"的标准——省、市、区、街道、门牌号，按这个格式写，谁都能看懂。
+Hãy tưởng tượng một kịch bản: bạn gửi một gói hàng cho bạn bè và cần điền địa chỉ. Nếu mỗi người viết địa chỉ theo một định dạng khác nhau, nhân viên giao hàng sẽ không thể phát. Giao thức chính là tiêu chuẩn quy định "cách viết địa chỉ" – tỉnh, thành phố, quận, đường, số nhà, viết theo định dạng này thì ai cũng có thể hiểu.
 
-计算机也是一样。两个程序要通信，必须约定好：
-- 数据格式是什么？（JSON？二进制？）
-- 怎么建立连接？（握手流程）
-- 出错了怎么办？（错误处理）
+Máy tính cũng vậy. Hai chương trình muốn giao tiếp phải thống nhất:
+- Định dạng dữ liệu là gì? (JSON? Nhị phân?)
+- Cách thiết lập kết nối? (Quy trình bắt tay)
+- Xử lý lỗi như thế nào? (Xử lý lỗi)
 
-### 0.2 计算机中常见的协议
+### 0.2 Các giao thức phổ biến trong máy tính
 
-| 协议 | 作用 | 你每天都在用 |
+| Giao thức | Tác dụng | Bạn sử dụng hàng ngày |
 |------|------|-------------|
-| **HTTP** | 网页传输协议 | 浏览器打开网页 |
-| **HTTPS** | 加密的 HTTP | 网银、支付页面 |
-| **TCP/IP** | 互联网基础协议 | 所有网络通信 |
-| **DNS** | 域名解析协议 | 把 `google.com` 变成 IP 地址 |
-| **SMTP** | 邮件发送协议 | 发送邮件 |
-| **WebSocket** | 双向实时通信 | 聊天软件、在线游戏 |
-| **SSH** | 安全远程登录 | 连接服务器 |
-| **FTP** | 文件传输协议 | 上传/下载文件 |
+| **HTTP** | Giao thức truyền tải trang web | Trình duyệt mở trang web |
+| **HTTPS** | HTTP được mã hóa | Ngân hàng trực tuyến, trang thanh toán |
+| **TCP/IP** | Giao thức nền tảng internet | Tất cả các giao tiếp mạng |
+| **DNS** | Giao thức phân giải tên miền | Chuyển `google.com` thành địa chỉ IP |
+| **SMTP** | Giao thức gửi email | Gửi email |
+| **WebSocket** | Giao tiếp song công thời gian thực | Phần mềm chat, trò chơi trực tuyến |
+| **SSH** | Đăng nhập từ xa an toàn | Kết nối máy chủ |
+| **FTP** | Giao thức truyền tải tệp | Tải lên/tải xuống tệp |
 
-这些协议构成了互联网的基石。没有它们，你无法浏览网页、发送邮件、观看视频。
+Những giao thức này tạo nên nền tảng của internet. Không có chúng, bạn không thể duyệt web, gửi email, xem video.
 
-### 0.3 协议的价值
+### 0.3 Giá trị của giao thức
 
-协议的核心价值是**标准化**和**互操作性**：
+Giá trị cốt lõi của giao thức là **tiêu chuẩn hóa** và **khả năng tương tác**:
 
-- **标准化**：大家都按同一套规则办事，减少沟通成本
-- **互操作性**：不同厂商、不同技术栈的系统可以无缝对接
+- **Tiêu chuẩn hóa**: Mọi người đều làm việc theo cùng một bộ quy tắc, giảm chi phí giao tiếp
+- **Khả năng tương tác**: Các hệ thống từ các nhà cung cấp, công nghệ khác nhau có thể kết nối liền mạch
 
-比如 HTTP 协议，让 Chrome 浏览器可以访问 Nginx 服务器，让 Python 爬虫可以抓取 Java 网站的数据。不需要 Chrome 和 Nginx 互相"认识"，只要都遵守 HTTP 协议就行。
+Ví dụ, giao thức HTTP cho phép trình duyệt Chrome truy cập máy chủ Nginx, cho phép trình thu thập dữ liệu Python lấy dữ liệu từ trang web Java. Không cần Chrome và Nginx phải "biết" nhau, chỉ cần cả hai tuân thủ giao thức HTTP là được.
 
-### 0.4 AI Agent 也需要协议
+### 0.4 AI Agent cũng cần giao thức
 
-AI Agent 要真正"干活"，需要：
-- 调用外部工具（查天气、发邮件、操作数据库）
-- 与其他 Agent 协作（分工合作完成复杂任务）
+Để AI Agent thực sự "làm việc", chúng cần:
+- Gọi các công cụ bên ngoài (kiểm tra thời tiết, gửi email, thao tác cơ sở dữ liệu)
+- Hợp tác với các Agent khác (phân công công việc để hoàn thành các nhiệm vụ phức tạp)
 
-这就需要标准化的协议来规定"AI 怎么调用工具"、"Agent 之间怎么对话"。这就是 **MCP** 和 **A2A** 的由来。
+Điều này đòi hỏi các giao thức được tiêu chuẩn hóa để quy định "AI gọi công cụ như thế nào" và "các Agent giao tiếp với nhau ra sao". Đây chính là nguồn gốc của **MCP** và **A2A**.
 
 ---
 
-## 1. Agent 协议的层次
+## 1. Các tầng giao thức của Agent
 
-在深入了解具体协议之前，让我们先看看 Agent 生态中的通信层次：
+Trước khi đi sâu vào các giao thức cụ thể, hãy cùng xem xét các tầng giao tiếp trong hệ sinh thái Agent:
 
-| 层级 | 协议 | 解决的问题 | 类比 |
+| Tầng | Giao thức | Vấn đề được giải quyết | So sánh |
 |------|------|-----------|------|
-| **1** | Function Call | AI 如何调用本地函数 | 大脑发出指令 |
-| **2** | **MCP** | AI 如何连接外部工具和数据源 | USB-C 接口 |
-| **3** | **A2A** | Agent 之间如何协作通信 | 企业微信 |
+| **1** | Function Call | AI gọi hàm cục bộ như thế nào | Não bộ ra lệnh |
+| **2** | **MCP** | AI kết nối với công cụ và nguồn dữ liệu bên ngoài như thế nào | Cổng USB-C |
+| **3** | **A2A** | Các Agent hợp tác giao tiếp như thế nào | WeChat Work |
 
-::: tip 逐行解读这张表
-**第1层（Function Call）**：这是大模型最基础的能力——通过输出结构化数据（JSON）来触发函数执行。它是"协议"的基础，但本身更像是一种能力而非标准协议。
+::: tip Giải thích từng dòng trong bảng này
+**Tầng 1 (Function Call)**: Đây là khả năng cơ bản nhất của các mô hình lớn – kích hoạt thực thi hàm bằng cách xuất dữ liệu có cấu trúc (JSON). Nó là nền tảng của "giao thức", nhưng bản thân nó giống một khả năng hơn là một giao thức tiêu chuẩn.
 
-**第2层（MCP）**：Model Context Protocol，由 Anthropic 于 2024 年 11 月发布。它标准化了 AI 与外部工具、数据源的连接方式，就像 USB-C 统一了各种设备的充电接口。
+**Tầng 2 (MCP)**: Model Context Protocol, được Anthropic phát hành vào tháng 11 năm 2024. Nó tiêu chuẩn hóa cách AI kết nối với các công cụ và nguồn dữ liệu bên ngoài, giống như USB-C đã thống nhất các cổng sạc của nhiều thiết bị khác nhau.
 
-**第3层（A2A）**：Agent-to-Agent Protocol，由 Google 于 2025 年 4 月发布。它让不同的 Agent 能够相互发现、通信和协作，就像企业微信让同事之间可以发任务、聊天。
+**Tầng 3 (A2A)**: Agent-to-Agent Protocol, được Google phát hành vào tháng 4 năm 2025. Nó cho phép các Agent khác nhau có thể tìm thấy, giao tiếp và hợp tác với nhau, giống như WeChat Work cho phép đồng nghiệp gửi nhiệm vụ, trò chuyện.
 :::
 
-本章重点介绍第 2、3 层的两个正式协议：MCP 和 A2A。
+Chương này tập trung vào hai giao thức chính thức ở tầng 2 và 3: MCP và A2A.
 
 ---
 
 ## 2. MCP (Model Context Protocol)
 
-### 2.1 协议基本信息
+### 2.1 Thông tin cơ bản về giao thức
 
-| 项目 | 内容 |
+| Mục | Nội dung |
 |------|------|
-| **全称** | Model Context Protocol |
-| **发起方** | Anthropic |
-| **发布时间** | 2024 年 11 月 25 日 |
-| **官方文档** | [modelcontextprotocol.io](https://modelcontextprotocol.io) |
-| **开源协议** | MIT License |
+| **Tên đầy đủ** | Model Context Protocol |
+| **Bên khởi xướng** | Anthropic |
+| **Thời gian phát hành** | 25 tháng 11 năm 2024 |
+| **Tài liệu chính thức** | [modelcontextprotocol.io](https://modelcontextprotocol.io) |
+| **Giấy phép mã nguồn mở** | MIT License |
 | **GitHub** | [github.com/modelcontextprotocol](https://github.com/modelcontextprotocol) |
 
-::: tip 为什么叫"Context Protocol"？
-**Context（上下文）** 是大模型理解任务的关键。MCP 的核心思想是：**让 AI 能够动态获取所需的上下文信息**，而不是把所有信息都塞进 Prompt。
+::: tip Tại sao lại gọi là "Context Protocol"?
+**Context (ngữ cảnh)** là chìa khóa để mô hình lớn hiểu nhiệm vụ. Ý tưởng cốt lõi của MCP là: **cho phép AI tự động lấy thông tin ngữ cảnh cần thiết**, thay vì nhồi nhét tất cả thông tin vào Prompt.
 
-比如，AI 需要读取一个文件时，不需要你把文件内容复制粘贴给它，而是通过 MCP 直接访问文件系统。
+Ví dụ, khi AI cần đọc một tệp, bạn không cần sao chép và dán nội dung tệp cho nó, mà thông qua MCP, nó có thể truy cập trực tiếp vào hệ thống tệp.
 :::
 
-### 2.2 发布的背景
+### 2.2 Bối cảnh phát hành
 
-2024 年，随着 Claude 3.5 Sonnet 的发布，Anthropic 发现一个问题：**每个工具都要单独集成**。
+Năm 2024, với sự ra mắt của Claude 3.5 Sonnet, Anthropic nhận thấy một vấn đề: **mỗi công cụ phải được tích hợp riêng lẻ**.
 
-想象一下：
-- 你想让 AI 读取 GitHub 仓库 → 要写 GitHub 集成代码
-- 你想让 AI 查询数据库 → 要写数据库集成代码
-- 你想让 AI 操作文件系统 → 要写文件系统集成代码
+Hãy tưởng tượng:
+- Bạn muốn AI đọc kho lưu trữ GitHub → phải viết mã tích hợp GitHub
+- Bạn muốn AI truy vấn cơ sở dữ liệu → phải viết mã tích hợp cơ sở dữ liệu
+- Bạn muốn AI thao tác hệ thống tệp → phải viết mã tích hợp hệ thống tệp
 
-每个集成都要重复写类似的代码：认证、错误处理、数据转换……
+Mỗi lần tích hợp đều phải viết lại các đoạn mã tương tự: xác thực, xử lý lỗi, chuyển đổi dữ liệu...
 
-Anthropic 在官方博客中写道：
+Anthropic đã viết trong blog chính thức của mình:
 > "We're introducing the Model Context Protocol (MCP), an open protocol that standardizes how applications provide context to LLMs."
 
-**核心目标**：让工具开发者写一次代码，所有支持 MCP 的 AI 应用都能使用。
+**Mục tiêu cốt lõi**: Cho phép các nhà phát triển công cụ viết mã một lần, và tất cả các ứng dụng AI hỗ trợ MCP đều có thể sử dụng.
 
-### 2.3 MCP 是什么？
+### 2.3 MCP là gì?
 
 <McpVisualDemo />
 
-**三大核心能力**：
+**Ba khả năng cốt lõi**:
 
-| 能力 | 英文 | 作用 | 示例 |
+| Khả năng | Tiếng Anh | Tác dụng | Ví dụ |
 |------|------|------|------|
-| **工具** | Tools | AI 可以调用的功能 | 查询天气、发送邮件 |
-| **资源** | Resources | AI 可以读取的数据 | 文件内容、数据库记录 |
-| **提示** | Prompts | 预定义的提示模板 | 代码审查模板、写作模板 |
+| **Công cụ** | Tools | Chức năng AI có thể gọi | Kiểm tra thời tiết, gửi email |
+| **Tài nguyên** | Resources | Dữ liệu AI có thể đọc | Nội dung tệp, bản ghi cơ sở dữ liệu |
+| **Lời nhắc** | Prompts | Mẫu lời nhắc được định nghĩa trước | Mẫu đánh giá mã, mẫu viết bài |
 
-### 2.4 MCP 的内部实现
+### 2.4 Cách triển khai nội bộ của MCP
 
 <McpDetailedDemo />
 
-### 2.5 类比理解：USB-C 接口
+### 2.5 Hiểu theo cách so sánh: Cổng USB-C
 
-MCP 就像 **USB-C 接口**：
+MCP giống như **cổng USB-C**:
 
-- **以前**：每个设备都有自己的充电口（圆口、扁口、磁吸……）
-- **现在**：USB-C 统一了所有设备的充电和数据传输
-- **MCP**：统一了 AI 与所有工具的连接方式
+- **Trước đây**: Mỗi thiết bị có cổng sạc riêng (cổng tròn, cổng dẹt, nam châm...)
+- **Bây giờ**: USB-C đã thống nhất việc sạc và truyền dữ liệu cho tất cả các thiết bị
+- **MCP**: Thống nhất cách AI kết nối với tất cả các công cụ
 
-工具开发者只需要实现一次 MCP Server，所有支持 MCP 的 AI 应用（Claude、Cursor、Windsurf 等）都能直接使用。
+Các nhà phát triển công cụ chỉ cần triển khai MCP Server một lần, tất cả các ứng dụng AI hỗ trợ MCP (Claude, Cursor, Windsurf, v.v.) đều có thể sử dụng trực tiếp.
 
-### 2.6 MCP 的典型应用场景
+### 2.6 Các trường hợp ứng dụng điển hình của MCP
 
-| 场景 | 说明 | 示例 |
+| Kịch bản | Mô tả | Ví dụ |
 |------|------|------|
-| **本地文件操作** | 让 AI 读取/修改本地文件 | 读取代码库、分析日志文件 |
-| **数据库查询** | 让 AI 直接查询数据库 | SQL 查询、数据分析 |
-| **API 调用** | 让 AI 调用第三方服务 | GitHub API、Slack、邮件 |
-| **开发工具集成** | 让 AI 使用开发工具 | Git 操作、终端命令 |
+| **Thao tác tệp cục bộ** | Cho phép AI đọc/sửa đổi tệp cục bộ | Đọc kho mã, phân tích tệp nhật ký |
+| **Truy vấn cơ sở dữ liệu** | Cho phép AI trực tiếp truy vấn cơ sở dữ liệu | Truy vấn SQL, phân tích dữ liệu |
+| **Gọi API** | Cho phép AI gọi các dịch vụ bên thứ ba | GitHub API, Slack, email |
+| **Tích hợp công cụ phát triển** | Cho phép AI sử dụng công cụ phát triển | Thao tác Git, lệnh terminal |
 
-**实际案例**：
-- **Cursor/Windsurf**：通过 MCP 连接文件系统、Git、终端
-- **Claude Desktop**：通过 MCP 连接笔记软件、邮件客户端
-- **自动化脚本**：让 AI 执行自动化任务（备份、部署、数据同步）
+**Các trường hợp thực tế**:
+- **Cursor/Windsurf**: Kết nối hệ thống tệp, Git, terminal thông qua MCP
+- **Claude Desktop**: Kết nối phần mềm ghi chú, ứng dụng email thông qua MCP
+- **Script tự động hóa**: Cho phép AI thực hiện các tác vụ tự động hóa (sao lưu, triển khai, đồng bộ hóa dữ liệu)
 
 ---
 
 ## 3. A2A (Agent-to-Agent Protocol)
 
-### 3.1 协议基本信息
+### 3.1 Thông tin cơ bản về giao thức
 
-| 项目 | 内容 |
+| Mục | Nội dung |
 |------|------|
-| **全称** | Agent-to-Agent Protocol |
-| **发起方** | Google |
-| **发布时间** | 2025 年 4 月 9 日 |
-| **官方文档** | [google.github.io/A2A](https://google.github.io/A2A) |
-| **开源协议** | Apache 2.0 |
+| **Tên đầy đủ** | Agent-to-Agent Protocol |
+| **Bên khởi xướng** | Google |
+| **Thời gian phát hành** | 9 tháng 4 năm 2025 |
+| **Tài liệu chính thức** | [google.github.io/A2A](https://google.github.io/A2A) |
+| **Giấy phép mã nguồn mở** | Apache 2.0 |
 | **GitHub** | [github.com/google/A2A](https://github.com/google/A2A) |
 
-::: tip 为什么是 Google 发起？
-Google 在 Cloud Next 2025 大会上发布 A2A，与其企业级 AI 战略密切相关。
+::: tip Tại sao lại là Google khởi xướng?
+Google đã phát hành A2A tại hội nghị Cloud Next 2025, điều này liên quan chặt chẽ đến chiến lược AI cấp doanh nghiệp của họ.
 
-Google 认为：未来的企业 AI 不是单个超级 Agent，而是**多个专业 Agent 协作**——有的负责数据分析，有的负责代码生成，有的负责文档处理。
+Google tin rằng: AI doanh nghiệp trong tương lai không phải là một Agent siêu việt duy nhất, mà là **nhiều Agent chuyên biệt hợp tác** – có Agent chịu trách nhiệm phân tích dữ liệu, có Agent chịu trách nhiệm tạo mã, có Agent chịu trách nhiệm xử lý tài liệu.
 
-这些 Agent 需要一种标准化的方式相互通信，A2A 应运而生。
+Các Agent này cần một cách tiêu chuẩn hóa để giao tiếp với nhau, và A2A ra đời từ đó.
 :::
 
-### 3.2 发布的背景
+### 3.2 Bối cảnh phát hành
 
-MCP 解决了"AI 如何连接工具"的问题，但还有一个问题：**多个 Agent 如何协作？**
+MCP đã giải quyết vấn đề "AI kết nối công cụ như thế nào", nhưng vẫn còn một vấn đề: **nhiều Agent hợp tác như thế nào?**
 
-想象一个场景：
-- Agent A 是"需求分析专家"
-- Agent B 是"代码生成专家"
-- Agent C 是"测试专家"
+Hãy tưởng tượng một kịch bản:
+- Agent A là "chuyên gia phân tích yêu cầu"
+- Agent B là "chuyên gia tạo mã"
+- Agent C là "chuyên gia kiểm thử"
 
-用户说："帮我开发一个登录功能"
+Người dùng nói: "Hãy giúp tôi phát triển một chức năng đăng nhập"
 
-Agent A 分析需求后，需要把任务分配给 Agent B；Agent B 写完代码后，需要让 Agent C 测试。它们之间如何通信？
+Agent A sau khi phân tích yêu cầu, cần giao nhiệm vụ cho Agent B; Agent B sau khi viết mã xong, cần nhờ Agent C kiểm thử. Chúng giao tiếp với nhau như thế nào?
 
-Google 在官方博客中写道：
+Google đã viết trong blog chính thức của mình:
 > "A2A is an open protocol that enables AI agents to communicate with each other, facilitating collaboration across different frameworks and vendors."
 
-**核心目标**：让不同厂商、不同框架开发的 Agent 能够无缝协作。
+**Mục tiêu cốt lõi**: Cho phép các Agent được phát triển bởi các nhà cung cấp và framework khác nhau có thể hợp tác liền mạch.
 
-### 3.3 A2A 是什么？
+### 3.3 A2A là gì?
 
 <A2AVisualDemo />
 
-**三大核心概念**：
+**Ba khái niệm cốt lõi**:
 
-| 概念 | 英文 | 作用 | 类比 |
+| Khái niệm | Tiếng Anh | Tác dụng | So sánh |
 |------|------|------|------|
-| **Agent Card** | Agent 名片 | 描述 Agent 的能力 | 员工工牌 |
-| **Task** | 任务 | 要执行的工作单元 | 工单 |
-| **Message** | 消息 | Agent 之间的通信内容 | 聊天记录 |
+| **Thẻ Agent** | Agent Card | Mô tả khả năng của Agent | Thẻ nhân viên |
+| **Nhiệm vụ** | Task | Đơn vị công việc cần thực hiện | Phiếu công việc |
+| **Tin nhắn** | Message | Nội dung giao tiếp giữa các Agent | Lịch sử trò chuyện |
 
-### 3.4 A2A 的内部实现
+### 3.4 Cách triển khai nội bộ của A2A
 
 <A2ADetailedDemo />
 
-### 3.5 类比理解：企业微信
+### 3.5 Hiểu theo cách so sánh: WeChat Work
 
-A2A 就像 **企业微信**：
+A2A giống như **WeChat Work**:
 
-- **Agent Card**：每个人的名片，显示姓名、部门、职责
-- **发任务**：@某人，分配一个任务
-- **聊天沟通**：任务执行过程中可以随时沟通
-- **任务追踪**：能看到任务的进度和状态
+- **Agent Card**: Danh thiếp của mỗi người, hiển thị tên, phòng ban, trách nhiệm
+- **Giao nhiệm vụ**: @một người nào đó, giao một nhiệm vụ
+- **Trò chuyện giao tiếp**: Có thể giao tiếp bất cứ lúc nào trong quá trình thực hiện nhiệm vụ
+- **Theo dõi nhiệm vụ**: Có thể xem tiến độ và trạng thái của nhiệm vụ
 
-不同的 Agent 就像不同的同事，A2A 让它们能够协作完成复杂项目。
+Các Agent khác nhau giống như các đồng nghiệp khác nhau, A2A cho phép họ hợp tác để hoàn thành các dự án phức tạp.
 
-### 3.6 A2A 的典型应用场景
+### 3.6 Các trường hợp ứng dụng điển hình của A2A
 
-| 场景 | 说明 | 示例 |
+| Kịch bản | Mô tả | Ví dụ |
 |------|------|------|
-| **软件开发** | 多 Agent 协作完成开发任务 | 需求分析→代码→测试→部署 |
-| **企业工作流** | 不同部门 Agent 协作处理业务 | HR Agent + 财务 Agent + 法务 Agent |
-| **智能客服** | 多个专业 Agent 分工处理 | 接待→解答→转接→记录 |
-| **数据分析** | 多个 Agent 协作分析数据 | 收集→清洗→分析→可视化→报告 |
+| **Phát triển phần mềm** | Nhiều Agent hợp tác hoàn thành nhiệm vụ phát triển | Phân tích yêu cầu → Mã hóa → Kiểm thử → Triển khai |
+| **Quy trình làm việc doanh nghiệp** | Các Agent của các phòng ban khác nhau hợp tác xử lý nghiệp vụ | HR Agent + Tài chính Agent + Pháp lý Agent |
+| **Dịch vụ khách hàng thông minh** | Nhiều Agent chuyên biệt phân công xử lý | Tiếp nhận → Giải đáp → Chuyển tiếp → Ghi nhận |
+| **Phân tích dữ liệu** | Nhiều Agent hợp tác phân tích dữ liệu | Thu thập → Làm sạch → Phân tích → Trực quan hóa → Báo cáo |
 
-**实际案例**：
-- **Google Agent Space**：企业内部多个 Agent 协作处理文档、邮件、日程
-- **软件开发团队**：需求 Agent → 代码 Agent → 测试 Agent → 部署 Agent
-- **智能客服系统**：接待 Agent → 专业解答 Agent → 人工转接 Agent
+**Các trường hợp thực tế**:
+- **Google Agent Space**: Nhiều Agent nội bộ doanh nghiệp hợp tác xử lý tài liệu, email, lịch trình
+- **Nhóm phát triển phần mềm**: Agent Yêu cầu → Agent Mã hóa → Agent Kiểm thử → Agent Triển khai
+- **Hệ thống dịch vụ khách hàng thông minh**: Agent Tiếp nhận → Agent Giải đáp chuyên nghiệp → Agent Chuyển tiếp thủ công
 
 ---
 
-## 4. MCP vs A2A：对比与关系
+## 4. MCP so với A2A: So sánh và mối quan hệ
 
-### 4.1 核心差异
+### 4.1 Sự khác biệt cốt lõi
 
-| 维度 | MCP | A2A |
+| Khía cạnh | MCP | A2A |
 |------|-----|-----|
-| **发起方** | Anthropic (2024.11) | Google (2025.04) |
-| **定位** | AI 与工具的连接 | Agent 与 Agent 的协作 |
-| **通信范围** | Client-Server | Peer-to-Peer |
-| **数据格式** | JSON-RPC 2.0 | HTTP + JSON |
-| **类比** | USB-C 接口 | 企业微信 |
+| **Bên khởi xướng** | Anthropic (11/2024) | Google (04/2025) |
+| **Định vị** | Kết nối AI với công cụ | Hợp tác giữa Agent với Agent |
+| **Phạm vi giao tiếp** | Client-Server | Peer-to-Peer |
+| **Định dạng dữ liệu** | JSON-RPC 2.0 | HTTP + JSON |
+| **So sánh** | Cổng USB-C | WeChat Work |
 
-### 4.2 两者的关系
+### 4.2 Mối quan hệ giữa hai giao thức
 
-MCP 和 A2A **不是竞争关系，而是互补关系**：
+MCP và A2A **không phải là mối quan hệ cạnh tranh, mà là mối quan hệ bổ sung**:
 
 <ProtocolComparisonDemo />
 
-### 4.3 如何选择？
+### 4.3 Lựa chọn như thế nào?
 
-| 场景 | 选择 |
+| Kịch bản | Lựa chọn |
 |------|------|
-| 让 AI 调用本地函数或工具 | Function Call |
-| 使用第三方工具（数据库、API、文件系统） | MCP |
-| 构建多 Agent 协作系统 | A2A |
-| 同时需要工具集成和多 Agent 协作 | MCP + A2A |
+| Cho phép AI gọi hàm cục bộ hoặc công cụ | Function Call |
+| Sử dụng công cụ bên thứ ba (cơ sở dữ liệu, API, hệ thống tệp) | MCP |
+| Xây dựng hệ thống hợp tác đa Agent | A2A |
+| Đồng thời cần tích hợp công cụ và hợp tác đa Agent | MCP + A2A |
 
 ---
 
-## 5. 协议的未来趋势
+## 5. Xu hướng tương lai của giao thức
 
-### 5.1 生态发展
+### 5.1 Phát triển hệ sinh thái
 
-**MCP 生态**（截至 2025 年初）：
-- 官方提供的 Server：文件系统、SQLite、Git、PostgreSQL 等
-- 社区贡献的 Server：Slack、Notion、Figma、Stripe 等
-- 支持 MCP 的应用：Claude Desktop、Cursor、Windsurf、Zed 等
+**Hệ sinh thái MCP** (tính đến đầu năm 2025):
+- Server chính thức được cung cấp: hệ thống tệp, SQLite, Git, PostgreSQL, v.v.
+- Server do cộng đồng đóng góp: Slack, Notion, Figma, Stripe, v.v.
+- Các ứng dụng hỗ trợ MCP: Claude Desktop, Cursor, Windsurf, Zed, v.v.
 
-**A2A 生态**（刚发布）：
-- Google 自家的 Agent 产品率先支持
-- 开源社区正在开发各种语言的 SDK
-- 企业级应用正在探索中
+**Hệ sinh thái A2A** (mới phát hành):
+- Các sản phẩm Agent của Google là những sản phẩm đầu tiên hỗ trợ
+- Cộng đồng mã nguồn mở đang phát triển SDK cho nhiều ngôn ngữ khác nhau
+- Các ứng dụng cấp doanh nghiệp đang được khám phá
 
-### 5.2 标准化进程
+### 5.2 Quá trình tiêu chuẩn hóa
 
-目前 Agent 协议还处于"战国时代"：
-- MCP 和 A2A 是最主流的两个
-- 还有其他新兴协议如 ANP、AGP 等
-- 未来可能会融合或统一
+Hiện tại, các giao thức Agent vẫn đang trong "thời kỳ chiến quốc":
+- MCP và A2A là hai giao thức phổ biến nhất
+- Còn có các giao thức mới nổi khác như ANP, AGP, v.v.
+- Trong tương lai có thể sẽ hợp nhất hoặc thống nhất
 
-类比互联网的发展：
-- 早期：各种局域网协议并存
-- 后来：TCP/IP 成为标准
-- 现在：Agent 协议可能也会走向统一
+So sánh với sự phát triển của internet:
+- Giai đoạn đầu: Nhiều giao thức mạng cục bộ cùng tồn tại
+- Sau đó: TCP/IP trở thành tiêu chuẩn
+- Hiện tại: Các giao thức Agent cũng có thể sẽ hướng tới sự thống nhất
 
 ---
 
-## 6. 小结
+## 6. Tóm tắt
 
-::: tip 核心要点
-| 协议 | 一句话理解 | 发布时间 | 发起方 | 适用场景 |
+::: tip Các điểm cốt lõi
+| Giao thức | Hiểu đơn giản | Thời gian phát hành | Bên khởi xướng | Kịch bản áp dụng |
 |------|-----------|---------|--------|---------|
-| **MCP** | AI 连接工具的"USB-C" | 2024.11 | Anthropic | 工具集成、数据源连接 |
-| **A2A** | Agent 协作的"企业微信" | 2025.04 | Google | 多 Agent 协作、任务委托 |
+| **MCP** | "USB-C" để AI kết nối công cụ | 11/2024 | Anthropic | Tích hợp công cụ, kết nối nguồn dữ liệu |
+| **A2A** | "WeChat Work" để Agent hợp tác | 04/2025 | Google | Hợp tác đa Agent, ủy thác nhiệm vụ |
 
-**关键洞察**：
-1. MCP 解决"AI 如何获取外部能力"的问题
-2. A2A 解决"多个 AI 如何协作"的问题
-3. 两者互补，未来可能会融合使用
-4. 选择协议要根据具体场景，没有银弹
+**Thông tin chi tiết quan trọng**:
+1. MCP giải quyết vấn đề "AI lấy khả năng bên ngoài như thế nào"
+2. A2A giải quyết vấn đề "nhiều AI hợp tác như thế nào"
+3. Cả hai bổ sung cho nhau, và có thể được sử dụng kết hợp trong tương lai
+4. Lựa chọn giao thức phải dựa trên kịch bản cụ thể, không có giải pháp vạn năng
 :::
 
 ---
 
-## 参考资料
+## Tài liệu tham khảo
 
-1. **MCP 官方文档**: [modelcontextprotocol.io](https://modelcontextprotocol.io)
-2. **MCP GitHub**: [github.com/modelcontextprotocol](https://github.com/modelcontextprotocol)
-3. **Anthropic 发布博客**: "Introducing the Model Context Protocol" (2024-11-25)
-4. **A2A 官方文档**: [google.github.io/A2A](https://google.github.io/A2A)
-5. **A2A GitHub**: [github.com/google/A2A](https://github.com/google/A2A)
-6. **Google Cloud Blog**: "Announcing the Agent-to-Agent Protocol" (2025-04-09)
+1. **Tài liệu chính thức của MCP**: [modelcontextprotocol.io](https://modelcontextprotocol.io)
+2. **GitHub của MCP**: [github.com/modelcontextprotocol](https://github.com/modelcontextprotocol)
+3. **Blog phát hành của Anthropic**: "Introducing the Model Context Protocol" (25-11-2024)
+4. **Tài liệu chính thức của A2A**: [google.github.io/A2A](https://google.github.io/A2A)
+5. **GitHub của A2A**: [github.com/google/A2A](https://github.com/google/A2A)
+6. **Blog của Google Cloud**: "Announcing the Agent-to-Agent Protocol" (09-04-2025)

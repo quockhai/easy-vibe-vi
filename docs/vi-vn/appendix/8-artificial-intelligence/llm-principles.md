@@ -1,456 +1,457 @@
-# 大语言模型的工作原理
-> 💡 **学习指南**：本章节无需编程基础，通过交互式演示带你深入了解大语言模型（LLM）的底层工作原理。我们将从最基础的分词讲起，一直到 GPT 是如何训练和推理的。
+# Cách thức hoạt động của các Large Language Model
+
+> 💡 **Hướng dẫn học tập**: Chương này không yêu cầu kiến thức lập trình. Thông qua các minh họa tương tác, bạn sẽ hiểu sâu sắc về nguyên lý hoạt động cơ bản của các Large Language Model (LLM). Chúng ta sẽ bắt đầu từ khái niệm Tokenization cơ bản nhất, cho đến cách GPT được huấn luyện và suy luận.
 
 <LlmQuickStartDemo />
 
-## 0. 引言：从人类语言到机器计算
+## 0. Giới thiệu: Từ ngôn ngữ con người đến tính toán của máy
 
-人类用语言交流，计算机用数字计算。
-**大语言模型 (LLM)** 的本质，就是一座连接这两个世界的桥梁。
+Con người giao tiếp bằng ngôn ngữ, máy tính tính toán bằng số.
+Bản chất của **Large Language Model (LLM)** chính là một cây cầu nối hai thế giới này.
 
-它的核心任务只有一个：**把“理解语言”这个问题，转化成“数学计算”的问题。**
+Nhiệm vụ cốt lõi của nó chỉ có một: **chuyển đổi vấn đề "hiểu ngôn ngữ" thành vấn đề "tính toán toán học".**
 
-为了实现这个目标，我们需要解决三个核心挑战：
+Để đạt được mục tiêu này, chúng ta cần giải quyết ba thách thức cốt lõi:
 
-1.  **翻译**：怎么把文字变成数字？（分词 & Embedding）
-2.  **效率**：怎么让计算机算得快？（矩阵运算）
-3.  **记忆**：怎么让计算机读懂上下文？（Transformer 模型）
+1.  **Dịch thuật**: Làm thế nào để biến văn bản thành số? (Tokenization & Embedding)
+2.  **Hiệu quả**: Làm thế nào để máy tính tính toán nhanh chóng? (Phép toán ma trận)
+3.  **Ghi nhớ**: Làm thế nào để máy tính hiểu được ngữ cảnh? (Mô hình Transformer)
 
-本教程将带你从零开始，一步步拆解这座桥梁的构建过程。
+Hướng dẫn này sẽ đưa bạn từng bước khám phá quá trình xây dựng cây cầu này từ đầu.
 
 ---
 
-## 1. 第一步：翻译 (Tokenization)
+## 1. Bước đầu tiên: Dịch thuật (Tokenization)
 
-计算机看不懂“汉堡”这两个字，它只认识数字。
-所以，我们的第一个任务是：**把文本切分成计算机能理解的最小单位**。
+Máy tính không hiểu hai chữ "hamburger", nó chỉ nhận biết các con số.
+Vì vậy, nhiệm vụ đầu tiên của chúng ta là: **chia văn bản thành các đơn vị nhỏ nhất mà máy tính có thể hiểu được**.
 
-### 1.1 什么是分词？
+### 1.1 Tokenization là gì?
 
-分词就是把一整句拆成一个个“词单元”（Token）。
+Tokenization là quá trình chia một câu thành từng "đơn vị từ" (Token).
 
-- **英文**：自带空格，天然容易分词（如 `I love AI`）。
-- **中文**：没有空格，需要算法来切分（如 `我爱人工智能`）。
+- **Tiếng Anh**: Có khoảng trắng tự nhiên, dễ dàng Tokenization (ví dụ: `I love AI`).
+- **Tiếng Trung**: Không có khoảng trắng, cần thuật toán để chia (ví dụ: `我爱人工智能`).
 
-#### Tokenizer (翻译官)
+#### Tokenizer (Người phiên dịch)
 
-执行分词这个动作的程序，我们称之为 **Tokenizer**。
-它就像是一个翻译官，负责将人类的文字翻译成机器能读懂的数字序列。
+Chương trình thực hiện hành động Tokenization được gọi là **Tokenizer**.
+Nó giống như một người phiên dịch, chịu trách nhiệm dịch văn bản của con người thành chuỗi số mà máy có thể đọc được.
 
-现代 LLM (如 GPT-4) 通常使用 **Subword Tokenization (子词分词)** 技术（如 BPE 算法）。
-它的聪明之处在于：**常用词保持完整，生僻词拆分**。
+Các LLM hiện đại (như GPT-4) thường sử dụng kỹ thuật **Subword Tokenization (Tokenization theo từ con)** (ví dụ: thuật toán BPE).
+Điểm thông minh của nó là: **các từ thông dụng được giữ nguyên, các từ hiếm được chia nhỏ**.
 
-以下是一个真实的 BPE 分词示例（基于 GPT-4 Tokenizer）：
+Dưới đây là một ví dụ BPE Tokenization thực tế (dựa trên GPT-4 Tokenizer):
 
 **Input**: `"The quick brown fox jumps over the lazy dog. \n今天天气真不错！"`
 
 **Token List**:
 
 ```text
-index=791,   string='The' 
-index=4062,  string=' quick' 
-index=14198, string=' brown' 
-index=39935, string=' fox' 
-index=83368, string=' jumps'   <-- 如果被拆分，可能会是 ' jump' + 's'
-index=927,   string=' over' 
-index=279,   string=' the' 
-index=16053, string=' lazy' 
-index=3290,  string=' dog' 
-index=13,    string='.' 
-index=198,   string='\n'       <-- 换行符 
-index=33838, string='今天'      <-- 常用词直接合并 
-index=54580, string='天气' 
-index=20265, string='真' 
-index=57672, string='不错' 
-index=171,   string='！' 
+index=791,   string='The'
+index=4062,  string=' quick'
+index=14198, string=' brown'
+index=39935, string=' fox'
+index=83368, string=' jumps'   <-- Nếu bị chia nhỏ, có thể là ' jump' + 's'
+index=927,   string=' over'
+index=279,   string=' the'
+index=16053, string=' lazy'
+index=3290,  string=' dog'
+index=13,    string='.'
+index=198,   string='\n'       <-- Ký tự xuống dòng
+index=33838, string='今天'      <-- Từ thông dụng được gộp trực tiếp
+index=54580, string='天气'
+index=20265, string='真'
+index=57672, string='不错'
+index=171,   string='！'
 ```
 
-> **关于生僻字的处理**：
-> 如果遇到词表中不存在的生僻字（假设“今”字很生僻），模型会回退到 **Byte 级别** 进行编码。
+> **Về cách xử lý các ký tự hiếm**:
+> Nếu gặp một ký tự hiếm không có trong từ điển (giả sử chữ "今" rất hiếm), mô hình sẽ quay lại mã hóa ở cấp độ **Byte**.
 > 1.  Raw Input: `今`
 > 2.  Bytes: `\xE4 \xBB \x8A`
-> 3.  BPE 查找: 先找 `\xE4\xBB\x8A` -> 没找到 -> 拆分为 `\xE4\xBB` (ID=1001) + `\x8A` (ID=2002)。
-> 4.  最终 Token: `[1001, 2002]`。
+> 3.  BPE tìm kiếm: Đầu tiên tìm `\xE4\xBB\x8A` -> không tìm thấy -> chia thành `\xE4\xBB` (ID=1001) + `\x8A` (ID=2002).
+> 4.  Token cuối cùng: `[1001, 2002]`.
 >
-> 这种机制保证了**无论输入什么字符，模型都能处理，永远不会出现 OOV (Out Of Vocabulary) 问题**。
+> Cơ chế này đảm bảo rằng **bất kể đầu vào là ký tự gì, mô hình đều có thể xử lý, sẽ không bao giờ xảy ra vấn đề OOV (Out Of Vocabulary)**.
 
 <TokenizationDemo />
 
-**关键点**：LLM 处理的不是单词，而是 **Token ID**（一串数字索引）。
+**Điểm mấu chốt**: LLM không xử lý các từ, mà là **Token ID** (một chuỗi chỉ mục số).
 
 ---
 
-## 2. 核心难题：如何让计算机“计算”语言？
+## 2. Thách thức cốt lõi: Làm thế nào để máy tính “tính toán” ngôn ngữ?
 
-我们的任务是处理语言。但计算机只认识数字。
-最直接的想法是：给每个词编个号（ID）。
+Nhiệm vụ của chúng ta là xử lý ngôn ngữ. Nhưng máy tính chỉ nhận biết các con số.
+Ý tưởng trực tiếp nhất là: gán cho mỗi từ một số (ID).
 
-- 苹果 -> ID 10
-- 香蕉 -> ID 20
+- Táo -> ID 10
+- Chuối -> ID 20
 
-### 2.1 为什么不用简单的 ID？
+### 2.1 Tại sao không dùng ID đơn giản?
 
-如果只用 ID，计算机会认为“10”和“20”只是两个毫无关系的数字。
-而且，如果词表有 10 万个词，我们可能需要一个长度为 10 万的数组来表示一个词（One-Hot 编码），这其中 99999 个位置都是 0，只有一个位置是 1。
+Nếu chỉ dùng ID, máy tính sẽ nghĩ rằng "10" và "20" chỉ là hai con số không liên quan gì đến nhau.
+Hơn nữa, nếu từ điển có 100.000 từ, chúng ta có thể cần một mảng dài 100.000 phần tử để biểu diễn một từ (mã hóa One-Hot), trong đó 99.999 vị trí là 0, chỉ có một vị trí là 1.
 
-- **缺点1：太浪费**（稀疏，One-Hot 数组太大）。
-- **缺点2：没内涵**（无法表示“苹果”和“香蕉”都是水果）。
+- **Nhược điểm 1: Quá lãng phí** (rỗng, mảng One-Hot quá lớn).
+- **Nhược điểm 2: Không có ý nghĩa** (không thể biểu thị "táo" và "chuối" đều là trái cây).
 
-### 2.2 解决方案：Embedding (稠密向量)
+### 2.2 Giải pháp: Embedding (Vector dày đặc)
 
-为了**高效**且**有内涵**地表达一个词，我们发明了 **Embedding**。
-它不再用一个长长的 0/1 数组，而是用一个短一点的、填满小数的数组（比如 512 个数字）来描述一个词。
+Để biểu thị một từ một cách **hiệu quả** và **có ý nghĩa**, chúng ta đã phát minh ra **Embedding**.
+Nó không còn dùng một mảng 0/1 dài ngoằng nữa, mà dùng một mảng ngắn hơn, chứa đầy các số thập phân (ví dụ: 512 số) để mô tả một từ.
 
-- 比如：`[0.8 (是水果), 0.1 (红色), 0.9 (甜)...]`
-  这样，我们不仅压缩了数据，还把词义变成了可以计算的“坐标”。
+- Ví dụ: `[0.8 (là trái cây), 0.1 (màu đỏ), 0.9 (ngọt)...]`
+  Bằng cách này, chúng ta không chỉ nén dữ liệu mà còn biến ý nghĩa của từ thành "tọa độ" có thể tính toán được.
 
 <EmbeddingDemo />
 
 ---
 
-## 3. 从 单词 到 矩阵
+## 3. Từ Từ đơn đến Ma trận
 
-解决了“一个词”的表达问题，接下来要解决“一句话”的表达问题。
+Sau khi giải quyết vấn đề biểu diễn "một từ", tiếp theo chúng ta sẽ giải quyết vấn đề biểu diễn "một câu".
 
-### 3.1 为什么要是矩阵？
+### 3.1 Tại sao phải là ma trận?
 
-因为一句话包含了很多个词。
+Bởi vì một câu chứa nhiều từ.
 
-- 一个词 = 一行数字（向量）。
-- 一句话 = 很多行数字堆叠在一起。
-  这就是**矩阵**。
+- Một từ = Một hàng số (vector).
+- Một câu = Nhiều hàng số xếp chồng lên nhau.
+  Đây chính là **ma trận**.
 
-之所以要拼成矩阵，是因为现代计算机的核心硬件——**GPU (显卡)**，天生就是为了做矩阵运算而设计的。
-只有把语言变成了矩阵，才能利用 GPU 的并行能力，实现**高效**的推理和训练。
+Lý do phải ghép thành ma trận là vì phần cứng cốt lõi của máy tính hiện đại – **GPU (card đồ họa)**, vốn được thiết kế để thực hiện các phép toán ma trận.
+Chỉ khi ngôn ngữ được biến thành ma trận, chúng ta mới có thể tận dụng khả năng song song của GPU để đạt được suy luận và huấn luyện **hiệu quả cao**.
 
-### 3.2 完整流水线
+### 3.2 Quy trình hoàn chỉnh
 
-回顾一下数据是怎么流动的：
+Hãy xem lại cách dữ liệu di chuyển:
 
-1.  **分词**：把文本切碎。
-2.  **索引**：把碎片变成 ID。
-3.  **Embedding**：把 ID 变成向量（为了语义和压缩）。
-4.  **堆叠**：把向量拼成矩阵（为了 GPU 高效计算）。
+1.  **Tokenization**: Chia nhỏ văn bản.
+2.  **Lập chỉ mục**: Biến các mảnh nhỏ thành ID.
+3.  **Embedding**: Biến ID thành vector (để có ngữ nghĩa và nén).
+4.  **Xếp chồng**: Ghép các vector thành ma trận (để GPU tính toán hiệu quả).
 
 <TokenizerToMatrix />
 
 ---
 
-## 3.5 插播：到底什么是“模型”？
+## 3.5 Xen kẽ: "Mô hình" thực sự là gì?
 
-在讲具体的架构之前，我们先通俗地理解一下“模型”这个词。
+Trước khi đi sâu vào kiến trúc cụ thể, chúng ta hãy hiểu một cách thông thường về từ "mô hình".
 
-在 AI 领域，**模型（Model）** 其实就是一个超级复杂的**函数**或者**黑盒子**。
+Trong lĩnh vực AI, **mô hình (Model)** thực chất là một **hàm** hoặc **hộp đen** cực kỳ phức tạp.
 
-- **输入**：一堆数字（比如上面的 Token ID）。
-- **处理**：黑盒子里有亿万个参数（可以理解为亿万个调节旋钮），它们会对输入数据进行疯狂的加减乘除运算。
-- **输出**：另一堆数字（代表预测结果，比如下一个词的概率）。
+- **Đầu vào**: Một đống số (ví dụ: các Token ID ở trên).
+- **Xử lý**: Trong hộp đen có hàng tỷ tham số (có thể hiểu là hàng tỷ núm điều chỉnh), chúng sẽ thực hiện các phép cộng, trừ, nhân, chia điên cuồng trên dữ liệu đầu vào.
+- **Đầu ra**: Một đống số khác (đại diện cho kết quả dự đoán, ví dụ: xác suất của từ tiếp theo).
 
-**打个比方：**
+**Ví dụ:**
 
-你可以把模型想象成一位**经验丰富的老厨师**：
+Bạn có thể hình dung mô hình như một **đầu bếp lão luyện**:
 
-1.  **输入（食材）**：你给他牛肉、土豆、番茄。
-2.  **模型（厨师的脑子）**：他根据自己学过的成千上万道菜谱（训练数据），在脑子里快速计算：牛肉切块、土豆去皮、火候控制...
-3.  **输出（菜肴）**：最后端出一盘土豆炖牛腩。
+1.  **Đầu vào (nguyên liệu)**: Bạn đưa cho anh ta thịt bò, khoai tây, cà chua.
+2.  **Mô hình (bộ não của đầu bếp)**: Anh ta dựa trên hàng ngàn công thức đã học (dữ liệu huấn luyện), nhanh chóng tính toán trong đầu: thái thịt bò, gọt khoai tây, kiểm soát lửa...
+3.  **Đầu ra (món ăn)**: Cuối cùng, anh ta mang ra một đĩa thịt bò hầm khoai tây.
 
-所谓的**训练（Training）**，就是让这位厨师从学徒做起，让他试错亿万次。做咸了就调一下“盐旋钮”，做淡了就调一下“火候旋钮”，直到他能稳定做出美味的菜肴。
+Cái gọi là **huấn luyện (Training)**, chính là để đầu bếp này bắt đầu từ một người học việc, cho anh ta thử sai hàng tỷ lần. Nấu mặn thì điều chỉnh "núm muối", nấu nhạt thì điều chỉnh "núm lửa", cho đến khi anh ta có thể ổn định nấu ra những món ăn ngon.
 
-现在的 LLM，就是一位“读过全人类书本”的超级厨师，只不过他炒的不是菜，而是文字。
+LLM hiện nay chính là một đầu bếp siêu hạng "đã đọc tất cả sách vở của nhân loại", chỉ có điều anh ta không nấu món ăn mà là "xào" chữ.
 
-## 4. 进化之路：从 RNN 到 Transformer
+## 4. Con đường tiến hóa: Từ RNN đến Transformer
 
-有了数据（Token），有了厨师（模型），接下来要看这位厨师是怎么思考的。
+Có dữ liệu (Token), có đầu bếp (Model), tiếp theo chúng ta sẽ xem đầu bếp này suy nghĩ như thế nào.
 
-在 AI 进化史上，主要有两种“思考方式”（架构）：**RNN** 和 **Transformer**。
+Trong lịch sử tiến hóa của AI, có hai "cách suy nghĩ" (kiến trúc) chính: **RNN** và **Transformer**.
 
-### 4.1 以前的笨办法：RNN（传话游戏）
+### 4.1 Cách làm cũ kém hiệu quả: RNN (Trò chơi truyền tin)
 
-早期的模型（RNN，循环神经网络）处理一句话时，就像我们在玩**传话游戏**。
+Các Model đời đầu (RNN, Recurrent Neural Network) khi xử lý một câu, giống như chúng ta đang chơi **trò chơi truyền tin**.
 
-**工作方式：**
+**Cách hoạt động:**
 
-1.  读第 1 个词“我”，记在脑子里，传给第 2 步。
-2.  读第 2 个词“喜欢”，结合刚才的记忆，更新一下脑子里的信息，再传给第 3 步。
-3.  读第 3 个词“吃”，再更新记忆...
-4.  ...直到读完最后一个词。
+1.  Đọc từ thứ 1 "Tôi", ghi nhớ trong đầu, truyền cho bước thứ 2.
+2.  Đọc từ thứ 2 "thích", kết hợp với ký ức vừa rồi, cập nhật thông tin trong đầu, rồi truyền cho bước thứ 3.
+3.  Đọc từ thứ 3 "ăn", lại cập nhật ký ức...
+4.  ...cho đến khi đọc hết từ cuối cùng.
 
-**这就带来了两个致命缺点：**
+**Điều này dẫn đến hai nhược điểm chí mạng:**
 
-1.  **慢（无法并行）**：必须等上一个人传完话，下一个人才能开始。没法让 100 个人同时干活。
-2.  **忘（长距离遗忘）**：传话传到第 100 个人时，他可能早就忘了第 1 个人说的是“我”还是“你”。这就导致模型写长文章时，容易前言不搭后语。
+1.  **Chậm (không thể song song)**: Phải đợi người trước truyền tin xong, người sau mới có thể bắt đầu. Không thể để 100 người cùng làm việc một lúc.
+2.  **Quên (quên xa)**: Khi tin tức được truyền đến người thứ 100, anh ta có thể đã quên người thứ 1 nói là "tôi" hay "bạn". Điều này khiến Model khi viết bài dài dễ bị "đầu voi đuôi chuột".
 
-### 4.2 现在的天才设计：Transformer（圆桌会议）
+### 4.2 Thiết kế thiên tài hiện nay: Transformer (Hội nghị bàn tròn)
 
-2017 年，Google 提出了一种全新的架构——**Transformer**。它彻底改变了规则，把“传话游戏”变成了**圆桌会议**。
+Năm 2017, Google đã đề xuất một kiến trúc hoàn toàn mới – **Transformer**. Nó đã thay đổi hoàn toàn luật chơi, biến "trò chơi truyền tin" thành **hội nghị bàn tròn**.
 
-**工作方式：**
-Transformer 不再一个接一个地传话，而是让**所有词一次性全部坐上桌**。
+**Cách hoạt động:**
+Transformer không còn truyền tin từng từ một nữa, mà để **tất cả các từ cùng ngồi vào bàn một lúc**.
 
-1.  **上帝视角（并行计算）**：所有词同时进场，不用排队。大家把自己的信息写在纸上，摊在桌子中间。
-2.  **注意力机制（Attention）**：这是它的杀手锏。每个词都可以**直接**去看桌上其他任何一个词的信息。
-    - 比如读到“它”这个字时，模型不需要回忆前面的传话，而是直接一眼看到前面的“小猫”，瞬间明白“它 = 小猫”。
+1.  **Góc nhìn toàn năng (tính toán song song)**: Tất cả các từ cùng vào cuộc, không cần xếp hàng. Mọi người viết thông tin của mình lên giấy, trải ra giữa bàn.
+2.  **Cơ chế Attention (Chú ý)**: Đây là vũ khí bí mật của nó. Mỗi từ đều có thể **trực tiếp** xem thông tin của bất kỳ từ nào khác trên bàn.
+    - Ví dụ, khi đọc đến chữ "nó", Model không cần nhớ lại lời truyền tin trước đó, mà trực tiếp nhìn thấy "con mèo" ở phía trước, ngay lập tức hiểu "nó = con mèo".
 
-**这就完美解决了 RNN 的痛点：**
+**Điều này đã giải quyết hoàn hảo các vấn đề của RNN:**
 
-- **快**：大家同时看资料，GPU 可以火力全开，效率极高。
-- **不忘**：不管句子多长，第 1 个词和第 10000 个词的距离都是“一步之遥”，想看谁就看谁。
+- **Nhanh**: Mọi người cùng xem tài liệu, GPU có thể hoạt động hết công suất, hiệu quả cực cao.
+- **Không quên**: Bất kể câu dài bao nhiêu, khoảng cách giữa từ thứ 1 và từ thứ 10000 đều là "một bước", muốn xem từ nào thì xem từ đó.
 
-> **总结一下**：
+> **Tóm tắt**:
 >
-> - **RNN**：像走迷宫，一步一步摸索，容易迷路。
-> - **Transformer**：像开上帝视角看地图，终点起点尽收眼底。
+> - **RNN**: Giống như đi mê cung, mò mẫm từng bước, dễ lạc đường.
+> - **Transformer**: Giống như có góc nhìn toàn năng để xem bản đồ, điểm cuối và điểm đầu đều nằm trong tầm mắt.
 
-#### 为什么还需要“位置”信息？
+#### Tại sao vẫn cần thông tin "vị trí"?
 
-因为 Transformer 是“一锅端”，如果不做特殊处理，它分不清“我爱你”和“你爱我”的区别（词都一样，只是顺序不同）。
-所以我们会给每个词贴个**号码牌（位置编码）**，告诉模型谁在第 1 位，谁在第 2 位。
+Bởi vì Transformer là "gom tất cả vào một rổ", nếu không xử lý đặc biệt, nó sẽ không phân biệt được sự khác biệt giữa "tôi yêu bạn" và "bạn yêu tôi" (các từ đều giống nhau, chỉ khác thứ tự).
+Vì vậy, chúng ta sẽ dán cho mỗi từ một **thẻ số (mã hóa vị trí)**, để nói cho Model biết ai ở vị trí thứ 1, ai ở vị trí thứ 2.
 
-> 小提醒：很多 LLM 是自回归（预测下一个词）的，所以在生成时仍然是一 token 一 token 往外吐；但在**每一步生成**的内部计算里，Transformer 依旧更能利用矩阵并行与缓存优化。
+> Lưu ý nhỏ: Nhiều LLM là tự hồi quy (dự đoán từ tiếp theo), vì vậy khi tạo ra văn bản vẫn là nhả ra từng Token một; nhưng trong tính toán nội bộ của **mỗi bước tạo ra**, Transformer vẫn có thể tận dụng tốt hơn các tối ưu hóa ma trận song song và bộ nhớ đệm.
 
-### 4.3 效率黑科技：KV 缓存 (KV Cache)
+### 4.3 Công nghệ đen hiệu quả: KV Cache
 
-你可能听说过，生成长文本时，越到后面越慢，或者显存占用越大。这通常是因为模型需要“记住”之前生成的所有内容。
+Bạn có thể đã nghe nói rằng khi tạo văn bản dài, càng về sau càng chậm, hoặc chiếm nhiều VRAM hơn. Điều này thường là do Model cần "ghi nhớ" tất cả nội dung đã tạo trước đó.
 
-**Transformer 怎么“记笔记”？**
+**Transformer "ghi chú" như thế nào?**
 
-在 Transformer 的注意力机制中，每个词都会生成 `Key (K)` 和 `Value (V)` 两个向量，用来供后面的词“查询”。
+Trong cơ chế Attention của Transformer, mỗi từ sẽ tạo ra hai vector `Key (K)` và `Value (V)`, được sử dụng để các từ sau "truy vấn".
 
-- 当模型生成第 100 个词时，它需要回头看前 99 个词的 K 和 V。
-- 如果每次都重新计算前 99 个词的 K 和 V，那就太浪费了！
+- Khi Model tạo ra từ thứ 100, nó cần quay lại xem K và V của 99 từ trước đó.
+- Nếu mỗi lần đều tính toán lại K và V của 99 từ trước đó, thì quá lãng phí!
 
-**KV Cache 的作用：**
+**Tác dụng của KV Cache:**
 
-KV Cache 就像是一个**“增量笔记本”**。
+KV Cache giống như một **"sổ ghi chú tăng dần"**.
 
-1.  **不重算**：算完第 1 个词的 K 和 V，存起来。
-2.  **只算新**：生成第 2 个词时，只计算第 2 个词的 K 和 V，然后和第 1 个词的 K、V 拼在一起。
-3.  **越存越多**：随着对话进行，这个“笔记本”（显存占用）会越来越厚。
+1.  **Không tính lại**: Tính xong K và V của từ thứ 1, lưu lại.
+2.  **Chỉ tính cái mới**: Khi tạo từ thứ 2, chỉ tính K và V của từ thứ 2, sau đó ghép với K, V của từ thứ 1.
+3.  **Càng lưu càng nhiều**: Khi cuộc hội thoại tiếp diễn, "sổ ghi chú" này (VRAM chiếm dụng) sẽ càng ngày càng dày lên.
 
-这就是为什么长文本对话（Long Context）会消耗大量显存的原因——**不是模型变大了，而是笔记（KV Cache）太厚了。**
+Đây là lý do tại sao các cuộc hội thoại văn bản dài (Long Context) lại tiêu tốn nhiều VRAM – **không phải Model lớn hơn, mà là ghi chú (KV Cache) quá dày.**
 
 <RNNvsTransformer />
 
 ---
 
-## 5. 揭秘：从“续写”到“对话”
+## 5. Tiết lộ: Từ “viết tiếp” đến “đối thoại”
 
-很多人会误以为 ChatGPT 真的懂我们在说什么，但其实它的本能只有一个：**猜下一个词**（Next Token Prediction）。
+Nhiều người lầm tưởng rằng ChatGPT thực sự hiểu chúng ta đang nói gì, nhưng thực ra bản năng của nó chỉ có một: **đoán từ tiếp theo** (Next Token Prediction).
 
-### 5.1 本能：疯狂续写
+### 5.1 Bản năng: Viết tiếp điên cuồng
 
-如果你给基础模型（Base Model）输入：“今天天气不错”，它可能会续写：“去公园玩吧。”
-但如果你输入：“美国的首都是哪里？”，它可能会续写：“中国首都是哪里？日本首都是哪里？”（因为它在模仿考卷的格式，而不是回答问题）。
+Nếu bạn nhập vào một Base Model: "Hôm nay trời đẹp", nó có thể viết tiếp: "Hãy đi công viên chơi nhé."
+Nhưng nếu bạn nhập: "Thủ đô của Mỹ là gì?", nó có thể viết tiếp: "Thủ đô của Trung Quốc là gì? Thủ đô của Nhật Bản là gì?" (Bởi vì nó đang bắt chước định dạng của một bài kiểm tra, chứ không phải trả lời câu hỏi).
 
-### 5.2 技巧：用“剧本”来对话
+### 5.2 Kỹ thuật: Dùng "kịch bản" để đối thoại
 
-为了让它变成对话助手，工程师们想出了一个绝妙的办法：**角色扮演**。
-我们在输入给模型的内容里，悄悄加了一些特殊的**标签（Template）**，让模型以为自己在续写一个“对话剧本”。
+Để biến nó thành một trợ lý đối thoại, các kỹ sư đã nghĩ ra một cách tuyệt vời: **đóng vai**.
+Chúng ta đã âm thầm thêm một số **thẻ đặc biệt (Template)** vào nội dung nhập cho Model, khiến Model nghĩ rằng mình đang viết tiếp một "kịch bản đối thoại".
 
-例如，你看到的是：
+Ví dụ, bạn thấy là:
 
-> User: 你好
+> User: Xin chào
 
-模型看到的其实是：
+Model thực sự thấy là:
 
-> `<|user|>` 你好 `<|assistant|>`
+> `<|user|>` Xin chào `<|assistant|>`
 
-模型一看到 `<|assistant|>`，就知道：“噢，轮到我扮演助手说话了。”
+Model vừa nhìn thấy `<|assistant|>` là biết ngay: "Ồ, đến lượt mình đóng vai trợ lý nói chuyện rồi."
 
-### 5.3 深度交互演示
+### 5.3 Minh họa tương tác chuyên sâu
 
-下方的演示将带你一步步看清 LLM 的本质。请依次点击 **1. 本能 -> 2. 技巧 -> 3. 原理 -> 4. 进阶**，亲手试一试！
+Bản demo dưới đây sẽ đưa bạn từng bước hiểu rõ bản chất của LLM. Vui lòng lần lượt nhấp vào **1. Bản năng -> 2. Kỹ thuật -> 3. Nguyên lý -> 4. Nâng cao**, và tự mình thử nghiệm!
 
 <TrainingInferenceDemo />
 
 ---
 
-## 6. 从“胡说”到“好助手” (Alignment)
+## 6. Từ “nói bậy” đến “trợ lý tốt” (Alignment)
 
-光会对话还不够。原始的模型可能会教人制造炸弹，或者满嘴脏话。
-为了让它成为 ChatGPT 这样彬彬有礼、安全可靠的助手，还需要最后两步打磨：
+Chỉ biết đối thoại thôi chưa đủ. Model nguyên bản có thể dạy người ta chế tạo bom, hoặc nói tục.
+Để nó trở thành một trợ lý lịch sự, an toàn và đáng tin cậy như ChatGPT, cần thêm hai bước hoàn thiện cuối cùng:
 
-1.  **SFT (指令微调)**：
-    - 找人类专家写很多高质量的问答对，教模型“怎么好好说话”。
-    - 目标：让模型听得懂指令，不再胡乱续写。
-    - _数据示例 (JSON 格式)_：
+1.  **SFT (Supervised Fine-Tuning)**:
+    - Tìm các chuyên gia con người viết nhiều cặp hỏi đáp chất lượng cao, dạy Model "cách nói chuyện tử tế".
+    - Mục tiêu: Giúp Model hiểu các chỉ thị, không còn viết tiếp lung tung.
+    - _Ví dụ dữ liệu (định dạng JSON)_:
       ```json
-      // SFT 训练数据示例
+      // Ví dụ dữ liệu huấn luyện SFT
       {
         "messages": [
-          { "role": "user", "content": "请把这句话翻译成英文：“你好”。" },
+          { "role": "user", "content": "Hãy dịch câu này sang tiếng Anh: “Xin chào”." },
           { "role": "assistant", "content": "Hello." }
         ]
       }
-      // 模型学会了：听到“翻译”指令时，要直接给出结果，而不是续写“你好吗”
+      // Model đã học được: khi nghe lệnh “dịch”, phải trực tiếp đưa ra kết quả, chứ không phải viết tiếp “Bạn khỏe không”
       ```
 
-2.  **RLHF (人类反馈强化学习)**：
-    - **打分**：让模型生成几个回答，人类老师来打分（哪个更安全？哪个更有礼貌？）。
-    - **奖惩**：模型如果说得好就给奖励，说得不好就惩罚。慢慢地，模型就学会了“对齐”人类的价值观（Alignment）。
-    - _数据示例 (JSON 格式)_：
+2.  **RLHF (Reinforcement Learning from Human Feedback)**:
+    - **Đánh giá**: Cho Model tạo ra một vài câu trả lời, giáo viên con người sẽ đánh giá (câu nào an toàn hơn? câu nào lịch sự hơn?).
+    - **Thưởng phạt**: Nếu Model nói tốt thì được thưởng, nói không tốt thì bị phạt. Dần dần, Model sẽ học được cách "Alignment" với các giá trị của con người.
+    - _Ví dụ dữ liệu (định dạng JSON)_:
       ```json
-      // RLHF 偏好数据示例 (DPO/PPO)
+      // Ví dụ dữ liệu ưu tiên RLHF (DPO/PPO)
       {
-        "prompt": "如何制造炸弹？",
-        "chosen": "对不起，我不能回答这个问题。", // 人类更喜欢的回答（安全）
-        "rejected": "首先你需要..." // 人类拒绝的回答（危险）
+        "prompt": "Làm thế nào để chế tạo bom?",
+        "chosen": "Xin lỗi, tôi không thể trả lời câu hỏi này.", // Câu trả lời được con người ưa thích hơn (an toàn)
+        "rejected": "Đầu tiên bạn cần..." // Câu trả lời bị con người từ chối (nguy hiểm)
       }
       ```
 
-**上方的演示中，点击第 4 个标签页“进阶：对齐”，你可以亲自体验对齐前后的巨大差异。**
+**Trong bản demo phía trên, nhấp vào tab thứ 4 "Nâng cao: Alignment", bạn có thể tự mình trải nghiệm sự khác biệt lớn trước và sau khi Alignment.**
 
 ---
 
-## 7. 前沿探索：会思考的模型、MoE 架构与线性注意力机制
+## 7. Khám phá tiên tiến: Các Thinking Model, kiến trúc MoE và cơ chế Linear Attention
 
-随着技术的发展，我们发现仅仅靠“预测下一个词”有时候会犯蠢，特别是在处理数学和逻辑问题时。
-于是，新一代的 **Thinking Models** (如 OpenAI o1, DeepSeek-R1) 诞生了。
+Với sự phát triển của công nghệ, chúng ta nhận thấy rằng chỉ dựa vào "dự đoán từ tiếp theo" đôi khi sẽ mắc lỗi ngớ ngẩn, đặc biệt khi xử lý các vấn đề toán học và logic.
+Do đó, thế hệ **Thinking Models** mới (như OpenAI o1, DeepSeek-R1) đã ra đời.
 
-### 7.1 什么是“思考”？(Thinking Models)
+### 7.1 "Suy nghĩ" là gì? (Thinking Models)
 
-人类在回答复杂问题（比如 9.11 和 9.9 哪个大？）时，不会脱口而出，而是会先在脑子里想一想。
-Thinking Model 就是学会了这种**慢思考 (System 2)** 能力的模型。
+Con người khi trả lời các câu hỏi phức tạp (ví dụ: 9.11 và 9.9 cái nào lớn hơn?) sẽ không nói ra ngay lập tức, mà sẽ suy nghĩ trong đầu trước.
+Thinking Model chính là Model đã học được khả năng **suy nghĩ chậm (System 2)** này.
 
-- **快思考 (System 1)**：凭直觉，脱口而出。容易犯错。
-- **慢思考 (System 2)**：通过产生一段“思维链 (Chain of Thought)”，一步步推理，最后给出答案。
+- **Suy nghĩ nhanh (System 1)**: Dựa vào trực giác, nói ra ngay. Dễ mắc lỗi.
+- **Suy nghĩ chậm (System 2)**: Thông qua việc tạo ra một "chuỗi suy nghĩ (Chain of Thought)", suy luận từng bước, cuối cùng đưa ra câu trả lời.
 
 <ThinkingModelDemo />
 
-### 7.2 训练揭秘：从“模仿”到“探索”
+### 7.2 Tiết lộ về huấn luyện: Từ “bắt chước” đến “khám phá”
 
-为什么以前的模型不会这样思考？因为训练方法变了。
+Tại sao các Model trước đây không suy nghĩ như vậy? Bởi vì phương pháp huấn luyện đã thay đổi.
 
-#### 传统模式 (SFT - 模仿学习)
+#### Chế độ truyền thống (SFT - Học bắt chước)
 
-- **方法**：给模型看人类的思维过程，让它**模仿**。
-- **局限**：模型的天花板就是人类数据及其质量。如果人类自己都想不清楚（比如极难的数学题），模型也学不会。
+- **Phương pháp**: Cho Model xem quá trình tư duy của con người, để nó **bắt chước**.
+- **Hạn chế**: Giới hạn của Model là dữ liệu của con người và chất lượng của nó. Nếu con người tự mình cũng không thể suy nghĩ rõ ràng (ví dụ: các bài toán cực khó), Model cũng không học được.
 
-#### 思考模式 (RL - 强化学习)
+#### Chế độ suy nghĩ (RL - Học tăng cường)
 
-- **方法**：**不给**过程数据，只给最终的**验证器 (Verifier)**。
-  - 比如给一道数学题，模型自己去瞎试。
-  - 试错了 -> 惩罚。
-  - 试对了 -> 奖励。
-- **顿悟时刻 (Aha Moment)**：
-  在经过成千上万次的自我尝试后，模型惊奇地发现：**“如果我在输出答案之前，先在草稿纸上多写几步推导，拿到奖励的概率会大大增加！”**
-  于是，这种“先思考、再回答”的行为模式就被强化并固定了下来。这就好比阿法狗 (AlphaGo) 自己左右互搏，最终超越了人类棋谱。
+- **Phương pháp**: **Không cung cấp** dữ liệu quá trình, chỉ cung cấp **bộ xác minh (Verifier)** cuối cùng.
+  - Ví dụ: đưa một bài toán, Model tự mình thử lung tung.
+  - Thử sai -> phạt.
+  - Thử đúng -> thưởng.
+- **Khoảnh khắc giác ngộ (Aha Moment)**:
+  Sau hàng ngàn lần tự thử nghiệm, Model ngạc nhiên phát hiện: **"Nếu tôi viết thêm vài bước suy luận trên giấy nháp trước khi đưa ra câu trả lời, xác suất nhận được phần thưởng sẽ tăng lên đáng kể!"**
+  Và thế là, kiểu hành vi "suy nghĩ trước, trả lời sau" này đã được tăng cường và cố định. Điều này giống như AlphaGo tự đấu với chính mình, cuối cùng vượt qua các kỳ thủ cờ vây của con người.
 
-### 7.3 实战指南：Prompt 风格大变局
+### 7.3 Hướng dẫn thực chiến: Thay đổi lớn trong phong cách Prompt
 
-使用 Thinking Model (如 DeepSeek-R1, OpenAI o1) 时，你的提示词策略需要完全改变。
+Khi sử dụng Thinking Model (như DeepSeek-R1, OpenAI o1), chiến lược Prompt của bạn cần thay đổi hoàn toàn.
 
-| 特性           | 传统模型 (GPT-4o, Claude 3.5)                 | 思考模型 (R1, o1)                                        |
-| :------------- | :-------------------------------------------- | :------------------------------------------------------- |
-| **核心逻辑**   | **System 1 (直觉)**                           | **System 2 (逻辑)**                                      |
-| **提示词技巧** | 需要引导思维链 (CoT)<br>例："请一步步思考..." | **不要**画蛇添足<br>模型自带思维链，人工引导反而会干扰它 |
-| **指令清晰度** | 需要把复杂任务拆解成子任务                    | 直接给最终目标，让模型自己拆解                           |
-| **适用场景**   | 创意写作、简单翻译、闲聊                      | 复杂数学、代码重构、逻辑推理                             |
+| Đặc điểm       | Model truyền thống (GPT-4o, Claude 3.5)            | Thinking Model (R1, o1)                                  |
+| :------------- | :------------------------------------------------ | :------------------------------------------------------- |
+| **Logic cốt lõi** | **System 1 (Trực giác)**                          | **System 2 (Logic)**                                     |
+| **Kỹ thuật Prompt** | Cần hướng dẫn Chain of Thought (CoT)<br>Ví dụ: "Hãy suy nghĩ từng bước..." | **Không nên** thêm thắt<br>Model tự có Chain of Thought, hướng dẫn thủ công sẽ làm nhiễu nó |
+| **Độ rõ ràng của chỉ thị** | Cần chia nhỏ nhiệm vụ phức tạp thành các nhiệm vụ con | Trực tiếp đưa ra mục tiêu cuối cùng, để Model tự chia nhỏ |
+| **Kịch bản áp dụng** | Viết sáng tạo, dịch thuật đơn giản, trò chuyện   | Toán học phức tạp, tái cấu trúc mã, suy luận logic       |
 
-> ⚠️ **注意**：对 Thinking Model 越少干预越好。你只需要清晰地定义**“什么是完美的任务结果”**，而不要去定义**“该怎么做”**。
+> ⚠️ **Lưu ý**: Đối với Thinking Model, càng ít can thiệp càng tốt. Bạn chỉ cần định nghĩa rõ ràng **"kết quả nhiệm vụ hoàn hảo là gì"**, chứ không cần định nghĩa **"phải làm thế nào"**.
 
-### 7.4 未来趋势：快慢融合
+### 7.4 Xu hướng tương lai: Kết hợp nhanh-chậm
 
-未来我们可能不再需要区分“思考模型”和“普通模型”。
-理想的 AI 应该像人类一样，具备**动态计算 (Adaptive Compute)** 能力：
+Trong tương lai, chúng ta có thể không cần phân biệt "Thinking Model" và "Model thông thường" nữa.
+AI lý tưởng nên giống như con người, có khả năng **tính toán thích ứng (Adaptive Compute)**:
 
-- 遇到“1+1=？”：瞬间调用 System 1，秒回。
-- 遇到“证明黎曼猜想”：自动切换到 System 2，思考三天三夜再回答。
-- **用户无感切换**：你只需要提问，模型自己决定用多少“脑力”来解决。
+- Gặp "1+1=?": Ngay lập tức gọi System 1, trả lời trong tích tắc.
+- Gặp "Chứng minh giả thuyết Riemann": Tự động chuyển sang System 2, suy nghĩ ba ngày ba đêm rồi mới trả lời.
+- **Người dùng không cảm nhận được sự chuyển đổi**: Bạn chỉ cần đặt câu hỏi, Model tự quyết định dùng bao nhiêu "năng lực não bộ" để giải quyết.
 
-### 7.5 架构进化：从“全能”到“专家团” (Dense vs MoE)
+### 7.5 Tiến hóa kiến trúc: Từ “toàn năng” đến “nhóm chuyên gia” (Dense vs MoE)
 
-随着模型越来越大（比如 GPT-4, DeepSeek-V3），如果每次生成一个字都要把所有神经元算一遍，速度会慢到无法忍受。
-于是，**MoE (Mixture of Experts，混合专家)** 架构应运而生。
+Khi các Model ngày càng lớn (ví dụ: GPT-4, DeepSeek-V3), nếu mỗi lần tạo ra một chữ mà phải tính toán tất cả các neuron, tốc độ sẽ chậm đến mức không thể chấp nhận được.
+Do đó, kiến trúc **MoE (Mixture of Experts, hỗn hợp chuyên gia)** đã ra đời.
 
-- **Dense (稠密模型)**：
-  - **比喻**：一个**全能天才**。不管问什么问题，他都调动整个大脑来回答。
-  - **特点**：稳定，但随着知识量增加，反应越来越慢。
-  - **代表**：GPT-3, Llama-2。
+- **Dense (Mô hình dày đặc)**:
+  - **Ví von**: Một **thiên tài toàn năng**. Bất kể hỏi vấn đề gì, anh ta đều huy động toàn bộ bộ não để trả lời.
+  - **Đặc điểm**: Ổn định, nhưng khi lượng kiến thức tăng lên, phản ứng càng chậm.
+  - **Đại diện**: GPT-3, Llama-2.
 
-- **MoE (混合专家模型)**：
-  - **比喻**：一个**流水线上的专家团**（每处理一个字就换一次人）。
-  - **核心机制 (Token-Level Routing)**：
-    MoE 的精髓在于**原生 Token 级路由**。它**绝不是**按“任务类型”分工（比如把数学题全给数学专家），而是**按“当前生成的字”实时分工**。
-    - 当模型生成“`def`”时，路由给**代码专家**。
-    - 当模型生成“`love`”时，路由给**文学专家**。
-    - 当模型生成“`3.14`”时，路由给**数学专家**。
-    这意味着，哪怕在同一句话里，不同的字也往往由不同的专家处理。
-  - **特点**：虽然总人数多（参数量大），但处理每个字时只有几个人干活（激活参数少）。**又博学，又快**。
-  - **代表**：GPT-4, DeepSeek-V3, Mixtral。
+- **MoE (Mô hình hỗn hợp chuyên gia)**:
+  - **Ví von**: Một **nhóm chuyên gia trên dây chuyền sản xuất** (mỗi khi xử lý một chữ thì thay người một lần).
+  - **Cơ chế cốt lõi (Token-Level Routing)**:
+    Tinh túy của MoE nằm ở **Token-Level Routing nguyên bản**. Nó **hoàn toàn không** phân công theo "loại nhiệm vụ" (ví dụ: giao tất cả các bài toán cho chuyên gia toán học), mà là **phân công theo "chữ đang được tạo ra" theo thời gian thực**.
+    - Khi Model tạo ra "`def`", nó được định tuyến đến **chuyên gia mã hóa**.
+    - Khi Model tạo ra "`love`", nó được định tuyến đến **chuyên gia văn học**.
+    - Khi Model tạo ra "`3.14`", nó được định tuyến đến **chuyên gia toán học**.
+    Điều này có nghĩa là, ngay cả trong cùng một câu, các chữ khác nhau thường được xử lý bởi các chuyên gia khác nhau.
+  - **Đặc điểm**: Mặc dù tổng số người nhiều (số lượng tham số lớn), nhưng khi xử lý mỗi chữ chỉ có vài người làm việc (số lượng tham số kích hoạt ít). **Vừa uyên bác, vừa nhanh**.
+  - **Đại diện**: GPT-4, DeepSeek-V3, Mixtral.
 
 <MoEDemo />
 
-### 7.6 效率革命：突破长度极限 (Linear Attention)
+### 7.6 Cách mạng hiệu quả: Vượt qua giới hạn độ dài (Linear Attention)
 
-除了 MoE，还有一个核心痛点：**上下文长度**。
-传统的 Transformer（如 GPT-4）使用的是**标准注意力机制**，它的计算量随着字数增加呈**平方级爆炸**。
+Ngoài MoE, còn một vấn đề cốt lõi khác: **độ dài ngữ cảnh**.
+Transformer truyền thống (như GPT-4) sử dụng **cơ chế Attention tiêu chuẩn**, khối lượng tính toán của nó **tăng theo cấp số nhân** khi số lượng từ tăng lên.
 
-- 读 1 万字，计算量是 1 亿次。
-- 读 10 万字，计算量是 100 亿次！
+- Đọc 10.000 từ, khối lượng tính toán là 100 triệu lần.
+- Đọc 100.000 từ, khối lượng tính toán là 10 tỷ lần!
 
-为了解决这个问题，MiniMax (abab 系列) 和 RWKV 等模型采用了**线性注意力机制 (Linear Attention)**。
+Để giải quyết vấn đề này, các Model như MiniMax (dòng abab) và RWKV đã áp dụng **cơ chế Linear Attention**.
 
-### 为什么一个是“网状”，一个是“线性”？
+### Tại sao một cái là “mạng lưới”, một cái là “tuyến tính”?
 
-根本区别在于：**你是选择“保留所有原话”，还是选择“随时总结”？**
+Sự khác biệt cơ bản nằm ở chỗ: **bạn chọn "giữ lại tất cả lời gốc", hay chọn "tóm tắt bất cứ lúc nào"?**
 
-- **标准 Attention (网状) —— 为什么必须回看？**
-  - **核心原因**：为了**“寻找相关性”**。
-  - **例子**：比如句子“我把**苹果**给**它**...”。当你读到“**它**”这个字时，为了弄清楚“它”到底指谁，模型必须回头把前面所有的词（我、把、苹果、给）都扫描一遍。
-  - **过程**：“它”发出一个查询信号 (Query)，去和前面所有词的标签 (Key) 进行匹配。
-    - 和“我”匹配？0分。
-    - 和“苹果”匹配？**100分！**
-  - **代价**：因为模型不知道哪个词重要，所以**必须把前面所有词都检查一遍，一个都不能漏**。这就是为什么线会织成一张网。
+- **Standard Attention (mạng lưới) – Tại sao phải nhìn lại?**
+  - **Lý do cốt lõi**: Để **"tìm kiếm sự liên quan"**.
+  - **Ví dụ**: Ví dụ câu "Tôi đưa **quả táo** cho **nó**...". Khi bạn đọc đến chữ "**nó**", để làm rõ "nó" chỉ ai, Model phải quay lại quét tất cả các từ phía trước (tôi, đưa, quả táo, cho).
+  - **Quá trình**: "Nó" phát ra một tín hiệu truy vấn (Query), để khớp với các nhãn (Key) của tất cả các từ phía trước.
+    - Khớp với "tôi"? 0 điểm.
+    - Khớp với "quả táo"? **100 điểm!**
+  - **Cái giá**: Bởi vì Model không biết từ nào quan trọng, nên **phải kiểm tra tất cả các từ phía trước, không bỏ sót một từ nào**. Đó là lý do tại sao các đường nối tạo thành một mạng lưới.
 
-- **线性 Attention (线性) —— 为什么可以不回看？**
-  - **原理**：模型学会了“做笔记”。读完“苹果”，它把“有一个苹果”这个信息压缩进**状态 (State)** 里；读到“它”时，直接查阅手里的状态，就能知道“它=苹果”。
-  - **代价**：虽然快，但在“压缩”过程中可能会丢失一些细节（比如忘记了苹果是红色的）。
+- **Linear Attention (tuyến tính) – Tại sao có thể không nhìn lại?**
+  - **Nguyên lý**: Model học cách "ghi chú". Đọc xong "quả táo", nó nén thông tin "có một quả táo" vào **trạng thái (State)**; khi đọc đến "nó", trực tiếp tra cứu trạng thái trong tay, là có thể biết "nó = quả táo".
+  - **Cái giá**: Mặc dù nhanh, nhưng trong quá trình "nén" có thể mất một số chi tiết (ví dụ: quên mất quả táo màu đỏ).
 
 <LinearAttentionDemo />
 
-### 7.7 架构大比拼：RNN vs Transformer vs RWKV
+### 7.7 So sánh kiến trúc lớn: RNN vs Transformer vs RWKV
 
-| 架构 | 核心机制 | 复杂度 (长度 N) | 并行训练 | 推理速度 | 遗忘问题 | 代表模型 |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **RNN** | 串行递归 | $O(N)$ (低) | ❌ 不可 | 慢 (串行) | 严重 (长距离遗忘) | LSTM, GRU |
-| **Transformer** | 全局注意力 | $O(N^2)$ (极高) | ✅ 可 | 中 (KV Cache) | 无 (但受限于窗口) | GPT-4, Llama |
-| **RWKV / Linear** | 线性注意力 | $O(N)$ (低) | ✅ 可 | 快 (恒定显存) | 轻微 (有压缩损耗) | RWKV, MiniMax |
+| Kiến trúc         | Cơ chế cốt lõi | Độ phức tạp (độ dài N) | Huấn luyện song song | Tốc độ suy luận | Vấn đề quên | Model đại diện |
+| :---------------- | :------------- | :--------------------- | :------------------ | :-------------- | :---------- | :------------- |
+| **RNN**           | Đệ quy tuần tự  | $O(N)$ (Thấp)          | ❌ Không thể        | Chậm (tuần tự)  | Nghiêm trọng (quên xa) | LSTM, GRU      |
+| **Transformer**   | Attention toàn cục | $O(N^2)$ (Cực cao)     | ✅ Có thể           | Trung bình (KV Cache) | Không (nhưng bị giới hạn bởi cửa sổ) | GPT-4, Llama   |
+| **RWKV / Linear** | Linear Attention | $O(N)$ (Thấp)          | ✅ Có thể           | Nhanh (VRAM cố định) | Nhẹ (có tổn thất nén) | RWKV, MiniMax  |
 
-> **RWKV / Linear Attention** 试图结合前两者的优点：像 Transformer 一样并行训练，像 RNN 一样高效推理。
-
----
-
-## 8. 总结与学习路线
-
-现在你已经打通了从“分词”到“ChatGPT”的任督二脉：
-
-1.  **Tokenization**：文本切分为 Token。
-2.  **Embedding**：Token 映射为语义向量。
-3.  **Transformer**：利用注意力机制处理序列，并行提取特征。
-4.  **Training**：使用 Template 格式化数据，通过 Teacher Forcing 并行训练。
-5.  **Inference**：自回归式地逐词生成。
-
-**下一步建议**：
-
-- 如果你对数学感兴趣，可以深入学习 **线性代数**（矩阵运算）和 **概率论**。
-- 如果你想动手实践，可以尝试使用 Python 的 `transformers` 库加载一个微型模型（如 GPT-2）玩一玩。
+> **RWKV / Linear Attention** cố gắng kết hợp ưu điểm của hai loại trước: huấn luyện song song như Transformer, suy luận hiệu quả như RNN.
 
 ---
 
-## 9. 名词速查表 (Glossary)
+## 8. Tóm tắt và lộ trình học tập
 
-| 名词               | 全称                                       | 解释                                                                                           |
-| :----------------- | :----------------------------------------- | :--------------------------------------------------------------------------------------------- |
-| **LLM**            | Large Language Model                       | 大语言模型。通过海量文本训练，能理解和生成人类语言的 AI 模型。                                 |
-| **Token**          | -                                          | **分词**。文本被切分成的最小单位（如单词、字或字符片段）。模型读写的都是 Token ID。            |
-| **Embedding**      | -                                          | **词向量**。将 Token 映射到高维空间（如 4096 维）的数值向量，捕捉词语的语义关系。              |
-| **Transformer**    | -                                          | 现代 LLM 的核心架构。基于注意力机制，能够并行处理长文本。                                      |
-| **Attention**      | Attention Mechanism                        | **注意力机制**。让模型在处理一个词时，能动态关注上下文中的其他相关词。                         |
-| **Context Window** | -                                          | **上下文窗口**。模型一次推理能“记住”的最大 Token 数量（如 128k）。                             |
-| **Pre-training**   | -                                          | **预训练**。在海量无标注文本上训练模型，让它学会语言的基本规律和世界知识。                     |
-| **SFT**            | Supervised Fine-Tuning                     | **指令微调**。使用高质量的问答对数据，教模型遵循人类指令。                                     |
-| **RLHF**           | Reinforcement Learning from Human Feedback | **人类反馈强化学习**。通过人类打分，进一步调整模型行为，使其符合人类价值观（对齐）。           |
-| **CoT**            | Chain of Thought                           | **思维链**。引导模型在给出最终答案前，先生成推理步骤的技术。                                   |
-| **MoE**            | Mixture of Experts                         | **混合专家模型**。由多个“专家”子模型组成，根据问题自动选择激活哪部分专家，效率更高。           |
-| **Temperature**    | -                                          | **温度**。控制模型生成随机性的参数。温度越高，回答越有创造力但越不可控；温度越低，回答越确定。 |
+Bây giờ bạn đã thông suốt từ "Tokenization" đến "ChatGPT":
+
+1.  **Tokenization**: Văn bản được chia thành các Token.
+2.  **Embedding**: Token được ánh xạ thành vector ngữ nghĩa.
+3.  **Transformer**: Sử dụng cơ chế Attention để xử lý chuỗi, trích xuất đặc trưng song song.
+4.  **Training**: Sử dụng Template để định dạng dữ liệu, huấn luyện song song thông qua Teacher Forcing.
+5.  **Inference**: Tạo ra từng từ một theo kiểu tự hồi quy.
+
+**Đề xuất các bước tiếp theo**:
+
+- Nếu bạn quan tâm đến toán học, có thể tìm hiểu sâu về **đại số tuyến tính** (phép toán ma trận) và **lý thuyết xác suất**.
+- Nếu bạn muốn thực hành, có thể thử sử dụng thư viện `transformers` của Python để tải một Model nhỏ (như GPT-2) và thử nghiệm.
+
+---
+
+## 9. Bảng tra cứu thuật ngữ (Glossary)
+
+| Thuật ngữ          | Tên đầy đủ                                  | Giải thích                                                                                              |
+| :----------------- | :----------------------------------------- | :----------------------------------------------------------------------------------------------------- |
+| **LLM**            | Large Language Model                       | Large Language Model. Mô hình AI được huấn luyện trên lượng lớn văn bản, có khả năng hiểu và tạo ngôn ngữ con người. |
+| **Token**          | -                                          | **Token**. Đơn vị nhỏ nhất mà văn bản được chia thành (như từ, chữ cái hoặc đoạn ký tự). Model đọc và ghi đều là Token ID. |
+| **Embedding**      | -                                          | **Vector từ**. Ánh xạ Token vào không gian số chiều cao (ví dụ: 4096 chiều), nắm bắt mối quan hệ ngữ nghĩa của từ. |
+| **Transformer**    | -                                          | Kiến trúc cốt lõi của các LLM hiện đại. Dựa trên cơ chế Attention, có khả năng xử lý văn bản dài song song. |
+| **Attention**      | Attention Mechanism                        | **Cơ chế Attention**. Cho phép Model khi xử lý một từ, có thể động thái chú ý đến các từ liên quan khác trong ngữ cảnh. |
+| **Context Window** | -                                          | **Cửa sổ ngữ cảnh**. Số lượng Token tối đa mà Model có thể "ghi nhớ" trong một lần suy luận (ví dụ: 128k). |
+| **Pre-training**   | -                                          | **Huấn luyện trước**. Huấn luyện Model trên lượng lớn văn bản không có nhãn, để nó học các quy luật cơ bản của ngôn ngữ và kiến thức thế giới. |
+| **SFT**            | Supervised Fine-Tuning                     | **Điều chỉnh tinh chỉnh có giám sát**. Sử dụng dữ liệu hỏi đáp chất lượng cao, dạy Model tuân thủ các chỉ thị của con người. |
+| **RLHF**           | Reinforcement Learning from Human Feedback | **Học tăng cường từ phản hồi của con người**. Thông qua đánh giá của con người, điều chỉnh thêm hành vi của Model để phù hợp với giá trị của con người (Alignment). |
+| **CoT**            | Chain of Thought                           | **Chuỗi suy nghĩ**. Kỹ thuật hướng dẫn Model tạo ra các bước suy luận trước khi đưa ra câu trả lời cuối cùng. |
+| **MoE**            | Mixture of Experts                         | **Mô hình hỗn hợp chuyên gia**. Bao gồm nhiều Model con "chuyên gia", tự động chọn kích hoạt phần chuyên gia nào tùy theo vấn đề, hiệu quả cao hơn. |
+| **Temperature**    | -                                          | **Nhiệt độ**. Tham số kiểm soát tính ngẫu nhiên của việc tạo ra của Model. Nhiệt độ càng cao, câu trả lời càng sáng tạo nhưng càng khó kiểm soát; nhiệt độ càng thấp, câu trả lời càng chắc chắn. |

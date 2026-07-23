@@ -1,95 +1,95 @@
-# SSH 与密钥认证
+# SSH và Xác thực bằng Khóa
 
-> 💡 **学习指南**：每次 `git push` 输密码？连服务器总被提示"Permission denied"？本章用 5 分钟带你搞懂 SSH 密钥认证的原理，以及如何一键免密登录 GitHub 和服务器。
-
----
-
-## 0. 你一定遇到过这些场景
-
-- `git push` 时反复弹出密码输入框，烦不胜烦
-- SSH 连接服务器失败，不知道 `id_rsa` 和 `id_ed25519` 是什么
-- 听说"公钥"和"私钥"，但搞不清哪个给别人、哪个自己留
-
-**核心矛盾**：密码不安全、又麻烦。SSH 密钥就是用来同时解决安全性和便利性的方案。
+> 💡 **Hướng dẫn học tập**: Mỗi lần `git push` lại phải nhập mật khẩu? Kết nối máy chủ luôn bị báo "Permission denied"? Chương này sẽ giúp bạn hiểu rõ nguyên lý xác thực bằng khóa SSH chỉ trong 5 phút, cùng với cách đăng nhập GitHub và máy chủ không cần mật khẩu chỉ với một cú nhấp chuột.
 
 ---
 
-## 1. 密码 vs 密钥：为什么密钥更好？
+## 0. Bạn chắc chắn đã gặp những tình huống này
 
-👇 动手点点看：对比密码登录和密钥登录的区别
+- `git push` thì hộp thoại nhập mật khẩu cứ hiện đi hiện lại, thật phiền phức
+- Kết nối SSH đến máy chủ thất bại, không biết `id_rsa` và `id_ed25519` là gì
+- Nghe nói về "khóa công khai" và "khóa riêng tư", nhưng không rõ cái nào đưa cho người khác, cái nào giữ lại cho mình
+
+**Mâu thuẫn cốt lõi**: Mật khẩu không an toàn, lại phiền phức. Khóa SSH chính là giải pháp để đồng thời giải quyết vấn đề bảo mật và tiện lợi.
+
+---
+
+## 1. Mật khẩu vs Khóa: Tại sao khóa tốt hơn?
+
+👇 Hãy tự mình trải nghiệm: So sánh sự khác biệt giữa đăng nhập bằng mật khẩu và đăng nhập bằng khóa
 
 <SSHAuthDemo />
 
-::: tip 💡 一句话总结
-密码登录 = 每次把密码发过去让对方核对（密码可能被截获）；  
-密钥登录 = 证明"我有钥匙"但不用把钥匙给你看（私钥永不传输）。
+::: tip 💡 Tóm tắt trong một câu
+Đăng nhập bằng mật khẩu = Mỗi lần gửi mật khẩu đi để đối phương kiểm tra (mật khẩu có thể bị chặn);  
+Đăng nhập bằng khóa = Chứng minh "tôi có chìa khóa" nhưng không cần cho bạn xem chìa khóa (khóa riêng tư không bao giờ được truyền đi).
 :::
 
 ---
 
-## 2. 非对称加密：公钥和私钥
+## 2. Mã hóa bất đối xứng: Khóa công khai và khóa riêng tư
 
-SSH 密钥基于**非对称加密**，一次生成两把钥匙：
+Khóa SSH dựa trên **mã hóa bất đối xứng**, tạo ra hai cặp khóa cùng một lúc:
 
-| | 私钥 (Private Key) | 公钥 (Public Key) |
+| | Khóa riêng tư (Private Key) | Khóa công khai (Public Key) |
 |---|---|---|
-| **保存位置** | 你的电脑 `~/.ssh/id_ed25519` | 服务器/GitHub |
-| **可以给别人吗** | ❌ 绝不 | ✅ 随便给 |
-| **功能** | 签名（证明身份） | 验签（验证身份） |
-| **类比** | 钥匙 | 锁 |
+| **Vị trí lưu trữ** | Máy tính của bạn `~/.ssh/id_ed25519` | Máy chủ/GitHub |
+| **Có thể đưa cho người khác không** | ❌ Tuyệt đối không | ✅ Thoải mái cho |
+| **Chức năng** | Ký (chứng minh danh tính) | Xác minh chữ ký (xác thực danh tính) |
+| **So sánh** | Chìa khóa | Ổ khóa |
 
-### 常见密钥类型
+### Các loại khóa phổ biến
 
-| 类型 | 命令 | 推荐度 | 说明 |
+| Loại | Lệnh | Mức độ khuyến nghị | Mô tả |
 |---|---|---|---|
-| **Ed25519** | `ssh-keygen -t ed25519` | ⭐⭐⭐ | 最新最快最安全 |
-| **RSA** | `ssh-keygen -t rsa -b 4096` | ⭐⭐ | 兼容性好，但较慢 |
-| **ECDSA** | `ssh-keygen -t ecdsa` | ⭐ | 一般不推荐 |
+| **Ed25519** | `ssh-keygen -t ed25519` | ⭐⭐⭐ | Mới nhất, nhanh nhất, an toàn nhất |
+| **RSA** | `ssh-keygen -t rsa -b 4096` | ⭐⭐ | Tương thích tốt, nhưng chậm hơn |
+| **ECDSA** | `ssh-keygen -t ecdsa` | ⭐ | Thường không được khuyến nghị |
 
 ---
 
-## 3. 实战：生成并配置 SSH 密钥
+## 3. Thực hành: Tạo và cấu hình khóa SSH
 
-### 3.1 生成密钥对
+### 3.1 Tạo cặp khóa
 
 ```bash
 ssh-keygen -t ed25519 -C "your@email.com"
 ```
 
-执行后会提示：
-- **文件路径**：直接回车用默认路径 `~/.ssh/id_ed25519`
-- **密码短语**：可以设置额外保护（也可留空）
+Sau khi thực thi, bạn sẽ được nhắc:
+- **Đường dẫn tệp**: Nhấn Enter để sử dụng đường dẫn mặc định `~/.ssh/id_ed25519`
+- **Cụm mật khẩu**: Có thể thiết lập bảo vệ bổ sung (hoặc để trống)
 
-### 3.2 把公钥添加到 GitHub
+### 3.2 Thêm khóa công khai vào GitHub
 
 ```bash
-# 1. 复制公钥内容
+# 1. Sao chép nội dung khóa công khai
 cat ~/.ssh/id_ed25519.pub | pbcopy  # macOS
 cat ~/.ssh/id_ed25519.pub | xclip   # Linux
 
-# 2. 打开 GitHub → Settings → SSH and GPG keys → New SSH key
-# 3. 粘贴公钥，保存
+# 2. Mở GitHub → Settings → SSH and GPG keys → New SSH key
+# 3. Dán khóa công khai, lưu lại
 
-# 4. 测试连接
+# 4. Kiểm tra kết nối
 ssh -T git@github.com
-# 成功会看到: Hi username! You've been authenticated...
+# Thành công bạn sẽ thấy: Hi username! You've been authenticated...
 ```
 
-### 3.3 把公钥添加到服务器
+### 3.3 Thêm khóa công khai vào máy chủ
 
 ```bash
-# 方式一：ssh-copy-id（推荐）
+# Cách 1: ssh-copy-id (khuyến nghị)
 ssh-copy-id user@your-server
 
-# 方式二：手动复制
+# Cách 2: Sao chép thủ công
 cat ~/.ssh/id_ed25519.pub | ssh user@server "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
 ```
 
 ---
 
-## 4. SSH Config：告别长命令
+## 4. SSH Config: Tạm biệt các lệnh dài dòng
 
-在 `~/.ssh/config` 中配置别名，一次配置终身受益：
+Cấu hình bí danh trong `~/.ssh/config`, một lần cấu hình dùng mãi mãi:
 
 ```
 Host dev
@@ -103,36 +103,36 @@ Host github.com
   IdentityFile ~/.ssh/id_ed25519
 ```
 
-配置后的效果：
+Hiệu quả sau khi cấu hình:
 
-| 之前 | 之后 |
+| Trước đây | Sau này |
 |---|---|
 | `ssh -i ~/.ssh/id_ed25519 deploy@192.168.1.100` | `ssh dev` |
-| 每次都要记 IP 和用户名 | 记一个别名就够 |
+| Mỗi lần đều phải nhớ IP và tên người dùng | Chỉ cần nhớ một bí danh là đủ |
 
 ---
 
-## 5. 常见问题排查
+## 5. Khắc phục sự cố thường gặp
 
-| 问题 | 原因 | 解决方案 |
+| Vấn đề | Nguyên nhân | Giải pháp |
 |---|---|---|
-| `Permission denied (publickey)` | 公钥没添加到服务器 | `ssh-copy-id user@server` |
-| `WARNING: UNPROTECTED PRIVATE KEY FILE` | 私钥文件权限太宽 | `chmod 600 ~/.ssh/id_ed25519` |
-| `Could not resolve hostname` | SSH Config 配置有误 | 检查 `~/.ssh/config` 格式 |
-| GitHub 还是要密码 | 用的 HTTPS 而非 SSH | 改用 `git@github.com:user/repo.git` |
+| `Permission denied (publickey)` | Khóa công khai chưa được thêm vào máy chủ | `ssh-copy-id user@server` |
+| `WARNING: UNPROTECTED PRIVATE KEY FILE` | Quyền của tệp khóa riêng tư quá rộng | `chmod 600 ~/.ssh/id_ed25519` |
+| `Could not resolve hostname` | Cấu hình SSH Config bị lỗi | Kiểm tra định dạng `~/.ssh/config` |
+| Vẫn yêu cầu mật khẩu GitHub | Đang sử dụng HTTPS thay vì SSH | Đổi sang dùng `git@github.com:user/repo.git` |
 
 ---
 
-## 6. 总结
+## 6. Tóm tắt
 
-::: tip 📚 核心要点
-1. **密钥 > 密码**：私钥永不传输，比密码安全得多
-2. **推荐 Ed25519**：最现代的密钥算法，速度快、安全性高
-3. **公钥随便给，私钥绝不泄露**：记住这条铁律
-4. **SSH Config**：配一次别名，之后 `ssh 别名` 一键连接
-5. **GitHub/GitLab**：添加公钥后，`git push/pull` 再也不需要输密码
+::: tip 📚 Các điểm cốt lõi
+1.  **Khóa > Mật khẩu**: Khóa riêng tư không bao giờ được truyền đi, an toàn hơn mật khẩu rất nhiều.
+2.  **Khuyến nghị Ed25519**: Thuật toán khóa hiện đại nhất, tốc độ nhanh, bảo mật cao.
+3.  **Khóa công khai thoải mái cho, khóa riêng tư tuyệt đối không tiết lộ**: Hãy ghi nhớ quy tắc vàng này.
+4.  **SSH Config**: Cấu hình bí danh một lần, sau đó `ssh bí_danh` để kết nối chỉ với một cú nhấp chuột.
+5.  **GitHub/GitLab**: Sau khi thêm khóa công khai, `git push/pull` sẽ không bao giờ yêu cầu nhập mật khẩu nữa.
 :::
 
-**下一步学习**：
-- [端口与 localhost](./ports-localhost) - 理解网络连接的基础
-- [环境变量与 PATH](./environment-path) - 理解系统配置
+**Học tiếp theo**:
+- [Cổng và localhost](./ports-localhost) - Hiểu cơ bản về kết nối mạng
+- [Biến môi trường và PATH](./environment-path) - Hiểu về cấu hình hệ thống

@@ -1,570 +1,570 @@
-# 附录
+# Phụ lục
 
-本附录涵盖从计算机基础到工程素养的完整知识体系，是你学习旅程中的重要参考库。
+Phụ lục này bao gồm một hệ thống kiến thức hoàn chỉnh từ cơ bản về máy tính đến kỹ năng kỹ thuật, là thư viện tham khảo quan trọng trong hành trình học tập của bạn.
 
-## 📍 附录知识地图
+## 📍 Bản đồ kiến thức phụ lục
 
-点击下方的分类卡片，查看每个分类的完整学习路径：
+Nhấp vào các thẻ danh mục bên dưới để xem lộ trình học tập đầy đủ cho từng danh mục:
 
 <AppendixFlowMap />
 
 ---
 
-## 内容分类
+## Danh mục nội dung
 
-### 一、计算机是怎么回事
+### I. Máy tính hoạt động như thế nào
 
-从晶体管到操作系统，深入了解计算机如何工作：
+Từ transistor đến hệ điều hành, hiểu sâu về cách máy tính hoạt động:
 <NavGrid>
 <NavCard
     href="/vi-vn/appendix/1-computer-fundamentals/vibe-coding-fullstack"
-    title="Vibe Coding 时代下的全栈开发"
-    description="AI 辅助时代，前端、后端、编程语言、全栈工程师的成长路径全景图"
+    title="Phát triển Full Stack trong kỷ nguyên Vibe Coding"
+    description="Bức tranh toàn cảnh về lộ trình phát triển của Frontend, Backend, ngôn ngữ lập trình, và kỹ sư Full Stack trong kỷ nguyên hỗ trợ bởi AI"
   />
 <NavCard
     href="/vi-vn/appendix/1-computer-fundamentals/transistor-to-cpu"
-    title="从晶体管到 CPU"
-    description="理解计算机最底层的硬件逻辑，从晶体管开关到 CPU 指令执行"
+    title="Từ Transistor đến CPU"
+    description="Hiểu logic phần cứng cơ bản nhất của máy tính, từ công tắc transistor đến thực thi lệnh CPU"
   />
 <NavCard
     href="/vi-vn/appendix/1-computer-fundamentals/operating-systems"
-    title="操作系统"
-    description="进程管理、内存管理、文件系统——操作系统的核心职责"
+    title="Hệ điều hành"
+    description="Quản lý tiến trình, quản lý bộ nhớ, hệ thống tập tin – các trách nhiệm cốt lõi của hệ điều hành"
   />
 <NavCard
     href="/vi-vn/appendix/1-computer-fundamentals/data-encoding-storage"
-    title="数据的编码、存储与传输"
-    description="二进制、字符编码、数据压缩与网络传输基础"
+    title="Mã hóa, lưu trữ và truyền tải dữ liệu"
+    description="Cơ bản về hệ nhị phân, mã hóa ký tự, nén dữ liệu và truyền tải mạng"
   />
 <NavCard
     href="/vi-vn/appendix/1-computer-fundamentals/computer-networks"
-    title="网络：两台电脑如何对话"
-    description="从网线到互联网，理解网络通信的底层原理"
+    title="Mạng: Hai máy tính giao tiếp như thế nào"
+    description="Từ dây mạng đến Internet, hiểu nguyên lý cơ bản của giao tiếp mạng"
   />
 <NavCard
     href="/vi-vn/appendix/1-computer-fundamentals/data-structures"
-    title="数据结构"
-    description="数组、链表、树、图——组织数据的基本方式"
+    title="Cấu trúc dữ liệu"
+    description="Mảng, danh sách liên kết, cây, đồ thị – các cách cơ bản để tổ chức dữ liệu"
   />
 <NavCard
     href="/vi-vn/appendix/1-computer-fundamentals/algorithm-thinking"
-    title="算法思维入门"
-    description="排序、搜索、递归——解决问题的思维框架"
+    title="Giới thiệu tư duy thuật toán"
+    description="Sắp xếp, tìm kiếm, đệ quy – khung tư duy để giải quyết vấn đề"
   />
 <NavCard
     href="/vi-vn/appendix/1-computer-fundamentals/programming-languages"
-    title="编程语言图谱"
-    description="从汇编到高级语言，理解编程语言的演进与分类"
+    title="Bản đồ ngôn ngữ lập trình"
+    description="Từ hợp ngữ đến ngôn ngữ cấp cao, hiểu sự tiến hóa và phân loại ngôn ngữ lập trình"
   />
 <NavCard
     href="/vi-vn/appendix/1-computer-fundamentals/compilers"
-    title="编译原理入门"
-    description="词法分析、语法分析、AST——编译器如何理解你的代码"
+    title="Giới thiệu nguyên lý biên dịch"
+    description="Phân tích từ vựng, phân tích cú pháp, AST – cách trình biên dịch hiểu mã của bạn"
   />
 <NavCard
     href="/vi-vn/appendix/1-computer-fundamentals/type-systems"
-    title="类型系统入门"
-    description="静态类型 vs 动态类型，类型安全与类型推断"
+    title="Giới thiệu hệ thống kiểu"
+    description="Kiểu tĩnh vs kiểu động, an toàn kiểu và suy luận kiểu"
   />
 </NavGrid>
 
-### 二、开发环境与工具
+### II. Môi trường phát triển và công cụ
 
-掌握现代软件开发必备的命令行、Git、编辑器等工具：
+Nắm vững các công cụ cần thiết cho phát triển phần mềm hiện đại như dòng lệnh, Git, trình soạn thảo:
 <NavGrid>
 <NavCard
     href="/vi-vn/appendix/2-development-tools/ide-basics"
-    title="集成开发环境 (IDE) 基础"
-    description="VS Code、Cursor、Trae——选择适合你的开发工具"
+    title="Cơ bản về Môi trường phát triển tích hợp (IDE)"
+    description="VS Code, Cursor, Trae – chọn công cụ phát triển phù hợp với bạn"
   />
 <NavCard
     href="/vi-vn/appendix/2-development-tools/command-line-shell"
-    title="命令行与 Shell 脚本"
-    description="终端操作、Shell 命令、脚本自动化"
+    title="Dòng lệnh và Shell Script"
+    description="Thao tác terminal, lệnh Shell, tự động hóa script"
   />
 <NavCard
     href="/vi-vn/appendix/2-development-tools/git-version-control"
-    title="Git：代码的时光机"
-    description="版本控制、分支管理、团队协作"
+    title="Git: Cỗ máy thời gian của mã nguồn"
+    description="Kiểm soát phiên bản, quản lý nhánh, cộng tác nhóm"
   />
 <NavCard
     href="/vi-vn/appendix/2-development-tools/environment-path"
-    title="环境变量与 PATH"
-    description="理解系统环境配置，解决「命令找不到」问题"
+    title="Biến môi trường và PATH"
+    description="Hiểu cấu hình môi trường hệ thống, giải quyết vấn đề 'không tìm thấy lệnh'"
   />
 <NavCard
     href="/vi-vn/appendix/2-development-tools/ports-localhost"
-    title="端口与 localhost"
-    description="理解网络端口、本地开发服务器与端口冲突"
+    title="Cổng và localhost"
+    description="Hiểu cổng mạng, máy chủ phát triển cục bộ và xung đột cổng"
   />
 <NavCard
     href="/vi-vn/appendix/2-development-tools/ssh-authentication"
-    title="SSH 与密钥认证"
-    description="远程登录、密钥管理、安全连接"
+    title="SSH và xác thực khóa"
+    description="Đăng nhập từ xa, quản lý khóa, kết nối an toàn"
   />
 <NavCard
     href="/vi-vn/appendix/2-development-tools/package-managers"
-    title="包管理器"
-    description="npm、pip、cargo——依赖管理的艺术"
+    title="Trình quản lý gói"
+    description="npm, pip, cargo – nghệ thuật quản lý dependency"
   />
 <NavCard
     href="/vi-vn/appendix/2-development-tools/debugging-art/"
-    title="调试的艺术"
-    description="断点调试、日志分析、问题定位方法论"
+    title="Nghệ thuật Debugging"
+    description="Debug bằng breakpoint, phân tích log, phương pháp luận xác định vấn đề"
   />
 <NavCard
     href="/vi-vn/appendix/2-development-tools/regex"
-    title="正则表达式"
-    description="模式匹配、文本处理的利器"
+    title="Biểu thức chính quy"
+    description="Đối sánh mẫu, công cụ mạnh mẽ để xử lý văn bản"
   />
 </NavGrid>
 
-### 三、浏览器与前端
+### III. Trình duyệt và Frontend
 
-全面了解浏览器原理、JavaScript、前端框架和工程化实践：
+Tìm hiểu toàn diện về nguyên lý trình duyệt, JavaScript, các Frontend Framework và thực hành kỹ thuật:
 <NavGrid>
 <NavCard
     href="/vi-vn/appendix/3-browser-and-frontend/javascript-deep-dive"
-    title="JavaScript 语言深入"
-    description="闭包、原型链、异步——JS 核心概念解析"
+    title="Tìm hiểu sâu về ngôn ngữ JavaScript"
+    description="Closure, Prototype Chain, bất đồng bộ – phân tích các khái niệm cốt lõi của JS"
   />
 <NavCard
     href="/vi-vn/appendix/3-browser-and-frontend/typescript"
-    title="TypeScript：给 JS 加上类型系统"
-    description="类型安全、接口定义、泛型编程"
+    title="TypeScript: Thêm hệ thống kiểu cho JS"
+    description="An toàn kiểu, định nghĩa interface, lập trình generic"
   />
 <NavCard
     href="/vi-vn/appendix/3-browser-and-frontend/frontend-frameworks"
-    title="前端框架对比"
-    description="React / Vue / Svelte / Angular——选择适合你的框架"
+    title="So sánh các Frontend Framework"
+    description="React / Vue / Svelte / Angular – chọn Framework phù hợp với bạn"
   />
 <NavCard
     href="/vi-vn/appendix/3-browser-and-frontend/browser-as-os-rendering"
-    title="浏览器渲染管道"
-    description="DOM、CSSOM、布局、绘制——页面是如何渲染的"
+    title="Quy trình Render của trình duyệt"
+    description="DOM, CSSOM, Layout, Paint – cách trang được render"
   />
 <NavCard
     href="/vi-vn/appendix/3-browser-and-frontend/html-css-layout"
-    title="HTML / CSS 布局体系"
-    description="盒模型、Flexbox、Grid——现代布局方案"
+    title="Hệ thống Layout HTML / CSS"
+    description="Box Model, Flexbox, Grid – các giải pháp Layout hiện đại"
   />
 <NavCard
     href="/vi-vn/appendix/3-browser-and-frontend/javascript-runtime"
-    title="JavaScript 运行时"
-    description="事件循环、任务队列、微任务与宏任务"
+    title="JavaScript Runtime"
+    description="Event Loop, hàng đợi tác vụ, Microtask và Macrotask"
   />
 <NavCard
     href="/vi-vn/appendix/3-browser-and-frontend/frontend-framework-nature"
-    title="前端框架的本质"
-    description="响应式原理、虚拟 DOM、组件化思想"
+    title="Bản chất của Frontend Framework"
+    description="Nguyên lý Reactive, Virtual DOM, tư tưởng Component"
   />
 <NavCard
     href="/vi-vn/appendix/3-browser-and-frontend/state-management"
-    title="状态管理哲学"
-    description="Redux、MobX、Zustand——状态管理的演进"
+    title="Triết lý quản lý trạng thái"
+    description="Redux, MobX, Zustand – sự tiến hóa của quản lý trạng thái"
   />
 <NavCard
     href="/vi-vn/appendix/3-browser-and-frontend/routing-navigation"
-    title="路由与导航"
-    description="SPA 路由原理、历史模式与哈希模式"
+    title="Routing và điều hướng"
+    description="Nguyên lý Routing của SPA, chế độ History và Hash"
   />
 <NavCard
     href="/vi-vn/appendix/3-browser-and-frontend/graphics-animation"
-    title="图形与动画"
-    description="Canvas / SVG / WebGL——Web 图形技术全景"
+    title="Đồ họa và hoạt ảnh"
+    description="Canvas / SVG / WebGL – toàn cảnh công nghệ đồ họa Web"
   />
 <NavCard
     href="/vi-vn/appendix/3-browser-and-frontend/realtime-communication"
-    title="实时通信"
-    description="WebSocket / SSE——实时数据推送方案"
+    title="Giao tiếp thời gian thực"
+    description="WebSocket / SSE – giải pháp đẩy dữ liệu thời gian thực"
   />
 <NavCard
     href="/vi-vn/appendix/3-browser-and-frontend/web-performance"
-    title="网页性能的度量与优化"
-    description="Core Web Vitals、性能监控、优化策略"
+    title="Đo lường và tối ưu hiệu suất trang web"
+    description="Core Web Vitals, giám sát hiệu suất, chiến lược tối ưu"
   />
 <NavCard
     href="/vi-vn/appendix/3-browser-and-frontend/frontend-engineering"
-    title="前端工程化全貌"
-    description="构建工具、模块化、代码规范"
+    title="Toàn cảnh Frontend Engineering"
+    description="Công cụ build, Modularization, quy tắc mã hóa"
   />
 <NavCard
     href="/vi-vn/appendix/3-browser-and-frontend/a11n-i18n"
-    title="无障碍与国际化"
-    description="让 Web 对所有人都友好"
+    title="Khả năng tiếp cận và Quốc tế hóa"
+    description="Làm cho Web thân thiện với tất cả mọi người"
   />
 </NavGrid>
 
-### 四、服务器与后端
+### IV. Máy chủ và Backend
 
-深入后端开发、API 设计、认证授权、缓存和消息队列等核心技术：
+Tìm hiểu sâu về phát triển Backend, thiết kế API, xác thực ủy quyền, caching và Message Queue cùng các công nghệ cốt lõi khác:
 <NavGrid>
 <NavCard
     href="/vi-vn/appendix/4-server-and-backend/backend-languages"
-    title="后端语言对比"
-    description="Node.js / Go / Java / Rust——选择适合的后端技术栈"
+    title="So sánh các ngôn ngữ Backend"
+    description="Node.js / Go / Java / Rust – chọn Tech Stack Backend phù hợp"
   />
 <NavCard
     href="/vi-vn/appendix/4-server-and-backend/client-languages"
-    title="客户端语言对比"
-    description="Swift / Kotlin / Dart——移动端开发语言选择"
+    title="So sánh các ngôn ngữ Client"
+    description="Swift / Kotlin / Dart – lựa chọn ngôn ngữ phát triển di động"
   />
 <NavCard
     href="/vi-vn/appendix/4-server-and-backend/cross-platform"
-    title="跨平台方案对比"
-    description="React Native / Flutter / Electron / Tauri——一套代码多端运行"
+    title="So sánh các giải pháp đa nền tảng"
+    description="React Native / Flutter / Electron / Tauri – một bộ mã chạy trên nhiều nền tảng"
   />
 <NavCard
     href="/vi-vn/appendix/4-server-and-backend/http-protocol"
-    title="HTTP 协议"
-    description="请求方法、状态码、头部、HTTPS"
+    title="Giao thức HTTP"
+    description="Phương thức yêu cầu, mã trạng thái, Header, HTTPS"
   />
 <NavCard
     href="/vi-vn/appendix/4-server-and-backend/request-journey"
-    title="一个请求的完整旅程"
-    description="从浏览器输入 URL 到服务器响应的全链路分析"
+    title="Hành trình hoàn chỉnh của một Request"
+    description="Phân tích toàn bộ chuỗi từ việc nhập URL vào trình duyệt đến phản hồi của máy chủ"
   />
 <NavCard
     href="/vi-vn/appendix/4-server-and-backend/web-frameworks"
-    title="Web 框架的本质"
-    description="路由、中间件、请求处理——框架做了什么"
+    title="Bản chất của Web Framework"
+    description="Routing, Middleware, xử lý Request – Framework làm gì"
   />
 <NavCard
     href="/vi-vn/appendix/4-server-and-backend/api-design"
-    title="API 设计哲学"
-    description="REST / GraphQL / gRPC——选择合适的 API 风格"
+    title="Triết lý thiết kế API"
+    description="REST / GraphQL / gRPC – chọn phong cách API phù hợp"
   />
 <NavCard
     href="/vi-vn/appendix/4-server-and-backend/api-intro"
-    title="API 入门"
-    description="接口设计基础、请求响应格式、错误处理"
+    title="Giới thiệu API"
+    description="Cơ bản về thiết kế giao diện, định dạng Request/Response, xử lý lỗi"
   />
 <NavCard
     href="/vi-vn/appendix/4-server-and-backend/serialization"
-    title="序列化与数据格式"
-    description="JSON / Protobuf / MessagePack——数据传输格式选择"
+    title="Serialization và định dạng dữ liệu"
+    description="JSON / Protobuf / MessagePack – lựa chọn định dạng truyền dữ liệu"
   />
 <NavCard
     href="/vi-vn/appendix/4-server-and-backend/auth-authorization"
-    title="认证与授权体系"
-    description="JWT、OAuth、Session——身份验证方案"
+    title="Hệ thống xác thực và ủy quyền"
+    description="JWT, OAuth, Session – các giải pháp xác thực danh tính"
   />
 <NavCard
     href="/vi-vn/appendix/4-server-and-backend/concurrency-async"
-    title="并发、异步与多线程"
-    description="并发模型、异步编程、线程安全"
+    title="Concurrency, bất đồng bộ và đa luồng"
+    description="Mô hình Concurrency, lập trình bất đồng bộ, an toàn luồng"
   />
 <NavCard
     href="/vi-vn/appendix/4-server-and-backend/caching"
-    title="缓存的层次与策略"
-    description="浏览器缓存、CDN、Redis——多级缓存架构"
+    title="Các tầng và chiến lược Caching"
+    description="Browser Cache, CDN, Redis – kiến trúc Cache đa cấp"
   />
 <NavCard
     href="/vi-vn/appendix/4-server-and-backend/message-queues"
-    title="消息队列与事件驱动"
-    description="Kafka、RabbitMQ——解耦与异步处理"
+    title="Message Queue và Event-Driven"
+    description="Kafka, RabbitMQ – tách rời và xử lý bất đồng bộ"
   />
 <NavCard
     href="/vi-vn/appendix/4-server-and-backend/async-task-queues"
-    title="异步任务队列"
-    description="Celery、Bull——后台任务处理"
+    title="Hàng đợi tác vụ bất đồng bộ"
+    description="Celery, Bull – xử lý tác vụ nền"
   />
 <NavCard
     href="/vi-vn/appendix/4-server-and-backend/rate-limiting-backpressure"
-    title="限流与背压控制"
-    description="保护系统免受过载冲击"
+    title="Giới hạn tốc độ và kiểm soát Backpressure"
+    description="Bảo vệ hệ thống khỏi quá tải"
   />
 <NavCard
     href="/vi-vn/appendix/4-server-and-backend/search-engines"
-    title="搜索引擎原理"
-    description="Elasticsearch、全文检索、倒排索引"
+    title="Nguyên lý Search Engine"
+    description="Elasticsearch, Full-text Search, Inverted Index"
   />
 <NavCard
     href="/vi-vn/appendix/4-server-and-backend/file-storage"
-    title="文件存储与对象存储"
-    description="本地存储、S3、OSS——文件管理方案"
+    title="Lưu trữ tập tin và lưu trữ đối tượng"
+    description="Lưu trữ cục bộ, S3, OSS – giải pháp quản lý tập tin"
   />
 <NavCard
     href="/vi-vn/appendix/4-server-and-backend/backend-layered-architecture"
-    title="后端分层架构"
-    description="Controller / Service / Repository——代码组织之道"
+    title="Kiến trúc Backend phân tầng"
+    description="Controller / Service / Repository – cách tổ chức mã nguồn"
   />
 </NavGrid>
 
-### 五、数据
+### V. Dữ liệu
 
-从 SQL 到数据治理，全面掌握数据处理和分析技能：
+Từ SQL đến quản trị dữ liệu, nắm vững kỹ năng xử lý và phân tích dữ liệu:
 <NavGrid>
 <NavCard
     href="/vi-vn/appendix/5-data/database-fundamentals"
-    title="数据库原理与 SQL"
-    description="索引、事务、查询优化，以及数据库查询语言基础"
+    title="Nguyên lý cơ sở dữ liệu và SQL"
+    description="Index, Transaction, tối ưu truy vấn, và cơ bản về ngôn ngữ truy vấn cơ sở dữ liệu"
   />
 <NavCard
     href="/vi-vn/appendix/5-data/database-fundamentals"
-    title="数据库原理"
-    description="索引、事务、查询优化——深入理解数据库"
+    title="Nguyên lý cơ sở dữ liệu"
+    description="Index, Transaction, tối ưu truy vấn – hiểu sâu về cơ sở dữ liệu"
   />
 <NavCard
     href="/vi-vn/appendix/5-data/data-models"
-    title="数据模型全景"
-    description="文档 / 图 / 时序 / 向量——NoSQL 数据库分类"
+    title="Toàn cảnh các mô hình dữ liệu"
+    description="Document / Graph / Time-series / Vector – phân loại cơ sở dữ liệu NoSQL"
   />
 <NavCard
     href="/vi-vn/appendix/5-data/data-tracking"
-    title="数据埋点与用户行为采集"
-    description="事件设计、数据采集、埋点方案"
+    title="Data Tracking và thu thập hành vi người dùng"
+    description="Thiết kế sự kiện, thu thập dữ liệu, giải pháp Tracking"
   />
 <NavCard
     href="/vi-vn/appendix/5-data/data-analysis"
-    title="数据分析基础"
-    description="统计方法、指标体系、漏斗分析"
+    title="Cơ bản về phân tích dữ liệu"
+    description="Phương pháp thống kê, hệ thống chỉ số, phân tích phễu"
   />
 <NavCard
     href="/vi-vn/appendix/5-data/ab-testing"
-    title="A/B 测试与实验驱动"
-    description="实验设计、样本量、显著性检验"
+    title="A/B Testing và phát triển dựa trên thử nghiệm"
+    description="Thiết kế thử nghiệm, kích thước mẫu, kiểm định ý nghĩa"
   />
 <NavCard
     href="/vi-vn/appendix/5-data/data-visualization"
-    title="数据可视化与仪表盘"
-    description="图表选择、可视化设计、仪表盘搭建"
+    title="Trực quan hóa dữ liệu và Dashboard"
+    description="Lựa chọn biểu đồ, thiết kế trực quan, xây dựng Dashboard"
   />
 <NavCard
     href="/vi-vn/appendix/5-data/data-governance"
-    title="数据治理与数据质量"
-    description="数据标准、数据质量、元数据管理"
+    title="Quản trị dữ liệu và chất lượng dữ liệu"
+    description="Tiêu chuẩn dữ liệu, chất lượng dữ liệu, quản lý Metadata"
   />
 </NavGrid>
 
-### 六、架构与系统设计
+### VI. Kiến trúc và thiết kế hệ thống
 
-学习微服务架构、分布式系统和系统设计方法论：
+Học về kiến trúc Microservices, hệ thống phân tán và phương pháp luận thiết kế hệ thống:
 <NavGrid>
 <NavCard
     href="/vi-vn/appendix/6-architecture-and-system-design/monolith-to-microservices"
-    title="从单体到微服务的演进"
-    description="何时拆分、如何拆分、拆分后的挑战"
+    title="Sự tiến hóa từ Monolith đến Microservices"
+    description="Khi nào nên chia tách, cách chia tách, và những thách thức sau khi chia tách"
   />
 <NavCard
     href="/vi-vn/appendix/6-architecture-and-system-design/distributed-systems"
-    title="分布式系统的挑战"
-    description="CAP 定理、一致性、分布式事务"
+    title="Thách thức của hệ thống phân tán"
+    description="Định lý CAP, Consistency, Distributed Transaction"
   />
 <NavCard
     href="/vi-vn/appendix/6-architecture-and-system-design/high-availability"
-    title="高可用与容灾"
-    description="故障转移、异地多活、灾难恢复"
+    title="Tính sẵn sàng cao và phục hồi sau thảm họa"
+    description="Failover, Multi-active Geo-redundancy, Disaster Recovery"
   />
 <NavCard
     href="/vi-vn/appendix/6-architecture-and-system-design/system-design-methodology"
-    title="系统设计方法论"
-    description="需求分析、容量估算、架构权衡"
+    title="Phương pháp luận thiết kế hệ thống"
+    description="Phân tích yêu cầu, ước tính dung lượng, đánh đổi kiến trúc"
   />
 </NavGrid>
 
-### 七、基础设施与运维
+### VII. Hạ tầng và Vận hành
 
-掌握容器化、Kubernetes、CI/CD、云平台和监控告警：
+Nắm vững Containerization, Kubernetes, CI/CD, nền tảng đám mây và giám sát cảnh báo:
 <NavGrid>
 <NavCard
     href="/vi-vn/appendix/7-infrastructure-and-operations/linux-basics"
-    title="Linux 基础"
-    description="文件系统、权限管理、常用命令"
+    title="Cơ bản về Linux"
+    description="Hệ thống tập tin, quản lý quyền, các lệnh thông dụng"
   />
 <NavCard
     href="/vi-vn/appendix/7-infrastructure-and-operations/docker-containers"
-    title="Docker 容器化"
-    description="镜像、容器、Dockerfile——应用容器化"
+    title="Containerization với Docker"
+    description="Image, Container, Dockerfile – Containerization ứng dụng"
   />
 <NavCard
     href="/vi-vn/appendix/7-infrastructure-and-operations/kubernetes"
-    title="Kubernetes 编排"
-    description="Pod、Service、Deployment——容器编排平台"
+    title="Orchestration với Kubernetes"
+    description="Pod, Service, Deployment – nền tảng Orchestration Container"
   />
 <NavCard
     href="/vi-vn/appendix/7-infrastructure-and-operations/ci-cd"
-    title="CI / CD 自动化"
-    description="持续集成、持续部署、自动化流水线"
+    title="Tự động hóa CI / CD"
+    description="Continuous Integration, Continuous Deployment, Pipeline tự động"
   />
 <NavCard
     href="/vi-vn/appendix/7-infrastructure-and-operations/dns-https"
-    title="域名、DNS 与 HTTPS"
-    description="域名解析、SSL 证书、HTTPS 配置"
+    title="Tên miền, DNS và HTTPS"
+    description="Phân giải tên miền, chứng chỉ SSL, cấu hình HTTPS"
   />
 <NavCard
     href="/vi-vn/appendix/7-infrastructure-and-operations/load-balancing-gateway"
-    title="负载均衡与网关"
-    description="Nginx、HAProxy——流量分发与负载均衡"
+    title="Load Balancing và Gateway"
+    description="Nginx, HAProxy – phân phối lưu lượng và Load Balancing"
   />
 <NavCard
     href="/vi-vn/appendix/7-infrastructure-and-operations/gateway-proxy"
-    title="网关与反向代理"
-    description="API 网关、反向代理、请求转发"
+    title="Gateway và Reverse Proxy"
+    description="API Gateway, Reverse Proxy, chuyển tiếp Request"
   />
 <NavCard
     href="/vi-vn/appendix/7-infrastructure-and-operations/cloud-platforms"
-    title="云平台实战"
-    description="AWS、阿里云、腾讯云——云服务选型"
+    title="Thực chiến nền tảng đám mây"
+    description="AWS, Alibaba Cloud, Tencent Cloud – lựa chọn dịch vụ đám mây"
   />
 <NavCard
     href="/vi-vn/appendix/7-infrastructure-and-operations/cloud-iam"
-    title="IAM 权限管理"
-    description="云上权限模型、角色管理、最小权限原则"
+    title="Quản lý quyền IAM"
+    description="Mô hình quyền trên đám mây, quản lý vai trò, nguyên tắc quyền tối thiểu"
   />
 <NavCard
     href="/vi-vn/appendix/7-infrastructure-and-operations/cloud-storage-cdn"
-    title="对象存储与 CDN"
-    description="S3、OSS、CDN 加速——静态资源管理"
+    title="Lưu trữ đối tượng và CDN"
+    description="S3, OSS, tăng tốc CDN – quản lý tài nguyên tĩnh"
   />
 <NavCard
     href="/vi-vn/appendix/7-infrastructure-and-operations/infrastructure-as-code"
-    title="基础设施即代码"
-    description="Terraform、Pulumi——用代码管理基础设施"
+    title="Infrastructure as Code"
+    description="Terraform, Pulumi – quản lý hạ tầng bằng mã"
   />
 <NavCard
     href="/vi-vn/appendix/7-infrastructure-and-operations/monitoring-logging"
-    title="监控、日志与告警"
-    description="Prometheus、Grafana、ELK——可观测性体系"
+    title="Giám sát, Log và cảnh báo"
+    description="Prometheus, Grafana, ELK – hệ thống Observability"
   />
 <NavCard
     href="/vi-vn/appendix/7-infrastructure-and-operations/incident-response"
-    title="故障排查与应急响应"
-    description="故障定位、根因分析、应急预案"
+    title="Khắc phục sự cố và ứng phó khẩn cấp"
+    description="Xác định sự cố, phân tích nguyên nhân gốc, kế hoạch ứng phó khẩn cấp"
   />
 </NavGrid>
 
-### 八、人工智能
+### VIII. Trí tuệ nhân tạo
 
-从 AI 历史到 Agent 智能体，全面了解人工智能技术：
+Từ lịch sử AI đến AI Agent, tìm hiểu toàn diện về công nghệ trí tuệ nhân tạo:
 <NavGrid>
 <NavCard
     href="/vi-vn/appendix/8-artificial-intelligence/ai-history"
-    title="AI 简史与核心概念"
-    description="从图灵测试到大模型，AI 发展的关键里程碑"
+    title="Lịch sử tóm tắt và các khái niệm cốt lõi của AI"
+    description="Từ Turing Test đến Large Model, các cột mốc quan trọng trong phát triển AI"
   />
 <NavCard
     href="/vi-vn/appendix/8-artificial-intelligence/neural-networks"
-    title="神经网络与深度学习"
-    description="神经元、反向传播、深度学习基础"
+    title="Mạng nơ-ron và Deep Learning"
+    description="Nơ-ron, Backpropagation, cơ bản về Deep Learning"
   />
 <NavCard
     href="/vi-vn/appendix/8-artificial-intelligence/transformer-attention"
-    title="Transformer 与注意力机制"
-    description="现代大模型的核心架构"
+    title="Transformer và cơ chế Attention"
+    description="Kiến trúc cốt lõi của các Large Model hiện đại"
   />
 <NavCard
     href="/vi-vn/appendix/8-artificial-intelligence/llm-principles"
-    title="大语言模型的工作原理"
-    description="GPT、Claude——LLM 如何理解和生成文本"
+    title="Nguyên lý hoạt động của Large Language Model"
+    description="GPT, Claude – cách LLM hiểu và tạo văn bản"
   />
 <NavCard
     href="/vi-vn/appendix/8-artificial-intelligence/prompt-engineering"
-    title="提示词工程"
-    description="设计有效的提示词，释放 AI 潜力"
+    title="Prompt Engineering"
+    description="Thiết kế Prompt hiệu quả, giải phóng tiềm năng AI"
   />
 <NavCard
     href="/vi-vn/appendix/8-artificial-intelligence/context-engineering"
-    title="上下文工程"
-    description="管理上下文窗口，优化长文本处理"
+    title="Context Engineering"
+    description="Quản lý cửa sổ Context, tối ưu xử lý văn bản dài"
   />
 <NavCard
     href="/vi-vn/appendix/8-artificial-intelligence/multimodal-models"
-    title="多模态模型"
-    description="视觉 / 音频 / 视频——多模态 AI 能力"
+    title="Mô hình đa phương thức (Multimodal Model)"
+    description="Thị giác / Âm thanh / Video – khả năng AI đa phương thức"
   />
 <NavCard
     href="/vi-vn/appendix/8-artificial-intelligence/image-generation"
-    title="图像生成原理"
-    description="Diffusion、GAN——AI 绘画背后的技术"
+    title="Nguyên lý tạo ảnh"
+    description="Diffusion, GAN – công nghệ đằng sau AI Painting"
   />
 <NavCard
     href="/vi-vn/appendix/8-artificial-intelligence/speech-synthesis-recognition"
-    title="语音合成与识别"
-    description="TTS、ASR——语音 AI 技术原理"
+    title="Tổng hợp và nhận dạng giọng nói"
+    description="TTS, ASR – nguyên lý công nghệ AI giọng nói"
   />
 <NavCard
     href="/vi-vn/appendix/8-artificial-intelligence/embedding-vector-retrieval"
-    title="Embedding 与向量检索"
-    description="文本向量化、向量数据库、语义搜索"
+    title="Embedding và Vector Retrieval"
+    description="Vector hóa văn bản, Vector Database, Semantic Search"
   />
 <NavCard
     href="/vi-vn/appendix/8-artificial-intelligence/rag"
-    title="RAG 架构"
-    description="检索增强生成——让 AI 拥有知识库"
+    title="Kiến trúc RAG"
+    description="Retrieval Augmented Generation – giúp AI có kho kiến thức"
   />
 <NavCard
     href="/vi-vn/appendix/8-artificial-intelligence/ai-agents"
-    title="AI Agent 与工具调用"
-    description="自主决策、工具使用、任务规划"
+    title="AI Agent và gọi công cụ"
+    description="Ra quyết định tự chủ, sử dụng công cụ, lập kế hoạch tác vụ"
   />
 <NavCard
     href="/vi-vn/appendix/8-artificial-intelligence/ai-protocols"
-    title="AI 协议"
-    description="MCP 等协议——AI 工具互操作标准"
+    title="AI Protocol"
+    description="Các Protocol như MCP – tiêu chuẩn tương tác công cụ AI"
   />
 <NavCard
     href="/vi-vn/appendix/8-artificial-intelligence/model-finetuning-deployment"
-    title="模型微调与部署"
-    description="LoRA、量化、模型部署实践"
+    title="Fine-tuning và triển khai Model"
+    description="LoRA, Quantization, thực hành triển khai Model"
   />
 <NavCard
     href="/vi-vn/appendix/8-artificial-intelligence/ai-native-app-design"
-    title="AI 原生应用设计"
-    description="设计以 AI 为核心的应用体验"
+    title="Thiết kế ứng dụng AI Native"
+    description="Thiết kế trải nghiệm ứng dụng lấy AI làm cốt lõi"
   />
 <NavCard
     href="/vi-vn/appendix/8-artificial-intelligence/ai-capability-dictionary"
-    title="AI 能力词典"
-    description="AI 领域常用术语和核心概念速查"
+    title="Từ điển khả năng AI"
+    description="Tra cứu nhanh các thuật ngữ thông dụng và khái niệm cốt lõi trong lĩnh vực AI"
   />
 </NavGrid>
 
-### 九、工程素养
+### IX. Kỹ năng kỹ thuật
 
-提升代码质量、测试策略、设计模式和工程实践能力：
+Nâng cao chất lượng mã, chiến lược kiểm thử, Design Pattern và khả năng thực hành kỹ thuật:
 <NavGrid>
 <NavCard
     href="/vi-vn/appendix/9-engineering-excellence/code-quality-refactoring"
-    title="代码质量与重构"
-    description="代码异味、重构手法、整洁代码"
+    title="Chất lượng mã và Refactoring"
+    description="Code Smells, kỹ thuật Refactoring, Clean Code"
   />
 <NavCard
     href="/vi-vn/appendix/9-engineering-excellence/testing-strategies"
-    title="测试策略"
-    description="单元测试、集成测试、E2E 测试——测试金字塔"
+    title="Chiến lược kiểm thử"
+    description="Unit Test, Integration Test, E2E Test – Tháp kiểm thử"
   />
 <NavCard
     href="/vi-vn/appendix/9-engineering-excellence/design-patterns"
-    title="设计模式"
-    description="创建型、结构型、行为型——经典设计模式"
+    title="Design Pattern"
+    description="Creational, Structural, Behavioral – các Design Pattern kinh điển"
   />
 <NavCard
     href="/vi-vn/appendix/9-engineering-excellence/security-thinking"
-    title="安全思维与攻防基础"
-    description="常见漏洞、安全编码、防御策略"
+    title="Tư duy bảo mật và cơ bản về tấn công/phòng thủ"
+    description="Các lỗ hổng phổ biến, mã hóa an toàn, chiến lược phòng thủ"
   />
 <NavCard
     href="/vi-vn/appendix/9-engineering-excellence/technical-writing"
-    title="技术文档写作"
-    description="README、API 文档、技术方案——写作技巧"
+    title="Viết tài liệu kỹ thuật"
+    description="README, tài liệu API, giải pháp kỹ thuật – kỹ năng viết"
   />
 <NavCard
     href="/vi-vn/appendix/9-engineering-excellence/open-source-collaboration"
-    title="开源协作"
-    description="GitHub 工作流、PR 规范、社区参与"
+    title="Cộng tác mã nguồn mở"
+    description="Workflow GitHub, quy tắc PR, tham gia cộng đồng"
   />
 <NavCard
     href="/vi-vn/appendix/9-engineering-excellence/technology-selection"
-    title="技术选型方法论"
-    description="如何评估和选择适合的技术方案"
+    title="Phương pháp luận lựa chọn công nghệ"
+    description="Cách đánh giá và lựa chọn giải pháp công nghệ phù hợp"
   />
 </NavGrid>
 
-## 使用建议
+## Gợi ý sử dụng
 
-- 学习过程中作为参考资料，按需查阅
-- 遇到不熟悉的技术概念时，先在这里寻找解释
-- 建议通读一遍，建立完整的知识体系
+- Sử dụng làm tài liệu tham khảo trong quá trình học, tra cứu khi cần
+- Khi gặp khái niệm kỹ thuật không quen thuộc, hãy tìm giải thích ở đây trước
+- Nên đọc qua một lần để xây dựng hệ thống kiến thức hoàn chỉnh
 
-这是你的技术知识宝库，随时欢迎查阅！
+Đây là kho tàng kiến thức kỹ thuật của bạn, luôn sẵn sàng để tra cứu!

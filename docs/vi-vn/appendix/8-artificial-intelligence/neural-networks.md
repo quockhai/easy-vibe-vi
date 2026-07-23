@@ -1,315 +1,315 @@
-# 神经网络与深度学习
+# Mạng Nơ-ron và Học Sâu
 
-::: tip 前言
-**神经网络是 AI 革命的引擎。** 从 ChatGPT 的语言理解到自动驾驶的图像识别，背后都是神经网络在工作。它不是魔法，而是一套精巧的数学框架——通过大量数据"学习"出输入到输出的映射关系。理解它的基本原理，能帮你更好地使用和调试 AI 工具。
+::: tip Lời nói đầu
+**Mạng nơ-ron là động cơ của cuộc cách mạng AI.** Từ khả năng hiểu ngôn ngữ của ChatGPT đến nhận diện hình ảnh trong xe tự lái, mạng nơ-ron đều đang hoạt động phía sau. Nó không phải là phép thuật, mà là một khung toán học tinh xảo – thông qua lượng lớn dữ liệu để "học" ra mối quan hệ ánh xạ từ đầu vào đến đầu ra. Hiểu các nguyên lý cơ bản của nó sẽ giúp bạn sử dụng và gỡ lỗi các công cụ AI tốt hơn.
 :::
 
-**这篇文章会带你学什么？**
+**Bài viết này sẽ giúp bạn học được gì?**
 
-学完这章后，你将获得：
+Sau khi hoàn thành chương này, bạn sẽ đạt được:
 
-- **核心概念**：理解神经元、层、前向传播、反向传播的基本原理
-- **网络类型**：了解 CNN、RNN、Transformer 等主流架构的特点和适用场景
-- **训练过程**：明白模型是如何从数据中"学习"的
-- **关键技巧**：掌握过拟合、学习率、正则化等实用概念
-- **发展脉络**：了解从感知机到大语言模型的演进历程
+-   **Khái niệm cốt lõi**: Hiểu các nguyên lý cơ bản của nơ-ron, lớp, lan truyền thuận, lan truyền ngược
+-   **Các loại mạng**: Tìm hiểu đặc điểm và kịch bản ứng dụng của các kiến trúc chính như CNN, RNN, Transformer
+-   **Quá trình huấn luyện**: Hiểu cách mô hình "học" từ dữ liệu
+-   **Kỹ thuật quan trọng**: Nắm vững các khái niệm thực tiễn như overfitting, learning rate, regularization
+-   **Lộ trình phát triển**: Tìm hiểu lịch sử tiến hóa từ Perceptron đến các Large Language Model
 
-| 章节 | 内容 | 核心概念 |
-|-----|------|---------|
-| **第 1 章** | 从神经元到网络 | 感知机、激活函数、前向传播 |
-| **第 2 章** | 网络如何学习 | 损失函数、梯度下降、反向传播 |
-| **第 3 章** | 主流网络架构 | CNN、RNN、Transformer |
-| **第 4 章** | 训练的艺术 | 过拟合、正则化、超参数调优 |
-| **第 5 章** | 发展历程与前沿 | 从感知机到 GPT |
+| Chương | Nội dung | Khái niệm cốt lõi |
+|-------|----------|-------------------|
+| **Chương 1** | Từ Nơ-ron đến Mạng | Perceptron, Activation Function, Lan truyền thuận |
+| **Chương 2** | Mạng học như thế nào | Loss Function, Gradient Descent, Lan truyền ngược |
+| **Chương 3** | Các kiến trúc mạng chính | CNN, RNN, Transformer |
+| **Chương 4** | Nghệ thuật huấn luyện | Overfitting, Regularization, Tối ưu siêu tham số |
+| **Chương 5** | Lịch sử phát triển và xu hướng tiên tiến | Từ Perceptron đến GPT |
 
 ---
 
-## 1. 从神经元到网络
+## 1. Từ Nơ-ron đến Mạng
 
-### 单个神经元
+### Nơ-ron đơn lẻ
 
-神经网络的最小单元是**神经元**（Neuron）。它模拟了生物神经元的工作方式：接收多个输入信号，加权求和，通过激活函数产生输出。
+Đơn vị nhỏ nhất của mạng nơ-ron là **nơ-ron** (Neuron). Nó mô phỏng cách hoạt động của nơ-ron sinh học: nhận nhiều tín hiệu đầu vào, tổng hợp có trọng số, và tạo ra đầu ra thông qua activation function.
 
 ```
-输入 x1 ──→ ×w1 ──┐
-输入 x2 ──→ ×w2 ──┼──→ Σ(加权求和) + b(偏置) ──→ f(激活函数) ──→ 输出
-输入 x3 ──→ ×w3 ──┘
+Đầu vào x1 ──→ ×w1 ──┐
+Đầu vào x2 ──→ ×w2 ──┼──→ Σ(Tổng hợp có trọng số) + b(Bias) ──→ f(Activation Function) ──→ Đầu ra
+Đầu vào x3 ──→ ×w3 ──┘
 ```
 
-数学表达：**y = f(w₁x₁ + w₂x₂ + w₃x₃ + b)**
+Biểu thức toán học: **y = f(w₁x₁ + w₂x₂ + w₃x₃ + b)**
 
 <NeuronDemo />
 
-### 激活函数：为什么需要非线性？
+### Activation Function: Tại sao cần phi tuyến tính?
 
-如果没有激活函数，无论多少层神经元叠加，最终都等价于一个线性变换（矩阵乘法）。激活函数引入**非线性**，让网络能学习复杂的模式。
+Nếu không có activation function, dù có bao nhiêu lớp nơ-ron chồng lên nhau, kết quả cuối cùng vẫn tương đương với một phép biến đổi tuyến tính (phép nhân ma trận). Activation function giới thiệu **phi tuyến tính**, cho phép mạng học các mẫu phức tạp.
 
-| 激活函数 | 公式 | 特点 | 常用场景 |
-|---------|------|------|---------|
-| ReLU | max(0, x) | 简单高效，训练快 | 隐藏层的默认选择 |
-| Sigmoid | 1/(1+e⁻ˣ) | 输出 0~1 | 二分类输出层 |
-| Tanh | (eˣ-e⁻ˣ)/(eˣ+e⁻ˣ) | 输出 -1~1 | RNN 中常用 |
-| Softmax | eˣᵢ/Σeˣⱼ | 输出概率分布 | 多分类输出层 |
+| Activation Function | Công thức | Đặc điểm | Kịch bản thường dùng |
+|---------------------|-----------|----------|----------------------|
+| ReLU                | max(0, x) | Đơn giản, hiệu quả, huấn luyện nhanh | Lựa chọn mặc định cho các hidden layer |
+| Sigmoid             | 1/(1+e⁻ˣ) | Đầu ra 0~1 | Output layer cho phân loại nhị phân |
+| Tanh                | (eˣ-e⁻ˣ)/(eˣ+e⁻ˣ) | Đầu ra -1~1 | Thường dùng trong RNN |
+| Softmax             | eˣᵢ/Σeˣⱼ  | Đầu ra phân phối xác suất | Output layer cho phân loại đa lớp |
 
-### 从神经元到网络
+### Từ Nơ-ron đến Mạng
 
-把多个神经元组织成**层**，多个层串联起来，就构成了神经网络：
+Tổ chức nhiều nơ-ron thành các **lớp**, và nối nhiều lớp lại với nhau sẽ tạo thành mạng nơ-ron:
 
 ```
-输入层          隐藏层1        隐藏层2        输出层
-(特征)         (提取低级特征)   (提取高级特征)   (预测结果)
+Input layer          Hidden layer 1        Hidden layer 2        Output layer
+(Đặc trưng)         (Trích xuất đặc trưng cấp thấp)   (Trích xuất đặc trưng cấp cao)   (Kết quả dự đoán)
 
  x1 ──→  [○ ○ ○ ○] ──→ [○ ○ ○] ──→  [○ ○]
- x2 ──→  [○ ○ ○ ○] ──→ [○ ○ ○] ──→  猫/狗
+ x2 ──→  [○ ○ ○ ○] ──→ [○ ○ ○] ──→  Mèo/Chó
  x3 ──→  [○ ○ ○ ○] ──→ [○ ○ ○]
 ```
 
-| 概念 | 说明 |
-|------|------|
-| 输入层 | 接收原始数据（图片像素、文本向量等） |
-| 隐藏层 | 中间处理层，层数越多网络越"深"（深度学习的"深"） |
-| 输出层 | 产生最终预测（分类概率、回归值等） |
-| 前向传播 | 数据从输入层逐层流向输出层的过程 |
+| Khái niệm | Giải thích |
+|-----------|------------|
+| Input layer | Nhận dữ liệu thô (pixel hình ảnh, vector văn bản, v.v.) |
+| Hidden layer | Lớp xử lý trung gian, càng nhiều lớp thì mạng càng "sâu" (chữ "sâu" trong Deep Learning) |
+| Output layer | Tạo ra dự đoán cuối cùng (xác suất phân loại, giá trị hồi quy, v.v.) |
+| Lan truyền thuận | Quá trình dữ liệu chảy từ input layer qua từng lớp đến output layer |
 
-::: tip 为什么叫"深度"学习？
-传统机器学习通常只有 1-2 层。当隐藏层数量增加到几十甚至上百层时，就叫"深度"学习。更深的网络能学习更抽象的特征：第一层学边缘，第二层学纹理，第三层学部件，更深的层学到"这是一只猫"。
+::: tip Tại sao gọi là Deep Learning?
+Machine Learning truyền thống thường chỉ có 1-2 lớp. Khi số lượng hidden layer tăng lên hàng chục hoặc thậm chí hàng trăm lớp, nó được gọi là Deep Learning. Mạng sâu hơn có thể học các đặc trưng trừu tượng hơn: lớp đầu tiên học cạnh, lớp thứ hai học texture, lớp thứ ba học các bộ phận, các lớp sâu hơn học được "đây là một con mèo".
 :::
 
 ---
 
-## 2. 网络如何学习
+## 2. Mạng học như thế nào
 
-神经网络的"学习"本质上是一个**优化问题**：找到一组权重（w）和偏置（b），使得网络的预测尽可能接近真实答案。
+Bản chất của việc "học" trong mạng nơ-ron là một **bài toán tối ưu hóa**: tìm một tập hợp các trọng số (w) và bias (b) sao cho dự đoán của mạng càng gần với câu trả lời thực tế càng tốt.
 
-### 训练三步曲
+### Ba bước huấn luyện
 
 ```
-1. 前向传播：输入数据，得到预测结果
-2. 计算损失：用损失函数衡量预测与真实值的差距
-3. 反向传播：根据损失，计算每个权重的梯度，更新权重
+1. Lan truyền thuận: Đưa dữ liệu vào, nhận kết quả dự đoán
+2. Tính Loss: Sử dụng Loss Function để đo lường sự khác biệt giữa dự đoán và giá trị thực tế
+3. Lan truyền ngược: Dựa trên Loss, tính gradient của từng trọng số, cập nhật trọng số
    ↓
-重复以上步骤，直到损失足够小
+Lặp lại các bước trên cho đến khi Loss đủ nhỏ
 ```
 
-### 损失函数：衡量"错得有多离谱"
+### Loss Function: Đo lường "mức độ sai lệch"
 
-损失函数（Loss Function）量化了预测值和真实值之间的差距。训练的目标就是最小化损失。
+Loss Function định lượng sự khác biệt giữa giá trị dự đoán và giá trị thực tế. Mục tiêu của huấn luyện là tối thiểu hóa Loss.
 
-| 损失函数 | 公式简述 | 适用场景 |
-|---------|---------|---------|
-| MSE（均方误差） | 预测值与真实值差的平方的均值 | 回归问题 |
-| Cross-Entropy（交叉熵） | -Σ y·log(ŷ) | 分类问题 |
-| Binary Cross-Entropy | 交叉熵的二分类版本 | 二分类问题 |
+| Loss Function | Mô tả công thức | Kịch bản áp dụng |
+|---------------|-----------------|------------------|
+| MSE (Mean Squared Error) | Giá trị trung bình của bình phương hiệu giữa giá trị dự đoán và giá trị thực tế | Bài toán hồi quy |
+| Cross-Entropy | -Σ y·log(ŷ) | Bài toán phân loại |
+| Binary Cross-Entropy | Phiên bản Cross-Entropy cho phân loại nhị phân | Bài toán phân loại nhị phân |
 
-### 梯度下降：找到最低点
+### Gradient Descent: Tìm điểm thấp nhất
 
-想象你站在一座山上，蒙着眼睛要走到最低点。你能做的就是**摸一下脚下的坡度，然后往下坡方向走一步**。这就是梯度下降。
+Hãy tưởng tượng bạn đang đứng trên một ngọn núi, bị bịt mắt và phải đi đến điểm thấp nhất. Điều bạn có thể làm là **cảm nhận độ dốc dưới chân, sau đó đi một bước theo hướng dốc xuống**. Đây chính là Gradient Descent.
 
 ```
-损失值
+Giá trị Loss
   ↑
   │    ╱╲
-  │   ╱  ╲      ← 当前位置
-  │  ╱    ╲    ↙ 沿梯度方向下降
-  │ ╱      ╲╱   ← 局部最小值
-  │╱            ╲╱  ← 全局最小值
-  └──────────────→ 权重值
+  │   ╱  ╲      ← Vị trí hiện tại
+  │  ╱    ╲    ↙ Đi xuống theo hướng gradient
+  │ ╱      ╲╱   ← Cực tiểu cục bộ
+  │╱            ╲╱  ← Cực tiểu toàn cục
+  └──────────────→ Giá trị trọng số
 ```
 
-| 概念 | 说明 |
-|------|------|
-| 梯度 | 损失函数对每个权重的偏导数，指示"往哪个方向调整能减少损失" |
-| 学习率 | 每一步走多远。太大会跳过最低点，太小会收敛太慢 |
-| 批量大小 | 每次用多少样本计算梯度。全量太慢，单样本太抖，小批量（mini-batch）是折中 |
+| Khái niệm | Giải thích |
+|-----------|------------|
+| Gradient | Đạo hàm riêng của Loss Function đối với mỗi trọng số, chỉ ra "điều chỉnh theo hướng nào để giảm Loss" |
+| Learning rate | Mỗi bước đi bao xa. Quá lớn sẽ bỏ qua điểm thấp nhất, quá nhỏ sẽ hội tụ chậm |
+| Batch size | Số lượng mẫu dùng để tính gradient mỗi lần. Toàn bộ quá chậm, một mẫu quá dao động, mini-batch là sự thỏa hiệp |
 
-### 反向传播：链式法则的胜利
+### Lan truyền ngược: Chiến thắng của quy tắc chuỗi
 
-反向传播（Backpropagation）是计算梯度的高效算法。它利用微积分的**链式法则**，从输出层开始，逐层向后计算每个权重对损失的贡献。
+Lan truyền ngược (Backpropagation) là một thuật toán hiệu quả để tính gradient. Nó sử dụng **quy tắc chuỗi** của vi tích phân, bắt đầu từ output layer, tính toán ngược từng lớp để xác định đóng góp của mỗi trọng số vào Loss.
 
 ```
-前向传播：输入 → 隐藏层1 → 隐藏层2 → 输出 → 损失
-反向传播：损失 → 输出 → 隐藏层2 → 隐藏层1 → 更新所有权重
+Lan truyền thuận: Đầu vào → Hidden layer 1 → Hidden layer 2 → Đầu ra → Loss
+Lan truyền ngược: Loss → Đầu ra → Hidden layer 2 → Hidden layer 1 → Cập nhật tất cả trọng số
 ```
 
-::: tip 直觉理解反向传播
-把神经网络想象成一条流水线。产品（预测）出了问题（损失大），你需要从最后一道工序开始往回查，看每道工序（每层权重）对最终问题贡献了多少，然后按贡献大小调整。贡献大的多调，贡献小的少调。
+::: tip Hiểu trực quan về Lan truyền ngược
+Hãy tưởng tượng mạng nơ-ron như một dây chuyền sản xuất. Khi sản phẩm (dự đoán) gặp vấn đề (Loss lớn), bạn cần bắt đầu kiểm tra ngược từ công đoạn cuối cùng, xem mỗi công đoạn (trọng số của mỗi lớp) đã đóng góp bao nhiêu vào vấn đề cuối cùng, sau đó điều chỉnh theo mức độ đóng góp. Đóng góp lớn thì điều chỉnh nhiều, đóng góp nhỏ thì điều chỉnh ít.
 :::
 
 ---
 
-## 3. 主流网络架构
+## 3. Các kiến trúc mạng chính
 
-不同类型的数据需要不同的网络架构。选对架构，事半功倍。
+Các loại dữ liệu khác nhau yêu cầu các kiến trúc mạng khác nhau. Chọn đúng kiến trúc sẽ đạt hiệu quả gấp đôi.
 
 <NetworkLayersDemo />
 
-### 3.1 CNN（卷积神经网络）
+### 3.1 CNN (Mạng nơ-ron tích chập)
 
-CNN 是处理图像的王者。核心思想：用小的卷积核在图像上滑动，提取局部特征。
-
-```
-输入图像 → [卷积层→激活→池化] × N → 全连接层 → 输出
-  28×28      提取边缘/纹理/形状        分类结果
-```
-
-| 特点 | 说明 |
-|------|------|
-| 局部连接 | 每个神经元只看一小块区域，而非整张图 |
-| 参数共享 | 同一个卷积核在整张图上复用，大幅减少参数 |
-| 平移不变性 | 猫在图片左边还是右边，都能识别 |
-| 层级特征 | 浅层学边缘，深层学语义 |
-
-代表模型：LeNet、AlexNet、VGG、ResNet、EfficientNet
-
-### 3.2 RNN（循环神经网络）
-
-RNN 专为**序列数据**设计。它的隐藏状态会传递到下一个时间步，让网络具有"记忆"能力。
+CNN là "ông vua" xử lý hình ảnh. Ý tưởng cốt lõi: sử dụng các kernel tích chập nhỏ trượt trên hình ảnh để trích xuất các đặc trưng cục bộ.
 
 ```
-时间步 t1    时间步 t2    时间步 t3
- "我"  ──→   "喜欢"  ──→  "猫"
+Hình ảnh đầu vào → [Lớp tích chập→Activation→Pooling] × N → Lớp Fully Connected → Đầu ra
+  28×28      Trích xuất cạnh/texture/hình dạng        Kết quả phân loại
+```
+
+| Đặc điểm | Giải thích |
+|----------|------------|
+| Kết nối cục bộ | Mỗi nơ-ron chỉ nhìn một vùng nhỏ, chứ không phải toàn bộ hình ảnh |
+| Chia sẻ tham số | Cùng một kernel tích chập được tái sử dụng trên toàn bộ hình ảnh, giảm đáng kể số lượng tham số |
+| Bất biến dịch chuyển | Mèo ở bên trái hay bên phải hình ảnh đều có thể được nhận diện |
+| Đặc trưng phân cấp | Các lớp nông học cạnh, các lớp sâu học ngữ nghĩa |
+
+Các mô hình tiêu biểu: LeNet, AlexNet, VGG, ResNet, EfficientNet
+
+### 3.2 RNN (Mạng nơ-ron hồi quy)
+
+RNN được thiết kế đặc biệt cho **dữ liệu chuỗi**. Trạng thái ẩn của nó được truyền đến bước thời gian tiếp theo, giúp mạng có khả năng "ghi nhớ".
+
+```
+Bước thời gian t1    Bước thời gian t2    Bước thời gian t3
+ "Tôi"  ──→   "thích"  ──→  "mèo"
   ↓           ↓           ↓
- [h1]  ──→  [h2]   ──→  [h3] ──→ 输出
+ [h1]  ──→  [h2]   ──→  [h3] ──→ Đầu ra
   ↑           ↑           ↑
- 隐藏状态在时间步之间传递（记忆）
+ Trạng thái ẩn được truyền giữa các bước thời gian (ghi nhớ)
 ```
 
-| 变体 | 解决的问题 | 核心机制 |
-|------|-----------|---------|
-| 原始 RNN | 基础序列建模 | 简单循环连接 |
-| LSTM | 长序列梯度消失 | 遗忘门、输入门、输出门 |
-| GRU | LSTM 参数太多 | 简化为重置门和更新门 |
-| 双向 RNN | 只能看到过去 | 同时从前往后和从后往前处理 |
+| Biến thể | Vấn đề giải quyết | Cơ chế cốt lõi |
+|----------|-------------------|----------------|
+| RNN gốc | Mô hình hóa chuỗi cơ bản | Kết nối hồi quy đơn giản |
+| LSTM     | Vấn đề vanishing gradient trong chuỗi dài | Forget gate, Input gate, Output gate |
+| GRU      | Quá nhiều tham số trong LSTM | Đơn giản hóa thành reset gate và update gate |
+| Bidirectional RNN | Chỉ có thể nhìn thấy quá khứ | Xử lý đồng thời từ trước ra sau và từ sau ra trước |
 
-::: tip LSTM 的门控机制
-LSTM 的精妙之处在于三个"门"：**遗忘门**决定丢弃哪些旧记忆，**输入门**决定存入哪些新信息，**输出门**决定输出哪些内容。就像你读一本书，会选择性地记住重要情节、忘掉无关细节。
+::: tip Cơ chế cổng của LSTM
+Sự tinh tế của LSTM nằm ở ba "cổng": **Forget gate** quyết định loại bỏ những ký ức cũ nào, **Input gate** quyết định lưu trữ thông tin mới nào, và **Output gate** quyết định nội dung nào sẽ được xuất ra. Giống như khi bạn đọc một cuốn sách, bạn sẽ chọn lọc ghi nhớ những tình tiết quan trọng và quên đi những chi tiết không liên quan.
 :::
 
-### 3.3 Transformer：注意力就是一切
+### 3.3 Transformer: Attention là tất cả
 
-2017 年 Google 发表的 "Attention Is All You Need" 论文提出了 Transformer，彻底改变了 AI 领域。它用**自注意力机制**替代了循环结构，是 GPT、BERT、Claude 等大模型的基础。
+Năm 2017, bài báo "Attention Is All You Need" của Google đã giới thiệu Transformer, thay đổi hoàn toàn lĩnh vực AI. Nó sử dụng **cơ chế self-attention** thay thế cấu trúc hồi quy, là nền tảng của các Large Model như GPT, BERT, Claude.
 
 ```
-输入序列 → 嵌入 + 位置编码 → [多头注意力 → 前馈网络] × N → 输出
+Chuỗi đầu vào → Embedding + Positional Encoding → [Multi-Head Attention → Feed-Forward Network] × N → Đầu ra
                                     ↑
-                          每个词都能"看到"所有其他词
+                          Mỗi từ đều có thể "nhìn thấy" tất cả các từ khác
 ```
 
-| 优势 | 说明 |
-|------|------|
-| 并行计算 | 不像 RNN 必须逐步处理，Transformer 可以并行处理整个序列 |
-| 长距离依赖 | 任意两个位置之间直接建立联系，不受距离限制 |
-| 可扩展性 | 模型越大、数据越多，效果越好（Scaling Law） |
+| Ưu điểm | Giải thích |
+|---------|------------|
+| Tính toán song song | Không giống RNN phải xử lý từng bước, Transformer có thể xử lý toàn bộ chuỗi song song |
+| Phụ thuộc tầm xa | Thiết lập kết nối trực tiếp giữa hai vị trí bất kỳ, không bị giới hạn bởi khoảng cách |
+| Khả năng mở rộng | Mô hình càng lớn, dữ liệu càng nhiều, hiệu quả càng tốt (Scaling Law) |
 
-**自注意力的直觉**：读"小猫坐在垫子上，因为**它**很累"这句话时，"它"需要关注"小猫"才能理解含义。自注意力让模型学会这种关联——为序列中的每对词计算一个"相关性分数"。
+**Trực giác về Self-Attention**: Khi đọc câu "Con mèo ngồi trên tấm thảm, bởi vì **nó** rất mệt", từ "nó" cần chú ý đến "con mèo" để hiểu ý nghĩa. Self-attention giúp mô hình học được mối liên hệ này – tính toán một "điểm liên quan" cho mỗi cặp từ trong chuỗi.
 
 <NetworkArchitectureDemo />
 
-## 4. 训练的艺术
+## 4. Nghệ thuật huấn luyện
 
-有了好的架构还不够，训练过程中有很多"坑"需要避开。
+Có kiến trúc tốt vẫn chưa đủ, trong quá trình huấn luyện có nhiều "cạm bẫy" cần tránh.
 
-### 4.1 过拟合 vs 欠拟合
+### 4.1 Overfitting vs Underfitting
 
-| 问题 | 表现 | 原因 | 解决方案 |
-|------|------|------|---------|
-| 过拟合 | 训练集表现好，测试集表现差 | 模型太复杂，"背答案"而非学规律 | 正则化、Dropout、数据增强、早停 |
-| 欠拟合 | 训练集和测试集都表现差 | 模型太简单，学不到规律 | 增加模型容量、训练更久、更好的特征 |
+| Vấn đề | Biểu hiện | Nguyên nhân | Giải pháp |
+|--------|----------|------------|-----------|
+| Overfitting | Hiệu suất tốt trên tập huấn luyện, kém trên tập kiểm tra | Mô hình quá phức tạp, "học thuộc lòng" thay vì học quy luật | Regularization, Dropout, Data Augmentation, Early Stopping |
+| Underfitting | Hiệu suất kém trên cả tập huấn luyện và tập kiểm tra | Mô hình quá đơn giản, không học được quy luật | Tăng dung lượng mô hình, huấn luyện lâu hơn, đặc trưng tốt hơn |
 
 ```
-误差
+Sai số
   ↑
-  │ ╲  训练误差          测试误差  ╱
+  │ ╲  Sai số huấn luyện          Sai số kiểm tra  ╱
   │  ╲                          ╱
   │   ╲─────────────────╱
-  │    欠拟合 ← 最佳点 → 过拟合
-  └──────────────────────────→ 模型复杂度
+  │    Underfitting ← Điểm tối ưu → Overfitting
+  └──────────────────────────→ Độ phức tạp của mô hình
 ```
 
-### 4.2 关键超参数
+### 4.2 Các siêu tham số quan trọng
 
-超参数是训练前需要人为设定的参数（不是模型自己学的）：
+Siêu tham số là các tham số cần được thiết lập thủ công trước khi huấn luyện (không phải do mô hình tự học):
 
-| 超参数 | 作用 | 常见范围 | 调优建议 |
-|--------|------|---------|---------|
-| 学习率 | 每步更新的幅度 | 1e-5 ~ 1e-1 | 最重要的超参数，通常从 1e-3 开始 |
-| 批量大小 | 每次训练用多少样本 | 16 ~ 512 | 越大训练越稳定，但需要更多显存 |
-| 训练轮数（Epoch） | 遍历整个数据集的次数 | 10 ~ 100+ | 配合早停法，验证集不再提升就停 |
-| 优化器 | 梯度更新策略 | Adam、SGD | Adam 是默认选择，SGD+动量适合精调 |
+| Siêu tham số | Tác dụng | Phạm vi phổ biến | Gợi ý điều chỉnh |
+|--------------|----------|------------------|------------------|
+| Learning rate | Mức độ cập nhật mỗi bước | 1e-5 ~ 1e-1 | Siêu tham số quan trọng nhất, thường bắt đầu từ 1e-3 |
+| Batch size | Số lượng mẫu dùng để huấn luyện mỗi lần | 16 ~ 512 | Càng lớn huấn luyện càng ổn định, nhưng cần nhiều VRAM hơn |
+| Số Epoch huấn luyện | Số lần duyệt qua toàn bộ tập dữ liệu | 10 ~ 100+ | Kết hợp với Early Stopping, dừng khi tập validation không còn cải thiện |
+| Optimizer | Chiến lược cập nhật gradient | Adam, SGD | Adam là lựa chọn mặc định, SGD + Momentum phù hợp để tinh chỉnh |
 
-### 4.3 正则化技巧
+### 4.3 Các kỹ thuật Regularization
 
-防止过拟合的常用手段：
+Các phương pháp phổ biến để ngăn overfitting:
 
-| 技巧 | 原理 | 使用方式 |
-|------|------|---------|
-| Dropout | 训练时随机关闭部分神经元 | 通常 p=0.1~0.5 |
-| 权重衰减 | 在损失函数中加入权重大小的惩罚 | L2 正则化，λ=1e-4 |
-| 数据增强 | 对训练数据做随机变换（翻转、裁剪、旋转） | 图像任务必备 |
-| 早停法 | 验证集损失不再下降时停止训练 | patience=5~10 |
-| Batch Normalization | 标准化每层的输入分布 | 加速收敛，有轻微正则化效果 |
+| Kỹ thuật | Nguyên lý | Cách sử dụng |
+|----------|-----------|--------------|
+| Dropout | Ngẫu nhiên tắt một phần nơ-ron trong quá trình huấn luyện | Thường p=0.1~0.5 |
+| Weight Decay | Thêm hình phạt cho độ lớn của trọng số vào Loss Function | L2 Regularization, λ=1e-4 |
+| Data Augmentation | Thực hiện các biến đổi ngẫu nhiên trên dữ liệu huấn luyện (lật, cắt, xoay) | Cần thiết cho các tác vụ hình ảnh |
+| Early Stopping | Dừng huấn luyện khi Loss trên tập validation không còn giảm | patience=5~10 |
+| Batch Normalization | Chuẩn hóa phân phối đầu vào của mỗi lớp | Tăng tốc hội tụ, có hiệu ứng regularization nhẹ |
 
-::: tip 训练的经验法则
-1. 先用小数据集跑通整个流程，确认代码没 bug
-2. 从已有的预训练模型开始微调，而非从零训练
-3. 学习率是最值得花时间调的超参数
-4. 如果训练损失不下降，先检查数据和代码，再怀疑模型
+::: tip Quy tắc kinh nghiệm khi huấn luyện
+1.  Đầu tiên, chạy toàn bộ quy trình với một tập dữ liệu nhỏ để xác nhận mã không có lỗi
+2.  Bắt đầu fine-tuning từ các mô hình pre-trained có sẵn, thay vì huấn luyện từ đầu
+3.  Learning rate là siêu tham số đáng dành thời gian để điều chỉnh nhất
+4.  Nếu Loss huấn luyện không giảm, hãy kiểm tra dữ liệu và mã trước, sau đó mới nghi ngờ mô hình
 :::
 
 ---
 
-## 5. 发展历程与前沿
+## 5. Lịch sử phát triển và xu hướng tiên tiến
 
-神经网络的发展经历了几次"寒冬"和"复兴"，每次突破都源于关键的技术创新。
+Sự phát triển của mạng nơ-ron đã trải qua vài "mùa đông" và "phục hưng", mỗi đột phá đều bắt nguồn từ những đổi mới công nghệ then chốt.
 
-| 年代 | 里程碑 | 关键突破 |
-|------|--------|---------|
-| 1958 | 感知机（Perceptron） | 第一个神经网络模型，只能处理线性问题 |
-| 1986 | 反向传播算法 | 让多层网络的训练成为可能 |
-| 1998 | LeNet（CNN） | 卷积网络在手写数字识别上大获成功 |
-| 2012 | AlexNet | 深度 CNN 在 ImageNet 上碾压传统方法，深度学习爆发 |
-| 2014 | GAN（生成对抗网络） | 两个网络对抗训练，能生成逼真图像 |
-| 2017 | Transformer | "Attention Is All You Need"，注意力机制取代 RNN |
-| 2018 | BERT | 预训练+微调范式，NLP 全面突破 |
-| 2020 | GPT-3 | 1750 亿参数，展示了大模型的涌现能力 |
-| 2022 | ChatGPT | RLHF 对齐技术，AI 进入大众视野 |
-| 2023+ | 多模态大模型 | GPT-4V、Claude 等，同时理解文本和图像 |
+| Niên đại | Cột mốc | Đột phá quan trọng |
+|---------|--------|--------------------|
+| 1958    | Perceptron | Mô hình mạng nơ-ron đầu tiên, chỉ có thể xử lý các vấn đề tuyến tính |
+| 1986    | Thuật toán Backpropagation | Giúp việc huấn luyện mạng đa lớp trở nên khả thi |
+| 1998    | LeNet (CNN) | Mạng tích chập đạt thành công lớn trong nhận diện chữ số viết tay |
+| 2012    | AlexNet | Deep CNN vượt trội các phương pháp truyền thống trên ImageNet, Deep Learning bùng nổ |
+| 2014    | GAN (Generative Adversarial Network) | Hai mạng huấn luyện đối kháng, có thể tạo ra hình ảnh chân thực |
+| 2017    | Transformer | "Attention Is All You Need", cơ chế attention thay thế RNN |
+| 2018    | BERT | Mô hình Pre-training + Fine-tuning, NLP đột phá toàn diện |
+| 2020    | GPT-3 | 175 tỷ tham số, thể hiện khả năng emergent của Large Model |
+| 2022    | ChatGPT | Kỹ thuật căn chỉnh RLHF, AI đi vào tầm nhìn của công chúng |
+| 2023+   | Large Model đa phương thức | GPT-4V, Claude, v.v., đồng thời hiểu văn bản và hình ảnh |
 
-### 当前趋势
+### Xu hướng hiện tại
 
-| 方向 | 说明 |
-|------|------|
-| 大模型（LLM） | 参数量从亿级到万亿级，涌现出推理、编程等能力 |
-| 多模态 | 同一个模型处理文本、图像、音频、视频 |
-| 高效微调 | LoRA、QLoRA 等技术让普通开发者也能微调大模型 |
-| AI Agent | 让大模型使用工具、规划任务、自主完成复杂目标 |
-| 小模型蒸馏 | 用大模型的知识训练小模型，在端侧部署 |
+| Hướng | Giải thích |
+|-------|------------|
+| Large Model (LLM) | Số lượng tham số từ hàng tỷ đến hàng nghìn tỷ, xuất hiện các khả năng như suy luận, lập trình |
+| Đa phương thức | Cùng một mô hình xử lý văn bản, hình ảnh, âm thanh, video |
+| Fine-tuning hiệu quả | Các kỹ thuật như LoRA, QLoRA cho phép các nhà phát triển thông thường cũng có thể fine-tune Large Model |
+| AI Agent | Cho phép Large Model sử dụng công cụ, lập kế hoạch nhiệm vụ, tự chủ hoàn thành các mục tiêu phức tạp |
+| Model Distillation cho Small Model | Sử dụng kiến thức của Large Model để huấn luyện Small Model, triển khai trên thiết bị biên |
 
-::: tip 对开发者的启示
-你不需要从零训练神经网络。现代 AI 开发更多是**调用 API**（如 OpenAI、Claude API）或**微调预训练模型**（如用 Hugging Face）。但理解底层原理能帮你更好地选择模型、设计 prompt、诊断问题。
+::: tip Lời khuyên cho các nhà phát triển
+Bạn không cần phải huấn luyện mạng nơ-ron từ đầu. Phát triển AI hiện đại chủ yếu là **gọi API** (như OpenAI, Claude API) hoặc **fine-tune các mô hình pre-trained** (như sử dụng Hugging Face). Nhưng việc hiểu các nguyên lý cơ bản có thể giúp bạn lựa chọn mô hình tốt hơn, thiết kế prompt hiệu quả hơn và chẩn đoán vấn đề.
 :::
 
 ---
 
-## 总结
+## Tóm tắt
 
-| 核心概念 | 一句话总结 |
-|---------|-----------|
-| 神经元 | 加权求和 + 激活函数，网络的最小计算单元 |
-| 前向传播 | 数据从输入层逐层流向输出层，产生预测 |
-| 反向传播 | 从损失出发，逐层计算梯度，更新权重 |
-| CNN | 卷积核提取局部特征，图像处理的首选 |
-| RNN/LSTM | 循环连接保持记忆，处理序列数据 |
-| Transformer | 自注意力并行处理，大模型的基础架构 |
-| 过拟合 | 模型"背答案"，用正则化、Dropout 等手段防止 |
-| 迁移学习 | 站在巨人肩膀上，用预训练模型微调解决新问题 |
+| Khái niệm cốt lõi | Tóm tắt trong một câu |
+|-------------------|----------------------|
+| Nơ-ron | Tổng hợp có trọng số + Activation Function, đơn vị tính toán nhỏ nhất của mạng |
+| Lan truyền thuận | Dữ liệu chảy từ input layer qua từng lớp đến output layer, tạo ra dự đoán |
+| Lan truyền ngược | Bắt đầu từ Loss, tính gradient từng lớp, cập nhật trọng số |
+| CNN | Kernel tích chập trích xuất đặc trưng cục bộ, lựa chọn hàng đầu cho xử lý hình ảnh |
+| RNN/LSTM | Kết nối hồi quy duy trì bộ nhớ, xử lý dữ liệu chuỗi |
+| Transformer | Self-attention xử lý song song, kiến trúc nền tảng của Large Model |
+| Overfitting | Mô hình "học thuộc lòng", sử dụng Regularization, Dropout và các phương pháp khác để ngăn chặn |
+| Transfer Learning | Đứng trên vai người khổng lồ, sử dụng mô hình pre-trained để fine-tune giải quyết vấn đề mới |
 
 ---
 
-## 延伸阅读
+## Đọc thêm
 
-- [3Blue1Brown - 神经网络系列视频](https://www.3blue1brown.com/topics/neural-networks) — 最直观的可视化讲解
-- [Stanford CS231n](http://cs231n.stanford.edu/) — 经典的卷积神经网络课程
-- [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/) — 图解 Transformer 架构
-- [Neural Networks and Deep Learning](http://neuralnetworksanddeeplearning.com/) — 免费在线教材
-- [Hugging Face 课程](https://huggingface.co/learn) — 动手实践 Transformer 和大模型
+-   [3Blue1Brown - Loạt video về mạng nơ-ron](https://www.3blue1brown.com/topics/neural-networks) — Giải thích trực quan nhất bằng hình ảnh
+-   [Stanford CS231n](http://cs231n.stanford.edu/) — Khóa học kinh điển về Convolutional Neural Network
+-   [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/) — Giải thích kiến trúc Transformer bằng hình ảnh
+-   [Neural Networks and Deep Learning](http://neuralnetworksanddeeplearning.com/) — Tài liệu học trực tuyến miễn phí
+-   [Khóa học Hugging Face](https://huggingface.co/learn) — Thực hành Transformer và Large Model

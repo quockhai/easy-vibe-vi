@@ -1,480 +1,492 @@
-# 上下文工程
-> 💡 **学习指南**：提示词工程解决的是“怎么把话说清楚”，上下文工程解决的是“让模型在合适的时刻看到合适的信息”。本章节会围绕一个问题展开：**在有限的上下文窗口里，如何既让模型懂你，又不把钱烧光？**
+---
+title: Kỹ thuật ngữ cảnh
+description: Làm thế nào để mô hình hiểu bạn mà không tốn quá nhiều chi phí, trong khi vẫn giữ nguyên cửa sổ ngữ cảnh giới hạn?
+layout: doc
+head:
+  meta:
+    - property: og:title
+      content: Kỹ thuật ngữ cảnh
+    - property: og:description
+      content: Làm thế nào để mô hình hiểu bạn mà không tốn quá nhiều chi phí, trong khi vẫn giữ nguyên cửa sổ ngữ cảnh giới hạn?
+---
 
-在开始之前，建议你先补两块“基础砖”：
+# Kỹ thuật ngữ cảnh
+> 💡 **Hướng dẫn học tập**: Kỹ thuật Prompt giải quyết vấn đề "làm thế nào để diễn đạt rõ ràng", còn kỹ thuật ngữ cảnh giải quyết vấn đề "làm thế nào để mô hình thấy được thông tin phù hợp vào đúng thời điểm". Chương này sẽ xoay quanh một câu hỏi: **Trong cửa sổ ngữ cảnh giới hạn, làm thế nào để mô hình vừa hiểu bạn, vừa không "đốt" hết tiền?**
 
-- **Token 是什么**：可以先阅读 [大语言模型入门](./llm-intro.md) 的「分词 & Token」部分。
-- **Prompt 是什么**：如果你还不熟悉 System / User / Assistant 的基本结构，可以先看 [提示词工程](./prompt-engineering/)。
+Trước khi bắt đầu, bạn nên bổ sung hai "viên gạch nền tảng" sau:
+
+-   **Token là gì**: Bạn có thể đọc phần "Phân tích từ & Token" trong [Giới thiệu về Mô hình ngôn ngữ lớn](./llm-intro.md).
+-   **Prompt là gì**: Nếu bạn chưa quen với cấu trúc cơ bản của System / User / Assistant, bạn có thể xem [Kỹ thuật Prompt](./prompt-engineering/).
 
 ---
 
-## 0. 引言：为什么聊着聊着，它就忘事，还越来越贵？
+## 0. Lời mở đầu: Tại sao đang trò chuyện, AI lại quên mất mọi thứ và ngày càng đắt đỏ?
 
 <AgentContextFlow />
 
-很多人在实际使用大模型时都会遇到类似的情况：
+Nhiều người gặp phải tình huống tương tự khi sử dụng các mô hình ngôn ngữ lớn trong thực tế:
 
-- 聊到一半，模型突然“忘记”之前说过的关键条件；
-- 长对话里，前后回答自相矛盾，很难保持同一套设定；
-- 对话轮次一多，账单像打车计价一样不断往上走。
+-   Đang trò chuyện dở, mô hình đột nhiên "quên" các điều kiện quan trọng đã nói trước đó;
+-   Trong các cuộc hội thoại dài, câu trả lời trước sau mâu thuẫn, khó duy trì cùng một thiết lập;
+-   Số lượt trò chuyện càng nhiều, hóa đơn càng tăng như đồng hồ tính tiền taxi.
 
-直觉上，我们会以为是：**“这个模型记性不好”**。
-但大多数时候，问题并不在于模型“不会记”，而在于我们**没有设计好它能看到的上下文**。
+Theo trực giác, chúng ta sẽ nghĩ rằng: **"Mô hình này có trí nhớ kém"**.
+Nhưng hầu hết thời gian, vấn đề không phải do mô hình "không biết nhớ", mà là do chúng ta **chưa thiết kế tốt ngữ cảnh mà nó có thể nhìn thấy**.
 
 <IntroProblemReasonSolution />
 
-面对这些挑战，单纯依靠“写好提示词”已经捉襟见肘。我们需要一套更系统的工程方法，来在有限的窗口和预算内，让模型始终获得最关键的信息。这正是**上下文工程**试图解决的问题。
+Đối mặt với những thách thức này, việc chỉ dựa vào "viết Prompt tốt" đã trở nên không đủ. Chúng ta cần một phương pháp kỹ thuật hệ thống hơn để đảm bảo mô hình luôn nhận được thông tin quan trọng nhất trong cửa sổ và ngân sách giới hạn. Đây chính là vấn đề mà **kỹ thuật ngữ cảnh** cố gắng giải quyết.
 
 ---
 
-## 1. 什么是“上下文工程”？（定义 + 场景）
+## 1. "Kỹ thuật ngữ cảnh" là gì? (Định nghĩa + Kịch bản)
 
-先给一个简短的工作定义，再看几个典型场景。
+Đầu tiên, hãy xem một định nghĩa ngắn gọn về công việc, sau đó là một vài kịch bản điển hình.
 
-> 上下文工程，是一门为 LLM 构建和管理“信息环境”的工程方法，决定模型“看到什么、忽略什么、什么时候看到”，从而在有限的上下文窗口内稳定完成任务。
+> Kỹ thuật ngữ cảnh là một phương pháp kỹ thuật để xây dựng và quản lý "môi trường thông tin" cho LLM, quyết định "mô hình thấy gì, bỏ qua gì, và khi nào thấy", từ đó hoàn thành nhiệm vụ một cách ổn định trong cửa sổ ngữ cảnh giới hạn.
 
-你可以简单地把它理解成三件事：整理信息、控制窗口、管理成本。  
-常见会用到它的场景包括：
+Bạn có thể đơn giản hiểu nó là ba việc: sắp xếp thông tin, kiểm soát cửa sổ, quản lý chi phí.
+Các kịch bản phổ biến thường sử dụng nó bao gồm:
 
-- 对话型 Agent 和客服机器人
-- 代码 / 文档助手
-- 多轮工具调用和长流程编排
+-   Agent đàm thoại và chatbot dịch vụ khách hàng
+-   Trợ lý code / tài liệu
+-   Gọi công cụ đa lượt và sắp xếp quy trình dài
 
-接下来，我们就从一个真实团队的“血泪教训”出发，看看他们是怎么一点点从“只会写 Prompt”进化到“会做上下文工程”的。
+Tiếp theo, chúng ta sẽ bắt đầu từ "những bài học xương máu" của một nhóm thực tế, để xem họ đã từng bước tiến hóa từ "chỉ biết viết Prompt" thành "biết làm kỹ thuật ngữ cảnh" như thế nào.
 
 ---
 
-## 2. 从"血泪教训"说起：Manus 团队踩过的坑
+## 2. Bắt đầu từ "những bài học xương máu": Những sai lầm mà nhóm Manus đã mắc phải
 
-本章案例来自 **Manus**（一款通用 AI Agent）。
-与普通对话不同，Manus 需要自主规划并调用工具完成长任务（涉及几十甚至上百轮交互）。
+Trường hợp này đến từ **Manus** (một AI Agent đa năng).
+Khác với các cuộc trò chuyện thông thường, Manus cần tự lập kế hoạch và gọi công cụ để hoàn thành các nhiệm vụ dài (liên quan đến hàng chục hoặc thậm chí hàng trăm lượt tương tác).
 
-这带来了核心矛盾：
-- **如果不记**：关键信息丢失，任务中断。
-- **全记**：成本和延迟爆炸，甚至超出窗口限制。
+Điều này dẫn đến mâu thuẫn cốt lõi:
+-   **Nếu không nhớ**: Thông tin quan trọng bị mất, nhiệm vụ bị gián đoạn.
+-   **Nhớ tất cả**: Chi phí và độ trễ tăng vọt, thậm chí vượt quá giới hạn cửa sổ.
 
-Manus 团队经历过多次架构重构，才明白一个道理：**上下文不能只靠“写”，而要靠“设计”。**
+Nhóm Manus đã trải qua nhiều lần tái cấu trúc kiến trúc, mới hiểu ra một điều: **Ngữ cảnh không thể chỉ dựa vào "viết", mà phải dựa vào "thiết kế".**
 
-### 2.1 四次重构教会我们什么？
+### 2.1 Bốn lần tái cấu trúc đã dạy chúng ta điều gì?
 
-Manus 的联合创始人季逸超分享过他们的"踩坑史"：
+Ji Yichao, đồng sáng lập Manus, đã chia sẻ "lịch sử vấp ngã" của họ:
 
-| 阶段 | 遇到的问题 | 当时的想法 | 结果 |
+| Giai đoạn | Vấn đề gặp phải | Suy nghĩ lúc đó | Kết quả |
 | :--- | :--- | :--- | :--- |
-| **第一次** | AI 聊着聊着就忘事 | "多写点提示词就好了" | 越写越长，越写越贵 |
-| **第二次** | 重要信息总被挤掉 | "把重要的多复制几遍" | 文本更长，成本更高 |
-| **第三次** | 账单高得吓人 | "能不能复用之前的计算？" | 找到降低重复计算成本的方式 |
-| **第四次** | 长文档处理不了 | "能不能需要时再查？" | 建立“图书馆+按需检索”的方案 |
+| **Lần 1** | AI quên mất mọi thứ khi trò chuyện | "Chỉ cần viết thêm Prompt là được" | Càng viết càng dài, càng đắt |
+| **Lần 2** | Thông tin quan trọng luôn bị đẩy ra | "Sao chép những cái quan trọng nhiều lần" | Văn bản dài hơn, chi phí cao hơn |
+| **Lần 3** | Hóa đơn cao đến mức đáng sợ | "Có thể tái sử dụng các tính toán trước đó không?" | Tìm cách giảm chi phí tính toán lặp lại |
+| **Lần 4** | Không thể xử lý tài liệu dài | "Có thể tra cứu khi cần không?" | Xây dựng giải pháp "thư viện + truy xuất theo yêu cầu" |
 
-**核心领悟**：**不是记得越多越好，而是记得越巧越好**。
+**Bài học cốt lõi**: **Không phải nhớ càng nhiều càng tốt, mà là nhớ càng khéo càng tốt**.
 
-### 2.2 AI 的"记性"到底像什么？
+### 2.2 Trí nhớ của AI thực sự giống cái gì?
 
-**传统电脑内存** = **硬盘**：
-- 容量大：可以长期保存大量数据；
-- 价格低：存放一年成本较低；
-- 读写速度相对较慢，查找信息需要一定时间。
+**Bộ nhớ máy tính truyền thống** = **Ổ cứng**:
+-   Dung lượng lớn: Có thể lưu trữ lượng lớn dữ liệu trong thời gian dài;
+-   Giá thấp: Chi phí lưu trữ một năm tương đối thấp;
+-   Tốc độ đọc ghi tương đối chậm, mất một thời gian để tìm kiếm thông tin.
 
-**AI 的上下文** = **小黑板**：
-- 读写快：模型可以在一次调用中直接看到全部上下文；
-- 容量有限：写满后不得不擦除旧内容；
-- 每写入一个 token 都会带来额外计算与费用。
+**Ngữ cảnh của AI** = **Bảng đen nhỏ**:
+-   Đọc ghi nhanh: Mô hình có thể trực tiếp nhìn thấy toàn bộ ngữ cảnh trong một lần gọi;
+-   Dung lượng giới hạn: Khi đầy, buộc phải xóa nội dung cũ;
+-   Mỗi Token được ghi vào đều mang lại tính toán và chi phí bổ sung.
 
-**Manus 的经验**：**小黑板要用得省，用得巧，别用来存百科全书**。
+**Kinh nghiệm của Manus**: **Bảng đen nhỏ cần được sử dụng tiết kiệm, khéo léo, đừng dùng để lưu trữ bách khoa toàn thư**.
 
 ---
 
-## 3. 第一步：认识成本 - 你的每一分钱花在哪？
+## 3. Bước đầu tiên: Nhận biết chi phí - Mỗi đồng tiền của bạn được chi tiêu vào đâu?
 
-### 3.1 为什么要先看成本？
+### 3.1 Tại sao phải xem xét chi phí trước?
 
-让我们看看一次典型的 AI 对话，你的钱是怎么花的：
+Hãy xem một cuộc trò chuyện AI điển hình, tiền của bạn được chi tiêu như thế nào:
 
 ```
-💰 成本构成（一次对话）：
-├─ 70% 重复看旧内容（"刚才聊了什么？"）
-├─ 20% 处理新内容（"现在说什么？"）  
-└─ 10% 生成回复（"怎么回答？"）
+💰 Cấu trúc chi phí (một cuộc trò chuyện):
+├─ 70% Xem lại nội dung cũ ("Vừa trò chuyện gì?")
+├─ 20% Xử lý nội dung mới ("Bây giờ nói gì?")
+└─ 10% Tạo phản hồi ("Trả lời thế nào?")
 ```
 
-**惊人发现**：**70% 的钱花在让 AI 重新看你之前说过的话！**
+**Phát hiện đáng kinh ngạc**: **70% số tiền được chi để AI đọc lại những gì bạn đã nói trước đó!**
 
-### 3.2 什么是 KV Cache？（前缀复用）
+### 3.2 KV Cache là gì? (Tái sử dụng tiền tố)
 
-在讨论价格之前，我们得先搞懂一个核心技术概念：**KV Cache（键值缓存）**。
-别被这个技术名词吓到，它其实就是 AI 的“短期记忆速查表”。
+Trước khi thảo luận về giá cả, chúng ta phải hiểu một khái niệm kỹ thuật cốt lõi: **KV Cache (Bộ nhớ đệm khóa-giá trị)**.
+Đừng để bị cái tên kỹ thuật này làm bạn sợ hãi, nó thực chất là "bảng tra cứu nhanh bộ nhớ ngắn hạn" của AI.
 
-- **没有 KV Cache 时**：AI 每次都要像第一次看到这篇文章一样，从第一个字开始重新阅读、理解、计算。
-- **有了 KV Cache 时**：AI 会把看过的部分（Pre-fill）计算结果存下来。下次如果开头的内容没变，它就直接调取记忆，不用重新算了。
+-   **Khi không có KV Cache**: AI mỗi lần đều phải đọc, hiểu, tính toán lại từ đầu như lần đầu tiên nhìn thấy bài viết này.
+-   **Khi có KV Cache**: AI sẽ lưu trữ kết quả tính toán của phần đã đọc (Pre-fill). Lần sau, nếu nội dung ban đầu không thay đổi, nó sẽ trực tiếp lấy từ bộ nhớ, không cần tính toán lại.
 
-这就好比：
-> 你去考场考试。
-> **情况 A**：每次都要把整本教材从头读一遍，再开始答题。（慢、累、贵）
-> **情况 B**：教材内容你已经背滚瓜烂熟了（Cache），坐下直接答题。（快、轻松、便宜）
+Điều này giống như:
+> Bạn đi thi.
+> **Tình huống A**: Mỗi lần đều phải đọc lại toàn bộ sách giáo khoa từ đầu, rồi mới bắt đầu làm bài. (Chậm, mệt, tốn kém)
+> **Tình huống B**: Nội dung sách giáo khoa bạn đã thuộc lòng (Cache), ngồi xuống làm bài ngay. (Nhanh, dễ dàng, rẻ)
 
-在云厂商的计费表里，**“背过的书”（Cache Hit）**通常比**“新看的书”（Cache Miss）**便宜 90% 以上。
+Trong bảng tính phí của các nhà cung cấp dịch vụ đám mây, **"cuốn sách đã thuộc lòng" (Cache Hit)** thường rẻ hơn **"cuốn sách mới đọc" (Cache Miss)** hơn 90%.
 
-### 3.3 "背课文" vs "现查现用"的价格差
+### 3.3 Sự khác biệt về giá giữa "Học thuộc lòng" và "Tra cứu tức thì"
 
-以 Claude 为例：
-- **现查现用**（没缓存）：$3.00 / 百万字
-- **背过再用**（有缓存）：$0.30 / 百万字  
-- **相差 10 倍**！
+Lấy Claude làm ví dụ:
+-   **Tra cứu tức thì** (không có cache): $3.00 / triệu từ
+-   **Học thuộc lòng** (có cache): $0.30 / triệu từ
+-   **Chênh lệch 10 lần**!
 
-**Manus 的实践**：通过让 AI "背课文"，他们把成本从 **$0.15 降到 $0.02**，**省了 87%**！
+**Thực tiễn của Manus**: Bằng cách để AI "học thuộc lòng", họ đã giảm chi phí từ **$0.15 xuống còn $0.02**, **tiết kiệm 87%**!
 
 <ContextWindowVisualizer />
 
-### 3.4 避坑指南：别让时间戳毁了你的“缓存”
+### 3.4 Hướng dẫn tránh bẫy: Đừng để dấu thời gian phá hủy "Cache" của bạn
 
-很多开发者习惯把“当前时间”写在 System Prompt 的第一句，觉得这样很严谨。
-**但这其实是上下文工程中最大的反模式之一。**
+Nhiều nhà phát triển có thói quen viết "thời gian hiện tại" vào câu đầu tiên của System Prompt, nghĩ rằng điều này rất chặt chẽ.
+**Nhưng đây thực chất là một trong những anti-pattern lớn nhất trong kỹ thuật ngữ cảnh.**
 
-想象一下：你背了一整本历史书（System Prompt），结果书的第一行写的是“现在的秒数”。
-如果这行字每秒都在变，那你上一秒背的所有内容，下一秒就全废了——你得从头再背一遍。
+Hãy tưởng tượng: Bạn đã thuộc lòng cả một cuốn sách lịch sử (System Prompt), nhưng dòng đầu tiên của cuốn sách lại ghi "số giây hiện tại".
+Nếu dòng chữ này thay đổi mỗi giây, thì tất cả nội dung bạn đã thuộc lòng ở giây trước sẽ trở nên vô dụng ở giây tiếp theo – bạn phải thuộc lòng lại từ đầu.
 
-这就是**前缀复用（KV Cache）**的死穴：**只要开头变了，后面全都要重算。**
+Đây chính là điểm yếu chí mạng của **tái sử dụng tiền tố (KV Cache)**: **Chỉ cần phần đầu thay đổi, tất cả phần sau đều phải tính toán lại.**
 
-#### 错误示范：把动态信息放前面
+#### Ví dụ sai: Đặt thông tin động ở phía trước
 ```text
-System: 现在是 2024-01-01 12:00:01。你是助手...
-(一分钟后)
-System: 现在是 2024-01-01 12:01:01。你是助手...
+System: Bây giờ là 2024-01-01 12:00:01. Bạn là trợ lý...
+(Một phút sau)
+System: Bây giờ là 2024-01-01 12:01:01. Bạn là trợ lý...
 ```
-**后果**：虽然只变了几个字，但因为在开头，导致后续 99% 的固定内容无法复用缓存，每次请求都像第一次一样慢且贵。
+**Hậu quả**: Mặc dù chỉ thay đổi vài chữ, nhưng vì ở đầu, dẫn đến 99% nội dung cố định phía sau không thể tái sử dụng cache, mỗi yêu cầu đều chậm và đắt như lần đầu tiên.
 
-#### 正确姿势：动静分离
+#### Cách làm đúng: Tách biệt động và tĩnh
 ```text
-System: 你是助手... (这里放几千字的固定规则、知识库)
-User: (在这里通过工具调用或用户消息传入当前时间)
+System: Bạn là trợ lý... (Đặt hàng nghìn từ quy tắc cố định, cơ sở tri thức ở đây)
+User: (Truyền thời gian hiện tại thông qua gọi công cụ hoặc tin nhắn người dùng ở đây)
 ```
-**好处**：前面的几千字规则永远不变，AI 只需要“背”一次。后续请求直接调用记忆，速度极快。
+**Lợi ích**: Hàng nghìn từ quy tắc phía trước không bao giờ thay đổi, AI chỉ cần "thuộc lòng" một lần. Các yêu cầu tiếp theo trực tiếp gọi từ bộ nhớ, tốc độ cực nhanh.
 
-👇 **动手点点看**：
-点击下方的开关，开启**“背课文加速”**，然后多次点击“发送新请求”。
-观察一下：当第一块内容变成“已背过”时，**开口速度（TTFT）**会发生什么变化？
+👇 **Hãy thử nhấp vào**:
+Nhấp vào công tắc bên dưới, bật **"Tăng tốc học thuộc lòng"**, sau đó nhấp nhiều lần vào "Gửi yêu cầu mới".
+Quan sát xem: Khi khối nội dung đầu tiên chuyển thành "Đã thuộc lòng", **Tốc độ phản hồi đầu tiên (TTFT)** sẽ thay đổi như thế nào?
 
 <KVCacheDemo />
 
 ---
 
-## 4. 第二步：滑动窗口 - 当"记性"变成"成本"
+## 4. Bước thứ hai: Sliding Window - Khi "trí nhớ" trở thành "chi phí"
 
-随着对话越来越长，最先遇到的问题就是：**窗口满了怎么办？**
+Khi cuộc trò chuyện càng dài, vấn đề đầu tiên gặp phải là: **Cửa sổ đầy thì làm sao?**
 
-### 4.1 为什么“先进先出”会出问题？
+### 4.1 Tại sao "vào trước ra trước" lại gây ra vấn đề?
 
-最简单的记忆管理是**滑动窗口（Sliding Window）**：**新的进来，旧的出去**。
-这听起来很公平，但在实际任务中却是个灾难。
+Quản lý bộ nhớ đơn giản nhất là **Sliding Window (Cửa sổ trượt)**: **Cái mới vào, cái cũ ra**.
+Nghe có vẻ công bằng, nhưng trong các nhiệm vụ thực tế lại là một thảm họa.
 
-**场景重现**：
+**Tái hiện kịch bản**:
 ```text
-对话记录：
-[1] 用户：我是张三，负责支付系统  
-[2] 用户：项目用 Go 语言开发
-[3] 用户：数据库是 PostgreSQL
+Lịch sử trò chuyện:
+[1] Người dùng: Tôi là Trương Tam, phụ trách hệ thống thanh toán
+[2] Người dùng: Dự án được phát triển bằng ngôn ngữ Go
+[3] Người dùng: Cơ sở dữ liệu là PostgreSQL
 ...
-[20] 用户：帮我写个接口
+[20] Người dùng: Giúp tôi viết một API
 ```
-**结果**：当聊到第 20 句时，第 1 句“我是张三”已经被挤出了窗口。AI 彻底忘了你是谁，也不知道你在负责什么系统。
+**Kết quả**: Khi trò chuyện đến câu thứ 20, câu thứ 1 "Tôi là Trương Tam" đã bị đẩy ra khỏi cửa sổ. AI hoàn toàn quên bạn là ai, cũng không biết bạn phụ trách hệ thống nào.
 
-**问题本质**：这种策略把**重要信息**（身份、技术栈）和**废话**（“好的”、“收到”）同等对待，一起被踢了出去。
+**Bản chất vấn đề**: Chiến lược này đối xử bình đẳng với **thông tin quan trọng** (danh tính, công nghệ) và **những lời vô nghĩa** ("được rồi", "đã nhận"), cùng bị loại bỏ.
 
-### 4.2 "中间失忆症" - 为什么 AI 总看不到关键信息？
+### 4.2 "Hội chứng mất trí nhớ giữa chừng" - Tại sao AI luôn bỏ qua thông tin quan trọng?
 
-除了“忘得快”，AI 还有一个怪癖：**它也会“看漏”**。
-研究发现：**AI 对开头和结尾最敏感，中间最容易被忽略**。这就是著名的 **Lost in the Middle（中间迷失）**现象。
+Ngoài việc "quên nhanh", AI còn có một đặc điểm kỳ lạ: **Nó cũng có thể "bỏ sót"**.
+Nghiên cứu cho thấy: **AI nhạy cảm nhất với phần đầu và cuối, phần giữa dễ bị bỏ qua nhất**. Đây là hiện tượng nổi tiếng **Lost in the Middle (Mất giữa chừng)**.
 
-**U 型记忆曲线**：
+**Đường cong trí nhớ hình chữ U**:
 ```text
-位置：开头 → 中间 → 结尾
-记忆： 高  →  低  →  高
+Vị trí: Đầu → Giữa → Cuối
+Trí nhớ: Cao → Thấp → Cao
 ```
 
-👇 **动手点点看**：
-1. 先试试**“滑动窗口”**：在下面的聊天框里多发几条消息，看看旧的对话是怎么被无情“挤出去”的。
-2. 再看看**“中间迷失”**：观察一下，当关键信息藏在整段话的中间位置时，检索成功率是不是最低的？
+👇 **Hãy thử nhấp vào**:
+1.  Đầu tiên hãy thử **"Sliding Window"**: Trong hộp chat bên dưới, gửi thêm vài tin nhắn, xem các cuộc trò chuyện cũ bị "đẩy ra" một cách không thương tiếc như thế nào.
+2.  Sau đó xem **"Mất giữa chừng"**: Quan sát xem, khi thông tin quan trọng bị giấu ở giữa một đoạn văn bản dài, tỷ lệ truy xuất thành công có phải là thấp nhất không?
 
 <SlidingWindowDemo />
 <LostInMiddleDemo />
 
-**解决方案**：把关键信息放在**开头**（系统提示）或**结尾**（用户问题）。
+**Giải pháp**: Đặt thông tin quan trọng ở **đầu** (System Prompt) hoặc **cuối** (câu hỏi của người dùng).
 
 ---
 
-## 5. 第三步：选择性保留 - 如何"钉"住关键信息？
+## 5. Bước thứ ba: Lựa chọn giữ lại - Làm thế nào để "Ghim" thông tin quan trọng?
 
-既然“先进先出”不靠谱，那我们该怎么办？
-Manus 的答案是：**建立“信息等级制度”**。
+Nếu "vào trước ra trước" không đáng tin cậy, vậy chúng ta nên làm gì?
+Câu trả lời của Manus là: **Xây dựng "hệ thống phân cấp thông tin"**.
 
-### 5.1 为什么要给信息分等级？
+### 5.1 Tại sao phải phân cấp thông tin?
 
-不再平等对待每条信息，而是根据重要程度决定它们的去留：
+Không còn đối xử bình đẳng với mọi thông tin, mà dựa vào mức độ quan trọng để quyết định giữ lại hay loại bỏ:
 
-| 等级 | 信息类型 | 待遇 | 成本影响 |
+| Cấp độ | Loại thông tin | Xử lý | Ảnh hưởng chi phí |
 | :--- | :--- | :--- | :--- |
-| **VIP** | 系统设定、用户身份 | **永远保留** | +15% 成本 |
-| **重要** | 当前任务目标 | **任务期内保留** | +10% 成本 |
-| **一般** | 普通对话历史 | **最近 5 轮保留** | 基准成本 |
-| **可弃** | 可检索的知识 | **用时再查** | -60% 成本 |
+| **VIP** | Thiết lập hệ thống, danh tính người dùng | **Luôn giữ lại** | +15% chi phí |
+| **Quan trọng** | Mục tiêu nhiệm vụ hiện tại | **Giữ lại trong suốt nhiệm vụ** | +10% chi phí |
+| **Thông thường** | Lịch sử trò chuyện thông thường | **Giữ lại 5 lượt gần nhất** | Chi phí cơ bản |
+| **Có thể bỏ** | Kiến thức có thể truy xuất | **Tra cứu khi cần** | -60% chi phí |
 
-**核心思想**：**用 25% 的成本增加，换取 90% 的关键信息保留**。
+**Tư tưởng cốt lõi**: **Dùng 25% chi phí tăng thêm, đổi lấy 90% thông tin quan trọng được giữ lại**.
 
-### 5.2 "钉钉子"策略
+### 5.2 Chiến lược "đóng đinh"
 
-你可以把上下文窗口想象成一面黑板：
-- **VIP 信息**：用钉子死死**钉在**黑板最上面（System Prompt）。
-- **重要信息**：用磁铁**吸在**黑板中间（Context Injection）。
-- **普通对话**：写在黑板下半部分，满了就擦掉旧的（Sliding Window）。
+Bạn có thể tưởng tượng cửa sổ ngữ cảnh như một bảng đen:
+-   **Thông tin VIP**: Dùng đinh đóng chặt **ghim** lên trên cùng của bảng đen (System Prompt).
+-   **Thông tin quan trọng**: Dùng nam châm **hút** vào giữa bảng đen (Context Injection).
+-   **Trò chuyện thông thường**: Viết ở nửa dưới bảng đen, khi đầy thì xóa cái cũ (Sliding Window).
 
-👇 **动手点点看**：
-试着在下面的演示里，把某条重要的对话“钉”住。
-观察一下：当你继续聊天时，被钉住的信息是不是一直都在，而没钉住的就被挤走了？
+👇 **Hãy thử nhấp vào**:
+Hãy thử "ghim" một cuộc trò chuyện quan trọng trong bản demo bên dưới.
+Quan sát xem: Khi bạn tiếp tục trò chuyện, thông tin đã ghim có luôn ở đó không, còn những thông tin không ghim thì bị đẩy ra?
 
 <SelectiveContextDemo />
 
 ---
 
-## 6. 第四步：RAG - 当"记性"需要"图书馆"
+## 6. Bước thứ tư: RAG - Khi "trí nhớ" cần "thư viện"
 
-有时候，我们要处理的信息太多了（比如几百页的技术文档），黑板根本写不下。这时候就需要外挂大脑——**RAG（检索增强生成）**。
+Đôi khi, chúng ta cần xử lý quá nhiều thông tin (ví dụ: hàng trăm trang tài liệu kỹ thuật), bảng đen không thể viết hết. Lúc này, chúng ta cần một bộ não gắn ngoài – **RAG (Tạo sinh tăng cường truy xuất)**.
 
-### 6.1 为什么“小黑板”不够用？
+### 6.1 Tại sao "bảng đen nhỏ" không đủ dùng?
 
-Manus 面对百万字级的技术文档时，对比了两种做法：
+Khi Manus đối mặt với tài liệu kỹ thuật hàng triệu từ, họ đã so sánh hai cách làm:
 
-1.  **全量写入**：所有内容一次性塞进上下文。
-    *   **后果**：黑板瞬间被占满，处理极慢，而且根据“中间迷失”理论，AI 根本记不住中间的内容。
-    *   **成本**：约 $50/次，等待 15 秒。
-2.  **按需检索（RAG）**：先去图书馆（数据库）查，只把相关的几段话抄到黑板上。
-    *   **后果**：黑板很清爽，AI 聚焦于关键信息。
-    *   **成本**：约 $0.5/次，等待 2 秒。
+1.  **Ghi toàn bộ**: Đặt tất cả nội dung vào ngữ cảnh cùng một lúc.
+    *   **Hậu quả**: Bảng đen bị chiếm đầy ngay lập tức, xử lý cực chậm, và theo lý thuyết "mất giữa chừng", AI hoàn toàn không thể nhớ nội dung ở giữa.
+    *   **Chi phí**: Khoảng $50/lần, chờ 15 giây.
+2.  **Truy xuất theo yêu cầu (RAG)**: Đầu tiên tìm kiếm trong thư viện (cơ sở dữ liệu), chỉ sao chép vài đoạn liên quan lên bảng đen.
+    *   **Hậu quả**: Bảng đen rất gọn gàng, AI tập trung vào thông tin quan trọng.
+    *   **Chi phí**: Khoảng $0.5/lần, chờ 2 giây.
 
-**省了 99% 的钱，87% 的时间！**
+**Tiết kiệm 99% tiền, 87% thời gian!**
 
-### 6.2 "查资料"的最佳实践
+### 6.2 Thực hành tốt nhất "tra cứu tài liệu"
 
-Manus 的经验总结：
-*   **每本书撕成多大片？** 500-1000 字效果最好。
-*   **一次查几本书？** 3-5 本，多了反而干扰。
-*   **多相关的书才查？** 相似度 > 0.7，避免“硬凑”不相关的内容。
+Tổng kết kinh nghiệm của Manus:
+*   **Mỗi cuốn sách nên chia thành bao nhiêu đoạn?** 500-1000 từ là hiệu quả nhất.
+*   **Một lần tra cứu bao nhiêu cuốn sách?** 3-5 cuốn, nhiều hơn sẽ gây nhiễu.
+*   **Nên tra cứu những cuốn sách có mức độ liên quan như thế nào?** Độ tương đồng > 0.7, tránh "cố gắng ghép nối" nội dung không liên quan.
 
-👇 **动手点点看**：
-在搜索框里输入问题（比如“如何重置密码”），看看系统是如何从一大堆文档里只找出最相关的那几条的。
+👇 **Hãy thử nhấp vào**:
+Nhập câu hỏi vào ô tìm kiếm (ví dụ: "làm thế nào để đặt lại mật khẩu"), xem hệ thống tìm ra những mục liên quan nhất từ một đống tài liệu như thế nào.
 
 <RAGSimulationDemo />
 
 ---
 
-## 7. 第五步：压缩 - 如何让"小黑板"写得更密？
+## 7. Bước thứ năm: Nén - Làm thế nào để "bảng đen nhỏ" viết được nhiều hơn?
 
-如果信息都很重要，实在删不掉，又不想查资料怎么办？
-那就只能**把字写小点**——这就是**上下文压缩**。
+Nếu tất cả thông tin đều quan trọng, thực sự không thể xóa, mà cũng không muốn tra cứu tài liệu thì sao?
+Vậy thì chỉ có thể **viết chữ nhỏ lại** – đây chính là **nén ngữ cảnh**.
 
-### 7.1 什么时候需要"缩写"？
-*   检索回来的资料太厚（>2000 字）。
-*   对话历史太啰嗦（占了 >80% 黑板空间）。
-*   需要快速回答，不想让 AI 读长篇大论。
+### 7.1 Khi nào cần "viết tắt"?
+*   Tài liệu truy xuất về quá dày (>2000 từ).
+*   Lịch sử trò chuyện quá dài dòng (chiếm >80% không gian bảng đen).
+*   Cần trả lời nhanh, không muốn AI đọc những bài dài.
 
-### 7.2 "缩写"的三种境界
+### 7.2 Ba cấp độ của "viết tắt"
 
-| 压缩方式 | 压缩率 | 保留什么 | 适用场景 | 省钱效果 |
+| Cách nén | Tỷ lệ nén | Giữ lại gì | Kịch bản áp dụng | Hiệu quả tiết kiệm |
 | :--- | :--- | :--- | :--- | :--- |
-| **总结式** | 70% | 主要意思 | 快速了解 | 省 30% |
-| **要点式** | 50% | 关键要点 | 结构化输出 | 省 50% |
-| **表格式** | 30% | 核心数据 | 程序处理 | 省 70% |
+| **Kiểu tóm tắt** | 70% | Ý chính | Nắm bắt nhanh | Tiết kiệm 30% |
+| **Kiểu gạch đầu dòng** | 50% | Các điểm chính | Đầu ra có cấu trúc | Tiết kiệm 50% |
+| **Kiểu bảng biểu** | 30% | Dữ liệu cốt lõi | Xử lý chương trình | Tiết kiệm 70% |
 
-👇 **动手点点看**：
-选择不同的压缩策略，看看长篇大论是如何变短、变精炼的。
+👇 **Hãy thử nhấp vào**:
+Chọn các chiến lược nén khác nhau, xem những bài dài dòng được rút ngắn và tinh gọn như thế nào.
 
 <ContextCompressionDemo />
 
 ---
 
-## 8. 系统整合：打造 AI 的“记忆宫殿”
+## 8. Tích hợp hệ thống: Xây dựng "Cung điện ký ức" của AI
 
-前面我们像搭积木一样，学习了各种独立的策略：
-*   **KV Cache**：帮我们省钱（第 3 章）
-*   **滑动窗口**：帮我们腾位置（第 4 章）
-*   **分级保留**：帮我们留重点（第 5 章）
-*   **RAG**：帮我们开外挂（第 6 章）
+Trước đó, chúng ta đã học các chiến lược độc lập như xây dựng khối:
+*   **KV Cache**: Giúp chúng ta tiết kiệm tiền (Chương 3)
+*   **Sliding Window**: Giúp chúng ta dọn chỗ (Chương 4)
+*   **Phân cấp giữ lại**: Giúp chúng ta giữ lại trọng tâm (Chương 5)
+*   **RAG**: Giúp chúng ta có thêm "bộ não gắn ngoài" (Chương 6)
 
-现在，是时候把这些积木搭成一座完整的城堡了——我们称之为 Manus 的**“记忆宫殿”**。
+Bây giờ, đã đến lúc ghép những khối này thành một lâu đài hoàn chỉnh – chúng ta gọi đó là **"Cung điện ký ức"** của Manus.
 
-### 8.1 像盖房子一样组装上下文
+### 8.1 Xây dựng ngữ cảnh như xây nhà
 
-不要把上下文看作一堆乱糟糟的文字，而要把它看作一座分层的建筑。每一层都有它独特的功能和“居住规则”。
+Đừng coi ngữ cảnh là một đống văn bản lộn xộn, mà hãy coi nó như một kiến trúc phân tầng. Mỗi tầng đều có chức năng và "quy tắc cư trú" độc đáo của riêng nó.
 
-👇 **动手点点看**：
-点击“开始建造”，看看我们是如何一层层把这座宫殿盖起来的。
+👇 **Hãy thử nhấp vào**:
+Nhấp vào "Bắt đầu xây dựng", xem chúng ta xây dựng cung điện này từng tầng một như thế nào.
 
 <MemoryPalaceDemo />
 
-### 8.2 为什么这样设计最强？
+### 8.2 Tại sao thiết kế này lại mạnh nhất?
 
-这座宫殿的设计哲学，其实就为了解决三个矛盾：
+Triết lý thiết kế của cung điện này thực chất là để giải quyết ba mâu thuẫn:
 
-1.  **地基（System Prompt）—— 解决“贵”的问题**
-    *   **矛盾**：系统设定（你是谁、规则是什么）最长，每次都要发。
-    *   **解法**：把它放在最底层，利用 **KV Cache** 技术，只要不改动，AI 就能“背诵全文”。后续几百轮对话，这部分的计算成本几乎为 **0**。
+1.  **Nền móng (System Prompt) – Giải quyết vấn đề "đắt"**
+    *   **Mâu thuẫn**: Thiết lập hệ thống (bạn là ai, quy tắc là gì) dài nhất, phải gửi mỗi lần.
+    *   **Giải pháp**: Đặt nó ở tầng thấp nhất, sử dụng công nghệ **KV Cache**, miễn là không thay đổi, AI có thể "thuộc lòng toàn bộ". Trong hàng trăm lượt trò chuyện tiếp theo, chi phí tính toán cho phần này gần như bằng **0**.
 
-2.  **支柱（Task Context）—— 解决“忘”的问题**
-    *   **矛盾**：对话一长，AI 容易忘了最初的任务目标（比如“写一个贪吃蛇游戏”）。
-    *   **解法**：利用**分级保留**策略，把任务目标“钉”在第二层。不管聊了多少轮，这层永远不删，确保 AI 不忘初心。
+2.  **Trụ cột (Task Context) – Giải quyết vấn đề "quên"**
+    *   **Mâu thuẫn**: Cuộc trò chuyện dài, AI dễ quên mục tiêu nhiệm vụ ban đầu (ví dụ: "viết một trò chơi rắn săn mồi").
+    *   **Giải pháp**: Sử dụng chiến lược **phân cấp giữ lại**, "ghim" mục tiêu nhiệm vụ vào tầng thứ hai. Bất kể trò chuyện bao nhiêu lượt, tầng này sẽ không bao giờ bị xóa, đảm bảo AI không quên mục đích ban đầu.
 
-3.  **顶层（Chat & RAG）—— 解决“乱”的问题**
-    *   **矛盾**：又有新对话，又有查到的资料，混在一起容易晕。
-    *   **解法**：
-        *   **客厅（对话）**：用**滑动窗口**管理，只留最近 5-10 句热乎的。
-        *   **图书馆（RAG）**：资料用完即走，不占地方。
+3.  **Tầng trên cùng (Chat & RAG) – Giải quyết vấn đề "lộn xộn"**
+    *   **Mâu thuẫn**: Vừa có cuộc trò chuyện mới, vừa có tài liệu đã tra cứu, trộn lẫn vào nhau dễ gây nhầm lẫn.
+    *   **Giải pháp**:
+        *   **Phòng khách (trò chuyện)**: Quản lý bằng **Sliding Window**, chỉ giữ lại 5-10 câu gần nhất.
+        *   **Thư viện (RAG)**: Tài liệu dùng xong là bỏ, không chiếm chỗ.
 
-### 8.3 实战效果
+### 8.3 Hiệu quả thực chiến
 
-Manus 团队把这套架构搬上线后，效果立竿见影：
+Sau khi nhóm Manus triển khai kiến trúc này, hiệu quả rõ rệt ngay lập tức:
 
-*   **省钱了**：因为地基被“背”下来了，每轮对话的成本暴跌 **84%**。
-*   **变快了**：AI 不用每次都从头读几千字，平均响应时间从 8 秒缩短到 **2 秒**。
-*   **更准了**：关键信息被“钉”死，再也不会聊着聊着就忘了自己是干嘛的。
+*   **Tiết kiệm tiền**: Vì nền móng đã được "thuộc lòng", chi phí mỗi lượt trò chuyện giảm mạnh **84%**.
+*   **Nhanh hơn**: AI không cần đọc lại hàng nghìn từ mỗi lần, thời gian phản hồi trung bình giảm từ 8 giây xuống còn **2 giây**.
+*   **Chính xác hơn**: Thông tin quan trọng được "ghim" chặt, không bao giờ còn tình trạng đang trò chuyện lại quên mình đang làm gì.
 
 ---
 
-## 9. 实战模板：直接抄作业
+## 9. Mẫu thực chiến: Sao chép ngay
 
-为了让你更直观地理解这套机制是如何运作的，我们为你准备了**全链路模拟**。
+Để bạn hiểu trực quan hơn về cách cơ chế này hoạt động, chúng tôi đã chuẩn bị **mô phỏng toàn bộ chu trình** cho bạn.
 
-请选择一个场景，点击“下一步”，看看从用户发问到 AI 回答的几秒钟内，**记忆宫殿**是如何动态调取、组装和清理上下文的。
+Vui lòng chọn một kịch bản, nhấp vào "Tiếp theo", xem trong vài giây từ khi người dùng đặt câu hỏi đến khi AI trả lời, **Cung điện ký ức** đã động điều chỉnh, lắp ráp và dọn dẹp ngữ cảnh như thế nào.
 
 <MemoryPalaceActionDemo />
 
-### 📝 拿来即用的实战设计
+### 📝 Thiết kế thực chiến sẵn sàng sử dụng
 
-如果你要设计一个类似 Manus 的系统，不要只盯着 Prompt 怎么写，更要关注**系统架构如何调度上下文**。
+Nếu bạn muốn thiết kế một hệ thống tương tự Manus, đừng chỉ tập trung vào cách viết Prompt, mà hãy chú ý hơn đến **cách kiến trúc hệ thống điều phối ngữ cảnh**.
 
-以下是两个经典场景的**系统设计蓝图**，包含了**提示词设计**和**代码逻辑（伪代码）**。
+Dưới đây là **bản thiết kế hệ thống** cho hai kịch bản kinh điển, bao gồm **thiết kế Prompt** và **logic code (mã giả)**.
 
-#### 场景 1：全栈工程师 Agent（长程记忆型）
-> **核心挑战**：任务周期长，容易忘了最初的需求和项目背景。
-> **解决策略**：System 层（身份）+ Task 层（钉死目标）+ Chat 层（滑动窗口）。
+#### Kịch bản 1: Full Stack Developer Agent (kiểu bộ nhớ dài hạn)
+> **Thách thức cốt lõi**: Chu kỳ nhiệm vụ dài, dễ quên yêu cầu ban đầu và bối cảnh dự án.
+> **Chiến lược giải quyết**: Lớp System (danh tính) + Lớp Task (ghim mục tiêu) + Lớp Chat (Sliding Window).
 
-**1. 系统提示词 (Layer 1 & 2)**
+**1. System Prompt (Lớp 1 & 2)**
 ```markdown
-# Layer 1: 身份设定 (System Prompt) - 永远不变，利用 KV Cache
-你是一名资深的全栈工程师，精通 Python 和 Vue3。
-代码风格：
-- 变量命名严格遵守 PEP8
-- 关键逻辑必须包含注释
-- 优先使用项目已有的工具函数
+# Lớp 1: Thiết lập danh tính (System Prompt) - Không bao giờ thay đổi, sử dụng KV Cache
+Bạn là một Full Stack Developer cấp cao, thành thạo Python và Vue3.
+Phong cách code:
+- Tên biến tuân thủ nghiêm ngặt PEP8
+- Logic quan trọng phải có chú thích
+- Ưu tiên sử dụng các hàm tiện ích đã có trong dự án
 
-# Layer 2: 任务锁定 (Task Context) - 任务期间不许删
-当前任务：重构支付模块 (payment_module)
-核心约束：
-1. 必须兼容旧版 API 接口 v1.0
-2. 数据库迁移脚本必须是幂等的
-3. 截止时间：本周五
+# Lớp 2: Khóa nhiệm vụ (Task Context) - Không được xóa trong suốt nhiệm vụ
+Nhiệm vụ hiện tại: Tái cấu trúc module thanh toán (payment_module)
+Ràng buộc cốt lõi:
+1. Phải tương thích với API phiên bản cũ v1.0
+2. Script di chuyển cơ sở dữ liệu phải là idempotent
+3. Thời hạn: Thứ Sáu tuần này
 ```
 
-**2. 上下文组装逻辑 (Pseudo-Code)**
+**2. Logic lắp ráp ngữ cảnh (Pseudo-Code)**
 ```python
 def build_engineer_context(user_input, chat_history, task_info):
     context = []
-    
-    # 1. 地基层：身份设定 (利用 KV Cache 缓存)
-    # 这部分内容几百轮对话都不变，计算成本几乎为 0
+
+    # 1. Lớp nền móng: Thiết lập danh tính (Sử dụng KV Cache)
+    # Phần nội dung này không thay đổi trong hàng trăm lượt trò chuyện, chi phí tính toán gần như bằng 0
     context.append(SYSTEM_PROMPT)
-    
-    # 2. 支柱层：任务锁定 (Pinned)
-    # 无论对话多长，这部分永远插入在 System 之后
-    context.append(f"当前任务：{task_info}")
-    
-    # 3. 检索层：代码片段 (RAG)
-    # 根据用户的问题，去代码库里找相关的代码
+
+    # 2. Lớp trụ cột: Khóa nhiệm vụ (Pinned)
+    # Bất kể cuộc trò chuyện dài bao nhiêu, phần này luôn được chèn sau System
+    context.append(f"Nhiệm vụ hiện tại: {task_info}")
+
+    # 3. Lớp truy xuất: Đoạn code (RAG)
+    # Dựa trên câu hỏi của người dùng, tìm kiếm code liên quan trong kho code
     relevant_code = search_codebase(user_input)
     if relevant_code:
-        context.append(f"参考代码：\n{relevant_code}")
-    
-    # 4. 交互层：对话历史 (Sliding Window)
-    # 只取最近 10 轮，避免撑爆上下文
-    recent_chat = chat_history[-10:] 
+        context.append(f"Tham khảo code:\n{relevant_code}")
+
+    # 4. Lớp tương tác: Lịch sử trò chuyện (Sliding Window)
+    # Chỉ lấy 10 lượt gần nhất, tránh làm đầy ngữ cảnh
+    recent_chat = chat_history[-10:]
     context.extend(recent_chat)
-    
-    # 5. 最新输入
+
+    # 5. Đầu vào mới nhất
     context.append(user_input)
-    
+
     return context
 ```
 
-#### 场景 2：智能客服 Agent（精准问答型）
-> **核心挑战**：成本敏感，且绝对不能胡说八道。
-> **解决策略**：System 层（强约束）+ RAG 层（动态注入）。
+#### Kịch bản 2: Smart Customer Service Agent (kiểu hỏi đáp chính xác)
+> **Thách thức cốt lõi**: Nhạy cảm về chi phí, và tuyệt đối không được bịa đặt.
+> **Chiến lược giải quyết**: Lớp System (ràng buộc chặt chẽ) + Lớp RAG (tiêm động).
 
-**1. 系统提示词 (Layer 1)**
+**1. System Prompt (Lớp 1)**
 ```markdown
-# Layer 1: 身份设定 (System Prompt)
-你是一名专业的电商客服专员。
-回复原则：
-1. 语气温柔、专业、简洁
-2. **绝对禁止**编造事实，只根据[参考资料]回答
-3. 如果资料里没有答案，请直接回答“非常抱歉，这个问题我需要转接人工客服”
+# Lớp 1: Thiết lập danh tính (System Prompt)
+Bạn là một chuyên viên chăm sóc khách hàng thương mại điện tử chuyên nghiệp.
+Nguyên tắc trả lời:
+1. Giọng điệu nhẹ nhàng, chuyên nghiệp, súc tích
+2. **Tuyệt đối cấm** bịa đặt sự thật, chỉ trả lời dựa trên [tài liệu tham khảo]
+3. Nếu tài liệu không có câu trả lời, vui lòng trả lời trực tiếp "Rất xin lỗi, vấn đề này tôi cần chuyển tiếp đến tổng đài viên"
 ```
 
-**2. 上下文组装逻辑 (Pseudo-Code)**
+**2. Logic lắp ráp ngữ cảnh (Pseudo-Code)**
 ```python
 def build_support_context(user_input):
     context = []
-    
-    # 1. 地基层：身份设定
+
+    # 1. Lớp nền móng: Thiết lập danh tính
     context.append(SYSTEM_PROMPT)
-    
-    # 2. 图书馆层：动态检索 (RAG)
-    # 只有客服场景，RAG 才是主角，放在中间位置
+
+    # 2. Lớp thư viện: Truy xuất động (RAG)
+    # Chỉ trong kịch bản dịch vụ khách hàng, RAG mới là nhân vật chính, đặt ở vị trí giữa
     docs = vector_db.search(user_input, top_k=3)
-    
-    context.append("【参考资料开始】")
+
+    context.append("【Bắt đầu tài liệu tham khảo】")
     for doc in docs:
         context.append(doc.content)
-    context.append("【参考资料结束】")
-    
-    # 3. 交互层：极短的历史
-    # 客服通常不需要太久远的记忆，保留最近 3 轮即可
+    context.append("【Kết thúc tài liệu tham khảo】")
+
+    # 3. Lớp tương tác: Lịch sử cực ngắn
+    # Dịch vụ khách hàng thường không cần bộ nhớ quá xa, giữ lại 3 lượt gần nhất là đủ
     context.extend(get_recent_chat(limit=3))
-    
+
     context.append(user_input)
-    
+
     return context
 ```
 
 ---
 
-## 10. 名词对照表
+## 10. Bảng đối chiếu thuật ngữ
 
-| 英文术语 | 中文对照 | 解释 |
+| Thuật ngữ tiếng Anh | Đối chiếu tiếng Việt | Giải thích |
 | :--- | :--- | :--- |
-| **Context Window** | 上下文窗口 | 模型一次性能够处理的文本最大长度（包括输入和输出）。超出限制的内容会被截断或遗忘。 |
-| **Token** | 词元 | LLM 处理文本的最小单位。通常 1 个 Token 约等于 0.75 个英文单词或 0.5 个汉字。计费和窗口限制都以此为单位。 |
-| **KV Cache** | KV 缓存 | 一种推理加速技术，通过缓存已经计算过的注意力键值对，避免对重复前缀进行重复计算，显著降低延迟和成本。 |
-| **RAG** | 检索增强生成 | 在回答问题前，先从外部知识库检索相关信息，作为上下文提供给模型，以减少幻觉并扩展知识边界。 |
-| **Sliding Window** | 滑动窗口 | 最基础的上下文管理策略。保持窗口内 Token 数量恒定，当新内容进入时，自动移除最早的旧内容。 |
-| **Lost in Middle** | 中间迷失 | 大模型的一种局限性。研究表明，模型对长上下文开头和结尾的信息记忆最深，而容易忽略中间部分的信息。 |
-| **System Prompt** | 系统提示 | 位于对话最开始的指令，用于设定模型的身份、行为规范、回复风格和核心任务。 |
-| **Few-shot** | 少样本学习 | 在提示词中提供几个“问题-答案”的示例，帮助模型快速理解任务模式和输出格式。 |
-| **Chain of Thought** | 思维链 | 引导模型在给出最终答案前，先输出推理步骤。这种方法能显著提升模型解决复杂逻辑和数学问题的能力。 |
-| **Hallucination** | 幻觉 | 模型自信地生成看似合理但实际上错误或不存在的信息的现象。 |
-| **Embedding** | 向量化 | 将文本转换为高维数值向量的技术。语义相似的文本在向量空间中的距离更近，是语义搜索的基础。 |
-| **Vector DB** | 向量数据库 | 专门用于存储和检索向量数据的数据库。支持通过相似度搜索快速找到与查询最匹配的文档片段。 |
-| **Temperature** | 温度 | 控制模型输出随机性的超参数。数值越高（如 0.8）输出越多样、有创意；数值越低（如 0.2）输出越确定、严谨。 |
-| **TTFT** | 首字延迟 | Time to First Token，即从用户发送请求到模型输出第一个 Token 所花费的时间，是衡量交互体验的关键指标。 |
+| **Context Window** | Cửa sổ ngữ cảnh | Chiều dài tối đa của văn bản mà mô hình có thể xử lý cùng một lúc (bao gồm cả đầu vào và đầu ra). Nội dung vượt quá giới hạn sẽ bị cắt bớt hoặc bị quên. |
+| **Token** | Token | Đơn vị nhỏ nhất mà LLM xử lý văn bản. Thường 1 Token xấp xỉ 0.75 từ tiếng Anh hoặc 0.5 ký tự tiếng Hán. Việc tính phí và giới hạn cửa sổ đều dựa trên đơn vị này. |
+| **KV Cache** | KV Cache | Một kỹ thuật tăng tốc suy luận, bằng cách lưu trữ các cặp khóa-giá trị chú ý đã được tính toán, tránh tính toán lặp lại cho các tiền tố trùng lặp, giảm đáng kể độ trễ và chi phí. |
+| **RAG** | RAG | Tạo sinh tăng cường truy xuất. Trước khi trả lời câu hỏi, hệ thống sẽ truy xuất thông tin liên quan từ cơ sở tri thức bên ngoài, cung cấp làm ngữ cảnh cho mô hình, nhằm giảm Hallucination và mở rộng phạm vi kiến thức. |
+| **Sliding Window** | Sliding Window | Chiến lược quản lý ngữ cảnh cơ bản nhất. Giữ số lượng Token trong cửa sổ không đổi, khi nội dung mới vào, tự động loại bỏ nội dung cũ nhất. |
+| **Lost in Middle** | Lost in Middle | Một hạn chế của các mô hình ngôn ngữ lớn. Nghiên cứu cho thấy mô hình ghi nhớ sâu nhất thông tin ở đầu và cuối ngữ cảnh dài, trong khi dễ bỏ qua thông tin ở phần giữa. |
+| **System Prompt** | System Prompt | Lệnh nằm ở đầu cuộc trò chuyện, dùng để thiết lập danh tính, quy tắc hành vi, phong cách trả lời và nhiệm vụ cốt lõi của mô hình. |
+| **Few-shot** | Few-shot | Học ít mẫu. Cung cấp một vài ví dụ "câu hỏi-trả lời" trong Prompt, giúp mô hình nhanh chóng hiểu mẫu nhiệm vụ và định dạng đầu ra. |
+| **Chain of Thought** | Chain of Thought | Hướng dẫn mô hình xuất ra các bước suy luận trước khi đưa ra câu trả lời cuối cùng. Phương pháp này có thể nâng cao đáng kể khả năng giải quyết các vấn đề logic và toán học phức tạp của mô hình. |
+| **Hallucination** | Hallucination | Hiện tượng mô hình tự tin tạo ra thông tin có vẻ hợp lý nhưng thực tế là sai hoặc không tồn tại. |
+| **Embedding** | Embedding | Kỹ thuật chuyển đổi văn bản thành các vector số học đa chiều. Văn bản có ý nghĩa tương tự sẽ có khoảng cách gần hơn trong không gian vector, là nền tảng của tìm kiếm ngữ nghĩa. |
+| **Vector DB** | Vector DB | Cơ sở dữ liệu chuyên dùng để lưu trữ và truy xuất dữ liệu vector. Hỗ trợ tìm kiếm theo độ tương đồng để nhanh chóng tìm thấy các đoạn tài liệu phù hợp nhất với truy vấn. |
+| **Temperature** | Temperature | Siêu tham số kiểm soát tính ngẫu nhiên của đầu ra mô hình. Giá trị càng cao (ví dụ 0.8) đầu ra càng đa dạng, sáng tạo; giá trị càng thấp (ví dụ 0.2) đầu ra càng chắc chắn, chặt chẽ. |
+| **TTFT** | TTFT | Time to First Token, tức là thời gian từ khi người dùng gửi yêu cầu đến khi mô hình xuất ra Token đầu tiên, là chỉ số quan trọng để đánh giá trải nghiệm tương tác. |
 
 ---
 
-## 总结：上下文工程的本质
+## Tóm tắt: Bản chất của kỹ thuật ngữ cảnh
 
-Manus 的四次重构告诉我们：
+Bốn lần tái cấu trúc của Manus cho chúng ta biết:
 
-**从实践来看**：不是记得越多越好，而是记得越有结构、越有选择性越好。
+**Từ góc độ thực tiễn**: Không phải nhớ càng nhiều càng tốt, mà là nhớ càng có cấu trúc, càng có chọn lọc càng tốt.
 
-**从成本视角看**：
-- 大部分浪费来自对固定前缀的重复计算，需要通过前缀稳定和缓存机制解决；
-- 重要信息被误删，往往源于“一视同仁”的滑动窗口，需要通过信息分级与钉住策略解决；  
-- 面对超长文档和知识库时，仅依赖增大上下文窗口并不现实，必须结合检索与压缩机制。
+**Từ góc độ chi phí**:
+-   Phần lớn lãng phí đến từ việc tính toán lặp lại các tiền tố cố định, cần được giải quyết bằng cơ chế ổn định tiền tố và caching;
+-   Thông tin quan trọng bị xóa nhầm thường do Sliding Window "đối xử bình đẳng", cần được giải quyết bằng chiến lược phân cấp thông tin và ghim;
+-   Khi đối mặt với tài liệu và cơ sở tri thức siêu dài, việc chỉ dựa vào việc tăng Context Window là không thực tế, phải kết hợp cơ chế truy xuất và nén.
 
-目标是：在给定的模型与上下文上限下，让每一个 token 的投入都具备明确的用途。
+Mục tiêu là: Trong giới hạn mô hình và ngữ cảnh cho phép, đảm bảo mỗi Token được đầu tư đều có mục đích rõ ràng.

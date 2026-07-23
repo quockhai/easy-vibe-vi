@@ -1,120 +1,120 @@
-# 语音合成与识别原理
-> 💡 **学习指南**：本章节将带你深入了解 AI 音频底层原理。我们不仅会探讨“生涩”的声学专业术语（如 STFT、流匹配、音色嵌入），还会通过通俗的比喻和直观的交互演示，让你彻底明白 AI 是如何“听懂人话”并“开口说话”的。即使你是零基础读者，也能轻松掌握！
+# Nguyên lý tổng hợp và nhận dạng giọng nói
+> 💡 **Hướng dẫn học tập**: Chương này sẽ đưa bạn đi sâu vào các nguyên lý cơ bản của âm thanh AI. Chúng ta sẽ không chỉ khám phá các thuật ngữ chuyên ngành âm học "khó nhằn" (như STFT, Flow Matching, Speaker Embeddings), mà còn thông qua các ví dụ minh họa dễ hiểu và các demo tương tác trực quan, giúp bạn hiểu rõ cách AI "nghe hiểu lời người" và "cất tiếng nói". Ngay cả khi bạn là người mới bắt đầu, bạn cũng có thể dễ dàng nắm vững!
 
 <AudioQuickStartDemo />
 
-## 0. 引言：物理声波的“数字化翻译”
+## 0. Giới thiệu: "Phiên dịch số hóa" sóng âm vật lý
 
-人类的语音和世界上的各种声音，本质上是空气振动产生的**连续物理声波**。但计算机的脑子里只有 `0` 和 `1`，它听不见声音。因此，让 AI 处理声音的第一步，就是跨越“物理世界”与“数字世界”的鸿沟。
+Giọng nói của con người và các loại âm thanh trên thế giới, về bản chất, là **sóng âm vật lý liên tục** được tạo ra bởi sự rung động của không khí. Nhưng trong bộ não của máy tính chỉ có `0` và `1`, nó không thể nghe thấy âm thanh. Do đó, bước đầu tiên để AI xử lý âm thanh là vượt qua ranh giới giữa "thế giới vật lý" và "thế giới số".
 
-这个过程叫做**声数转换 (A/D 转换)**，其核心输出就是 **脉冲编码调制 (PCM)** 波形，也就是我们常见的音频数据。它由两个核心指标决定：
-1. **采样率 (Sample Rate)**：一秒钟内给声波拍多少次“照片”。比如 16kHz 就是一秒钟记录 16,000 个振幅数字。
-2. **位深度 (Bit Depth)**：每次拍照的“标尺”有多精细。16-bit 意味着振幅有 65,536 个层级的区分度。
+Quá trình này được gọi là **chuyển đổi tương tự-số (A/D conversion)**, và đầu ra cốt lõi của nó là dạng sóng **Điều chế mã xung (PCM)**, tức là dữ liệu âm thanh phổ biến mà chúng ta thường thấy. Nó được quyết định bởi hai chỉ số cốt lõi:
+1.  **Tốc độ lấy mẫu (Sample Rate)**: Số lần "chụp ảnh" sóng âm trong một giây. Ví dụ, 16kHz có nghĩa là ghi lại 16.000 giá trị biên độ trong một giây.
+2.  **Độ sâu bit (Bit Depth)**: "Thước đo" cho mỗi lần chụp ảnh tinh tế đến mức nào. 16-bit có nghĩa là biên độ có 65.536 cấp độ phân biệt.
 
-但这带来了一个问题：一秒钟 16,000 个数字，一句话几十万个数字，信息量大且冗杂。如果直接把这长长的一维波形丢给神经网络去处理，这就好比**让一个人通过凑近看毛衣上的一根根毛线结构，去判断这件毛衣的图案好不好看**——这显然是极其困难的计算挑战。
+Nhưng điều này đặt ra một vấn đề: 16.000 con số trong một giây, hàng trăm nghìn con số cho một câu nói, lượng thông tin lớn và dư thừa. Nếu trực tiếp đưa dạng sóng một chiều dài này cho mạng nơ-ron xử lý, điều này giống như **yêu cầu một người phải nhìn thật gần từng sợi len trên áo len để đánh giá xem họa tiết của chiếc áo đó có đẹp hay không** – đây rõ ràng là một thách thức tính toán cực kỳ khó khăn.
 
 ---
 
-## 1. 特征工程：给 AI 戴上“人类的耳朵”
+## 1. Kỹ thuật đặc trưng: Đeo "tai người" cho AI
 
-既然直接看“一维波形 (Time-Domain)”行不通，科学家们便想到了一个降维打击的办法：**把一维的声音，变成二维的频率图谱 (Frequency-Domain)。**
+Vì việc trực tiếp nhìn vào "dạng sóng một chiều (Time-Domain)" không hiệu quả, các nhà khoa học đã nghĩ ra một phương pháp giảm chiều: **biến âm thanh một chiều thành biểu đồ tần số hai chiều (Frequency-Domain).**
 
-### 1.1 从一条线到一张图：短时傅里叶变换 (STFT)
-想象一下，听一首交响乐时，我们很少去在意某个瞬间空气振动的位移总量，我们更在意的是这段时间里**有哪些乐器（不同频率）、声音有多大（能量）**。
+### 1.1 Từ một đường thẳng đến một biểu đồ: Biến đổi Fourier thời gian ngắn (STFT)
+Hãy tưởng tượng, khi nghe một bản giao hưởng, chúng ta hiếm khi quan tâm đến tổng độ dịch chuyển của không khí rung động tại một khoảnh khắc nào đó, chúng ta quan tâm hơn đến việc trong khoảng thời gian đó **có những nhạc cụ nào (tần số khác nhau) và âm lượng (năng lượng) lớn đến mức nào**.
 
-通过**短时傅里叶变换 (STFT)** 这个数学魔法，我们可以把平铺直叙的声波，拆解成一张包含“时间、频率、能量（颜色深浅）”的二维矩阵图片，这被称为 **频谱图 (Spectrogram)**。至此，处理声音的问题，被巧妙地转化为了 AI 更擅长处理的“看图”问题。
+Thông qua phép thuật toán học **Biến đổi Fourier thời gian ngắn (STFT)**, chúng ta có thể phân tích sóng âm phẳng thành một hình ảnh ma trận hai chiều bao gồm "thời gian, tần số, năng lượng (độ đậm nhạt của màu sắc)", được gọi là **biểu đồ phổ (Spectrogram)**. Đến đây, vấn đề xử lý âm thanh đã được khéo léo chuyển đổi thành vấn đề "xem hình ảnh" mà AI giỏi hơn.
 
-### 1.2 迎合听觉习惯：梅尔刻度 (Mel Scale)
-物理学上的频率分布是线性的（0-100Hz 的跨度和 10000-10100Hz 一样长）。但**人类的耳朵是非常“双标”的**：我们对低沉的声音（低频）变化极其敏感，却对尖锐的高保真声音（高频）的细微差别迟钝不已。
+### 1.2 Phù hợp với thói quen nghe: Thang Mel (Mel Scale)
+Phân bố tần số trong vật lý là tuyến tính (khoảng cách từ 0-100Hz và 10000-10100Hz là như nhau). Nhưng **tai người lại rất "tiêu chuẩn kép"**: chúng ta cực kỳ nhạy cảm với sự thay đổi của âm thanh trầm (tần số thấp), nhưng lại thờ ơ với những khác biệt nhỏ của âm thanh sắc nét, độ trung thực cao (tần số cao).
 
-为了让 AI 能像人类一样，“把有限的注意力放在更重要的地方”，研究者引入了非线性的 **梅尔滤波器组 (Mel Filterbanks)**。它在低频区域划分极细，高频区域则粗略包裹。
-经过对数转换后，我们得到了当代音频 AI 的灵魂基石——**梅尔频谱 (Mel-Spectrogram)**。
+Để AI có thể giống như con người, "đặt sự chú ý có hạn vào những nơi quan trọng hơn", các nhà nghiên cứu đã giới thiệu **bộ lọc Mel phi tuyến tính (Mel Filterbanks)**. Nó phân chia rất chi tiết ở vùng tần số thấp, trong khi bao phủ một cách thô sơ ở vùng tần số cao.
+Sau khi chuyển đổi logarit, chúng ta có được nền tảng cốt lõi của AI âm thanh hiện đại – **phổ Mel (Mel-Spectrogram)**.
 
-👇 **动手点点看**：在下方观察一维的机器波形如何被转化为符合人类感知的二维色彩图谱。
+👇 **Hãy thử nhấp vào**: Quan sát cách dạng sóng máy một chiều bên dưới được chuyển đổi thành biểu đồ màu sắc hai chiều phù hợp với nhận thức của con người.
 <MelSpectrogramDemo />
 
 ---
 
-## 2. 让大模型学会“外语”：两种主流生成范式
+## 2. Dạy Large Model "ngoại ngữ": Hai mô hình tạo sinh chính
 
-当提取完特征后，我们该如何教 AI 生成声音？目前学术界和工业界有两大并行的“魔法阵”。
+Khi đã trích xuất xong các đặc trưng, làm thế nào để chúng ta dạy AI tạo ra âm thanh? Hiện tại, giới học thuật và công nghiệp có hai "phép thuật" song song.
 
-### 2.1 范式一：把声音当文字 (Audio Tokenization)
-伴随 ChatGPT 的火爆，科学家们思考：如果把声音也变成一个接一个的“汉字（Token）”，大语言模型（LLM）是不是就能直接唱歌说话了？
-- **压缩与量化**：依靠强大的 **神经编解码器 (Neural Codec，如 EnCodec)** 和 VQ-VAE 架构，一段几兆大小的音频会被极限压缩，最终变成一本字典里的一个个离散代号（比如序列：`[82, 105, 33...]`）。
-- **生成接龙**：AI 模型只需像做文字接龙一样，预测下一个声音 Token 是什么。这极大地统一了多模态学习的底层架构！
+### 2.1 Mô hình 1: Coi âm thanh là văn bản (Audio Tokenization)
+Cùng với sự bùng nổ của ChatGPT, các nhà khoa học đã suy nghĩ: Nếu âm thanh cũng được biến thành từng "ký tự (Token)" một, liệu Large Language Model (LLM) có thể trực tiếp hát và nói chuyện không?
+-   **Nén và lượng tử hóa**: Dựa vào **Neural Codec mạnh mẽ (ví dụ: EnCodec)** và kiến trúc VQ-VAE, một đoạn âm thanh có kích thước vài megabyte sẽ được nén tối đa, cuối cùng biến thành các mã số rời rạc trong một từ điển (ví dụ: chuỗi: `[82, 105, 33...]`).
+-   **Tạo chuỗi**: Mô hình AI chỉ cần dự đoán Token âm thanh tiếp theo là gì, giống như chơi trò nối chữ. Điều này đã thống nhất đáng kể kiến trúc cơ bản của học đa phương thức!
 
 <AudioTokenizationDemo />
 
-### 2.2 范式二：把声音当画作 (Spectrogram Generation)
-这是目前大量成熟语音软件的基石方案，可控性极佳。
-- **谱图生成**：AI 模型并不输出最终的音频波形，而是直接学习“文本”到“二维梅尔频谱图”的映射，像画家一样画出一张声学特征图。
-- **还原波形 (Vocoder)**：由于频谱图丢失了相位等细节信息无法直接播放，我们需要一个**声码器 (Vocoder，如 HiFi-GAN)** 充当翻译官，将这张图完好无损地等效还原回能推动喇叭振动的一维波形。
+### 2.2 Mô hình 2: Coi âm thanh là tác phẩm hội họa (Spectrogram Generation)
+Đây là giải pháp nền tảng cho nhiều phần mềm giọng nói trưởng thành hiện nay, với khả năng kiểm soát tuyệt vời.
+-   **Tạo biểu đồ phổ**: Mô hình AI không xuất ra dạng sóng âm thanh cuối cùng, mà trực tiếp học ánh xạ từ "văn bản" sang "biểu đồ phổ Mel hai chiều", vẽ ra một biểu đồ đặc trưng âm học như một họa sĩ.
+-   **Khôi phục dạng sóng (Vocoder)**: Vì biểu đồ phổ đã mất thông tin chi tiết như pha nên không thể phát trực tiếp, chúng ta cần một **Vocoder (ví dụ: HiFi-GAN)** đóng vai trò phiên dịch, khôi phục hoàn chỉnh biểu đồ này về dạng sóng một chiều có thể làm rung loa.
 
 ---
 
-## 3. 双端互逆：ASR 与 TTS 的协同翻译
+## 3. Hai đầu đối nghịch: Dịch thuật phối hợp giữa ASR và TTS
 
-让机器拥有“耳朵”和“嘴巴”，其实是在做两场南辕北辙的翻译：
+Việc trang bị cho máy móc "tai" và "miệng" thực chất là thực hiện hai quá trình dịch thuật hoàn toàn trái ngược nhau:
 
-- **自动语音识别 (ASR)**：将声音翻译为文字。这是一道**多对一的收敛选择题**。模型（如 Whisper）必须在充满嘈杂环境噪音、口音变化、同音字干扰（“期中”与“期终”）的海量音频中，提炼锁定出唯一正确的语义文字。
-- **文本转语音 (TTS)**：将文字翻译为声音。这是一道**一对多的发散创作题**。同样一句干瘪的“你好”，它可以带着一万种不同的语速、情绪、停顿和嗓音。模型必须有能力脑补出这些缺失的参数。
+-   **Nhận dạng giọng nói tự động (ASR)**: Dịch âm thanh thành văn bản. Đây là một **câu hỏi trắc nghiệm hội tụ nhiều-một**. Mô hình (ví dụ: Whisper) phải tinh lọc và khóa vào văn bản ngữ nghĩa duy nhất chính xác trong vô số âm thanh đầy tiếng ồn môi trường, thay đổi giọng điệu, nhiễu đồng âm ("期中" và "期终").
+-   **Chuyển văn bản thành giọng nói (TTS)**: Dịch văn bản thành âm thanh. Đây là một **câu hỏi sáng tạo phân kỳ một-nhiều**. Cùng một câu "你好" khô khan, nó có thể mang theo vạn kiểu tốc độ nói, cảm xúc, ngắt nghỉ và giọng điệu khác nhau. Mô hình phải có khả năng hình dung ra các tham số bị thiếu này.
 
 <ASRvsTTSDemo />
 
 ---
 
-## 4. 从“挤牙膏”到“直通车”：TTS 核心架构换代
+## 4. Từ "nhỏ giọt" đến "đường cao tốc": Thay đổi kiến trúc cốt lõi của TTS
 
-在了解了基础流程后，我们看看 TTS 引擎是如何追求极致速度和连贯性的。
+Sau khi hiểu quy trình cơ bản, chúng ta hãy xem cách các công cụ TTS theo đuổi tốc độ và sự liền mạch tối đa.
 
-- **串行笨方法 (自回归 AR)**：老一代模型必须遵循时间先后，生成完上一毫秒，才能以此为基准预测下一毫秒。这种方法虽然稳妥，但**极易卡壳且速度缓慢**。
-- **神级预判 (非自回归 NAR)**：后续的模型引入了**时长预测器 (Duration Predictor)**，不再排队生成，而是一次性为每个声素“算命”出它该有的时长，接着兵分多路**瞬间并行输出整句音频**。
-- **常微分快车道 (流匹配 Flow Matching)**：这是当下的**终极前沿方案**（如 F5-TTS）。它运用连续正规化流和常微分方程 (ODE) 等复杂数学原理，摒弃了传统的生硬搭建。模型学习的是一条从“纯白噪声”到“完美频谱”的最优直达运动轨迹（概率流）。不仅计算效率呈指数级上升，其声音的平滑与自然度也达到了巅峰。
+-   **Phương pháp tuần tự chậm chạp (Tự hồi quy AR)**: Các mô hình thế hệ cũ phải tuân theo thứ tự thời gian, tạo ra mili giây trước đó, sau đó mới lấy đó làm cơ sở để dự đoán mili giây tiếp theo. Phương pháp này tuy an toàn nhưng **rất dễ bị kẹt và tốc độ chậm**.
+-   **Dự đoán thần tốc (Không tự hồi quy NAR)**: Các mô hình sau này đã giới thiệu **bộ dự đoán thời lượng (Duration Predictor)**, không còn xếp hàng để tạo ra nữa, mà thay vào đó "tiên đoán" thời lượng cần thiết cho mỗi âm vị trong một lần, sau đó chia thành nhiều luồng **xuất ra toàn bộ câu âm thanh song song ngay lập tức**.
+-   **Đường cao tốc phương trình vi phân thường (Flow Matching)**: Đây là **giải pháp tiên tiến tối thượng** hiện nay (ví dụ: F5-TTS). Nó sử dụng các nguyên lý toán học phức tạp như dòng chuẩn hóa liên tục và phương trình vi phân thường (ODE), loại bỏ cách xây dựng cứng nhắc truyền thống. Mô hình học một quỹ đạo chuyển động tối ưu trực tiếp từ "nhiễu trắng tinh khiết" đến "phổ hoàn hảo" (dòng xác suất). Không chỉ hiệu suất tính toán tăng theo cấp số nhân, mà độ mượt mà và tự nhiên của âm thanh cũng đạt đến đỉnh cao.
 
 <TTSPipelineDemo />
 
 ---
 
-## 5. 零样本声音克隆 (Zero-Shot Voice Cloning)
+## 5. Nhân bản giọng nói Zero-Shot (Zero-Shot Voice Cloning)
 
-仅仅在几年前，要想用 AI 模仿某人的声音，还得让他在极其安静的录音棚录上几万句话并花费数天训练模型。而今天，仅需 **3 秒钟的语音条**，AI 就能以假乱真。
+Chỉ vài năm trước, để AI bắt chước giọng nói của ai đó, người đó phải ghi âm hàng chục nghìn câu nói trong phòng thu cực kỳ yên tĩnh và mất vài ngày để huấn luyện mô hình. Còn ngày nay, chỉ cần **một đoạn âm thanh 3 giây**, AI đã có thể làm giả như thật.
 
-这背后依赖一项核心技术：**说话人特征编码器 (Speaker Encoder)** 和度量学习。
-- 这不仅是一个监听器，更是一个**“基因提取仪”**。它的任务是剥离掉音频里的背景噪音和具体说了什么话（Text），强行且唯一地抓取出关于你的生理恒定特征：声带有多宽？共鸣音腔有多大？咬字有什么习惯？
-- 这些特征最终会被压扁成一个几百维的**说话人嵌入向量 (Speaker Embeddings, 如 x-vector)**。这串如同条形码般的数字完全表征了你的声音身份。随后的 TTS 模型只要“带上这串向量”进行条件生成，吐出的任何语言都会带上你的嗓音特色。
+Đằng sau điều này là một công nghệ cốt lõi: **bộ mã hóa đặc trưng người nói (Speaker Encoder)** và học metric.
+-   Đây không chỉ là một thiết bị nghe, mà còn là một **"máy chiết xuất gen"**. Nhiệm vụ của nó là loại bỏ tiếng ồn nền và nội dung cụ thể đã nói (Text) trong âm thanh, đồng thời trích xuất một cách mạnh mẽ và duy nhất các đặc điểm sinh lý ổn định của bạn: dây thanh âm rộng bao nhiêu? Khoang cộng hưởng lớn đến mức nào? Có thói quen phát âm nào không?
+-   Những đặc trưng này cuối cùng sẽ được nén thành một **vector nhúng người nói (Speaker Embeddings, ví dụ: x-vector)** có vài trăm chiều. Chuỗi số giống như mã vạch này hoàn toàn biểu thị danh tính giọng nói của bạn. Mô hình TTS sau đó chỉ cần "mang theo chuỗi vector này" để tạo ra âm thanh có điều kiện, bất kỳ ngôn ngữ nào được phát ra cũng sẽ mang đặc trưng giọng nói của bạn.
 
 <VoiceCloningDemo />
 
 ---
 
-## 6. 赋予灵魂：情感节奏与细粒度风格控制
+## 6. Ban tặng linh hồn: Nhịp điệu cảm xúc và kiểm soát phong cách chi tiết
 
-一句“真的吗”，既可以是惊喜，也可以是愤怒质疑。商业级的高阶 AI 不仅要“读对字”，更要“带有感情”。
+Một câu "Thật không?" có thể là sự ngạc nhiên, cũng có thể là sự tức giận nghi ngờ. AI cấp cao thương mại không chỉ cần "đọc đúng chữ", mà còn phải "có cảm xúc".
 
-学术界提出了 **全局风格 Token (GST)** 以及特征瓶颈机制。大模型可以从海量的人类演绎录音中聚类提取出对应的“伤心”、“激动”、“慵懒”等抽象的软向量。
-在工程落地时，我们还引入了基频 (F0，掌控音调升降)、能量 (Energy，掌控音量爆破音) 等直观的适配器调节参数，赋予了创作者像捏游戏人物脸型一样，精细捏合“语音情绪”的能力。
+Giới học thuật đã đề xuất **Global Style Token (GST)** và cơ chế bottleneck đặc trưng. Large Model có thể phân cụm và trích xuất các vector mềm trừu tượng tương ứng như "buồn bã", "phấn khích", "lười biếng" từ vô số bản ghi âm diễn cảm của con người.
+Khi triển khai thực tế, chúng tôi còn giới thiệu các tham số điều chỉnh adapter trực quan như tần số cơ bản (F0, kiểm soát độ cao thấp của âm điệu), năng lượng (Energy, kiểm soát âm lượng, âm bật) để trao cho người sáng tạo khả năng tinh chỉnh "cảm xúc giọng nói" giống như nặn khuôn mặt nhân vật trong game.
 
 <EmotionControlDemo />
 
 ---
 
-## 7. 结语
+## 7. Lời kết
 
-从基础的数字信号转换（PCM），到降维提纯（Mel-Spectrogram），直至时下大火的基于“流匹配算法（Flow Matching）”和“神经编解码（Neural Codec）”的多模态大基座，音频 AI 正在上演一场从机械仿真向原生理解的跃升。
+Từ chuyển đổi tín hiệu số cơ bản (PCM), đến giảm chiều và tinh lọc (Mel-Spectrogram), cho đến nền tảng đa phương thức lớn đang rất hot hiện nay dựa trên "thuật toán Flow Matching" và "Neural Codec", AI âm thanh đang trải qua một bước nhảy vọt từ mô phỏng cơ học sang hiểu biết bản địa.
 
-未来的人工智能代理（AI Agent），将彻底打通人类视、听、说的高维链路，像拥有真人直觉一般应对每一次交流！
+Trong tương lai, AI Agent sẽ hoàn toàn kết nối các kênh chiều cao của con người về thị giác, thính giác và lời nói, phản ứng với mọi cuộc giao tiếp như thể có trực giác của con người thật!
 
 ---
 
-## 8. 核心术语速查表 (Glossary)
+## 8. Bảng tra cứu thuật ngữ cốt lõi (Glossary)
 
-| 术语 | 英文全称 | 释义 |
+| Thuật ngữ | Tên tiếng Anh đầy đủ | Giải thích |
 | :--- | :--- | :--- |
-| **PCM** | Pulse-Code Modulation | 脉冲编码调制，最原始、最庞大的一维音频波形记录方式。 |
-| **STFT** | Short-Time Fourier Transform | 短时傅里叶变换，将声音从随时间变化的单一振幅，变为兼具频率与能量的数学分析方法。 |
-| **梅尔频谱** | Mel-Spectrogram | 大模型处理声音的基础特征：一种经过对数与人类非线性听觉偏好调整后的高价值二维音频图谱。 |
-| **神经编解码器** | Neural Codec | 依靠极其硬核的变分自编码残差技术，将超大尺寸连续声波高度压缩转化成离散标号（Token）的 AI 组件。 |
-| **Vocoder** | 声码器 | “逆向翻译官”：负责将二维的梅尔频谱图重新物理渲染回能驱动音响发声的一维音频波形。 |
-| **Speaking Embeddings** | 说话人特征向量 | 将特定人员的专属嗓音音色固定下来的极高维度且不可变的数学 ID（如 x-vector）。 |
-| **Flow Matching** | 流匹配 | 将正态分布转化为经验数据分布的一种无需昂贵微分随机计算，而是沿常微分方程建立一条常态直线平滑生成路径的前沿 AI 推断过程。 |
+| **PCM** | Pulse-Code Modulation | Điều chế mã xung, phương pháp ghi lại dạng sóng âm thanh một chiều nguyên thủy và lớn nhất. |
+| **STFT** | Short-Time Fourier Transform | Biến đổi Fourier thời gian ngắn, một phương pháp phân tích toán học biến âm thanh từ biên độ đơn lẻ thay đổi theo thời gian thành dạng có cả tần số và năng lượng. |
+| **Mel-Spectrogram** | Mel-Spectrogram | Đặc trưng cơ bản để Large Model xử lý âm thanh: một biểu đồ âm thanh hai chiều có giá trị cao, đã được điều chỉnh bằng logarit và ưu tiên thính giác phi tuyến tính của con người. |
+| **Neural Codec** | Neural Codec | Một thành phần AI dựa trên công nghệ mã hóa tự động biến phân dư cực kỳ mạnh mẽ, nén cao sóng âm liên tục có kích thước siêu lớn thành các mã số rời rạc (Token). |
+| **Vocoder** | Vocoder | "Phiên dịch ngược": chịu trách nhiệm tái tạo vật lý biểu đồ phổ Mel hai chiều trở lại thành dạng sóng âm thanh một chiều có thể điều khiển loa phát ra âm thanh. |
+| **Speaking Embeddings** | Speaking Embeddings | Vector đặc trưng người nói, một ID toán học có chiều rất cao và không thay đổi, dùng để cố định âm sắc giọng nói đặc trưng của một người cụ thể (ví dụ: x-vector). |
+| **Flow Matching** | Flow Matching | Một quy trình suy luận AI tiên tiến, biến đổi phân phối chuẩn thành phân phối dữ liệu thực nghiệm mà không cần tính toán vi phân ngẫu nhiên tốn kém, thay vào đó xây dựng một đường tạo sinh thẳng mượt mà theo phương trình vi phân thường. |

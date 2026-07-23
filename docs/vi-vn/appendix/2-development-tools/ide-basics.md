@@ -1,72 +1,72 @@
-# 集成开发环境 (IDE) 基础
+# Kiến thức cơ bản về Môi trường Phát triển Tích hợp (IDE)
 
-::: tip 💡 学习指南
-本章节将带你深入了解程序员的核心生产力工具——**集成开发环境 (IDE)**。我们将从 IDE 的设计理念出发，逐一解析其核心组件，并通过虚拟 IDE 演示其工作原理。
+::: tip 💡 Hướng dẫn học tập
+Chương này sẽ đưa bạn đi sâu vào công cụ năng suất cốt lõi của lập trình viên – **Môi trường Phát triển Tích hợp (IDE)**. Chúng ta sẽ bắt đầu từ triết lý thiết kế của IDE, lần lượt phân tích các thành phần cốt lõi của nó, và trình bày nguyên lý hoạt động thông qua một IDE ảo.
 :::
 
-## 遇到不懂的怎么办？(How to solve problems)
+## Làm gì khi gặp vấn đề không hiểu? (How to solve problems)
 
-在学习和使用 IDE 的过程中，你可能会遇到各种看不懂的按钮、菜单或者代码报错。这时候，**不要慌张，利用 AI 助手是最高效的解决办法**。
+Trong quá trình học và sử dụng IDE, bạn có thể gặp phải nhiều nút, menu hoặc lỗi code không hiểu. Lúc này, **đừng hoảng sợ, sử dụng trợ lý AI là cách giải quyết hiệu quả nhất**.
 
-**推荐做法：截图问 AI**
+**Cách làm được khuyến nghị: Chụp ảnh màn hình và hỏi AI**
 
-现在的 AI（如 ChatGPT、Claude、DeepSeek 等）都具备强大的识图能力。当你遇到不认识的界面元素或复杂的代码片段时：
+Các AI hiện nay (như ChatGPT, Claude, DeepSeek, v.v.) đều có khả năng nhận diện hình ảnh mạnh mẽ. Khi bạn gặp một yếu tố giao diện không quen thuộc hoặc một đoạn code phức tạp:
 
-1.  **截图**：截取你不懂的那一部分（比如某个奇怪的图标，或者一段复杂的配置代码）。
-2.  **提问**：把图片发给 AI，并问它：“这个是什么？有什么用？”或者“这段代码里的 xxx 是干嘛的？”。
-3.  **追问**：如果 AI 的回答太专业看不懂，继续问：“请用大白话解释一下，最好举个生活中的例子。”
+1.  **Chụp ảnh màn hình**: Chụp phần bạn không hiểu (ví dụ: một biểu tượng lạ, hoặc một đoạn code cấu hình phức tạp).
+2.  **Đặt câu hỏi**: Gửi hình ảnh cho AI và hỏi: "Đây là gì? Nó có tác dụng gì?" hoặc "xxx trong đoạn code này dùng để làm gì?".
+3.  **Hỏi thêm**: Nếu câu trả lời của AI quá chuyên nghiệp và khó hiểu, hãy tiếp tục hỏi: "Xin hãy giải thích bằng ngôn ngữ đời thường, tốt nhất là cho một ví dụ trong cuộc sống."
 
 <AiHelpDemo />
 
 ---
 
-## 0. 引言：为什么需要 IDE？
+## 0. Giới thiệu: Tại sao cần IDE?
 
-在软件开发过程中，程序员需要频繁地进行编写代码、管理文件、编译运行、调试错误等操作。如果这些操作都需要在不同的独立软件中完成（例如用记事本写代码，用命令行编译，用文件夹管理文件），效率将极低且容易出错。
+Trong quá trình phát triển phần mềm, lập trình viên cần thường xuyên thực hiện các thao tác như viết code, quản lý file, biên dịch và chạy chương trình, gỡ lỗi. Nếu những thao tác này đều phải được hoàn thành trong các phần mềm độc lập khác nhau (ví dụ: dùng Notepad để viết code, dùng dòng lệnh để biên dịch, dùng thư mục để quản lý file), hiệu suất sẽ cực kỳ thấp và dễ xảy ra lỗi.
 
-**IDE (Integrated Development Environment)** 的核心价值在于**集成**。它将软件开发所需的各种工具（编辑器、编译器、调试器、文件管理器等）整合到一个统一的图形界面中，提供一站式的工作体验。
+Giá trị cốt lõi của **IDE (Integrated Development Environment)** nằm ở sự **tích hợp**. Nó hợp nhất các công cụ cần thiết cho phát triển phần mềm (trình soạn thảo, trình biên dịch, trình gỡ lỗi, trình quản lý file, v.v.) vào một giao diện đồ họa thống nhất, cung cấp trải nghiệm làm việc một cửa.
 
-**VS Code 就是一种最流行的 IDE。** 虽然它本质上是一个轻量级的代码编辑器，但通过强大的插件系统，它具备了 IDE 的所有核心功能（代码编辑、调试、版本控制等），因此被广泛视为现代前端和全栈开发的首选 IDE。
+**VS Code là một trong những IDE phổ biến nhất.** Mặc dù về bản chất nó là một trình soạn thảo code nhẹ, nhưng thông qua hệ thống plugin mạnh mẽ, nó sở hữu tất cả các chức năng cốt lõi của một IDE (chỉnh sửa code, gỡ lỗi, kiểm soát phiên bản, v.v.), do đó được coi là IDE được lựa chọn hàng đầu cho phát triển Frontend và Full Stack hiện đại.
 
-简而言之，IDE 旨在最大化开发者的生产力，减少在不同工具间切换的时间成本。
+Nói tóm lại, IDE được thiết kế để tối đa hóa năng suất của nhà phát triển, giảm thời gian chuyển đổi giữa các công cụ khác nhau.
 
-> 🔗 **资源下载**：
+> 🔗 **Tài nguyên tải xuống**:
 >
-> - [VS Code 官网下载](https://code.visualstudio.com/Download)
-> - [VS Code 网页版体验](https://vscode.dev/)
+> - [Tải xuống VS Code chính thức](https://code.visualstudio.com/Download)
+> - [Trải nghiệm VS Code phiên bản web](https://vscode.dev/)
 >
-> **VS Code (Visual Studio Code)** 是由微软开发的一款免费、开源、跨平台的代码编辑器。它凭借**轻量级、插件丰富、启动速度快**等特点，成为了全球最受欢迎的开发工具之一。无论你是写 Python、JavaScript 还是 C++，VS Code 都能通过安装插件变成最适合你的“神器”。
+> **VS Code (Visual Studio Code)** là một trình soạn thảo code miễn phí, mã nguồn mở, đa nền tảng được phát triển bởi Microsoft. Với các đặc điểm như **nhẹ, nhiều plugin, khởi động nhanh**, nó đã trở thành một trong những công cụ phát triển phổ biến nhất trên thế giới. Dù bạn viết Python, JavaScript hay C++, VS Code đều có thể trở thành "công cụ thần kỳ" phù hợp nhất với bạn thông qua việc cài đặt plugin.
 
 ---
 
-## 1. 核心界面解析
+## 1. Phân tích giao diện cốt lõi
 
-现代 IDE（以 VS Code 为例）的界面布局经过精心设计，通常包含以下四个核心区域：
+Bố cục giao diện của các IDE hiện đại (ví dụ VS Code) được thiết kế tỉ mỉ, thường bao gồm bốn khu vực cốt lõi sau:
 
-1. **侧边栏 (Sidebar)：资源管理**
-   展示项目的文件树，支持新建、重命名、移动和删除文件，提供对项目结构的全局视图和快速访问能力。
+1.  **Sidebar (Thanh bên): Quản lý tài nguyên**
+    Hiển thị cây thư mục của dự án, hỗ trợ tạo mới, đổi tên, di chuyển và xóa file, cung cấp cái nhìn tổng quan về cấu trúc dự án và khả năng truy cập nhanh.
 
-2. **编辑区 (Editor Area)：代码创作**
-   编写与修改代码的核心区域。支持语法高亮、智能代码补全、语法检查等功能，提供高效、智能的代码编写环境。
+2.  **Editor Area (Khu vực soạn thảo): Sáng tạo code**
+    Khu vực cốt lõi để viết và sửa đổi code. Hỗ trợ tô sáng cú pháp, tự động hoàn thành code thông minh, kiểm tra cú pháp, v.v., cung cấp môi trường viết code hiệu quả và thông minh.
 
-3. **底部面板 (Panel)：执行与反馈**
-   与底层系统交互及查看运行结果。包括终端 (Terminal)、输出 (Output) 等，用于执行指令、查看日志及调试。
+3.  **Panel (Bảng điều khiển dưới): Thực thi và phản hồi**
+    Tương tác với hệ thống cấp thấp và xem kết quả chạy. Bao gồm Terminal, Output, v.v., dùng để thực thi lệnh, xem log và gỡ lỗi.
 
-4. **活动栏 (Activity Bar)：功能导航**
-   位于界面最左侧，包含文件资源管理器、搜索、Git 管理等图标，用于在不同的工作上下文（如“写代码”与“提交代码”）之间快速切换。
+4.  **Activity Bar (Thanh hoạt động): Điều hướng chức năng**
+    Nằm ở phía ngoài cùng bên trái của giao diện, chứa các biểu tượng như trình khám phá file, tìm kiếm, quản lý Git, v.v., dùng để chuyển đổi nhanh chóng giữa các ngữ cảnh làm việc khác nhau (ví dụ: "viết code" và "commit code").
 
 ---
 
-## 2. 交互演示：功能体验
+## 2. Trình diễn tương tác: Trải nghiệm chức năng
 
-百闻不如一见。为了让你真正感受到 IDE 的便捷，我们为你准备了一个**虚拟的 VS Code 环境**。
+Trăm nghe không bằng một thấy. Để bạn thực sự cảm nhận được sự tiện lợi của IDE, chúng tôi đã chuẩn bị một **môi trường VS Code ảo** cho bạn.
 
-**请尝试以下操作**：
+**Hãy thử các thao tác sau**:
 
-1.  点击右上角的 **“▶ 开始自动导览”**，跟随光标了解各个区域。
-2.  **自由探索**：点击左侧图标切换视图，或者点击文件名打开代码。
-3.  **体验集成**：你会发现，文件管理、代码编辑、终端运行，都在同一个窗口内无缝衔接。
-4.  **安装插件**：在下拉菜单中选择 **“插件安装 (Extensions)”** 模式，体验如何在虚拟商店中安装 Python 插件。
+1.  Nhấp vào **"▶ Bắt đầu tự động hướng dẫn"** ở góc trên bên phải, làm theo con trỏ để tìm hiểu từng khu vực.
+2.  **Tự do khám phá**: Nhấp vào các biểu tượng bên trái để chuyển đổi chế độ xem, hoặc nhấp vào tên file để mở code.
+3.  **Trải nghiệm tích hợp**: Bạn sẽ thấy rằng việc quản lý file, chỉnh sửa code, chạy Terminal đều được kết nối liền mạch trong cùng một cửa sổ.
+4.  **Cài đặt plugin**: Chọn chế độ **"Cài đặt Plugin (Extensions)"** trong menu thả xuống để trải nghiệm cách cài đặt plugin Python trong cửa hàng ảo.
 
 <ClientOnly>
   <VirtualVSCodeDemo />
@@ -74,76 +74,76 @@
 
 ---
 
-## 3. 核心机制：为什么 VS Code 无所不能？
+## 3. Cơ chế cốt lõi: Tại sao VS Code lại "vô sở bất năng"?
 
-你可能会好奇：为什么同一个软件，既能写 Python，又能写 C++，还能做网页开发？它是怎么做到的？
-其实，VS Code 的设计哲学可以总结为一句话：**“核心极简，能力外挂”。**
+Bạn có thể tò mò: Tại sao cùng một phần mềm lại có thể viết Python, C++ và cả phát triển web? Nó làm điều đó như thế nào?
+Thực ra, triết lý thiết kế của VS Code có thể tóm gọn trong một câu: **"Cốt lõi tối giản, khả năng mở rộng bên ngoài."**
 
-### 3.1 极简核心：只是一个“画板”
+### 3.1 Cốt lõi tối giản: Chỉ là một "bảng vẽ"
 
-想象一下，你刚下载好的 VS Code，如果不安装任何插件，它其实**并不懂编程**。
-此时的它，本质上只是一个**功能强大的文本编辑器**。
+Hãy tưởng tượng, VS Code mà bạn vừa tải xuống, nếu không cài đặt bất kỳ plugin nào, nó thực sự **không hiểu lập trình**.
+Lúc này, về bản chất, nó chỉ là một **trình soạn thảo văn bản mạnh mẽ**.
 
-- 它负责显示文字（渲染）。
-- 它负责管理文件（IO）。
-- 但它不知道 `print("Hello")` 是 Python 代码，也不知道 `int main()` 是 C++ 入口。
+- Nó chịu trách nhiệm hiển thị văn bản (rendering).
+- Nó chịu trách nhiệm quản lý file (IO).
+- Nhưng nó không biết `print("Hello")` là code Python, cũng không biết `int main()` là điểm vào của C++.
 
-### 3.2 插件系统：注入“灵魂”
+### 3.2 Hệ thống Plugin: Thổi "linh hồn" vào
 
-为了让 VS Code 能够“理解”代码，我们需要安装**插件 (Extensions)**。
-插件就像是专门的**翻译官**：
+Để VS Code có thể "hiểu" code, chúng ta cần cài đặt **Plugin (Extensions)**.
+Plugin giống như những **phiên dịch viên** chuyên nghiệp:
 
-- **Python 插件**：告诉 VS Code 什么是变量，什么是函数，怎么运行 `.py` 文件。
-- **C++ 插件**：告诉 VS Code 如何调用编译器，如何调试内存。
+-   **Plugin Python**: Cho VS Code biết đâu là biến, đâu là hàm, cách chạy file `.py`.
+-   **Plugin C++**: Cho VS Code biết cách gọi trình biên dịch, cách gỡ lỗi bộ nhớ.
 
-这种设计使得 VS Code 非常轻量——你不写 Java，就不用背负 Java 的运行环境。
+Thiết kế này làm cho VS Code rất nhẹ – bạn không viết Java, thì không cần phải gánh môi trường chạy của Java.
 
-### 3.3 幕后流程：从代码到运行
+### 3.3 Quy trình hậu trường: Từ code đến chạy
 
 <ClientOnly>
   <IdeArchitectureDemo />
 </ClientOnly>
 
-让我们通过一个具体的场景，来看看 VS Code、插件和底层环境是如何协作的。
-假设你写了一行 Python 代码并点击了**运行**或**调试**：
+Hãy cùng xem xét một kịch bản cụ thể để hiểu cách VS Code, plugin và môi trường cấp thấp phối hợp với nhau.
+Giả sử bạn viết một dòng code Python và nhấp vào **chạy** hoặc **gỡ lỗi**:
 
-#### 1. 语言识别 (Activation)
+#### 1. Nhận diện ngôn ngữ (Activation)
 
-VS Code 检测到 `.py` 后缀，自动唤醒 **Python 插件**。插件立刻接管了编辑器，开始进行语法分析，将代码染上不同的颜色（语法高亮），并提供智能提示。
+VS Code phát hiện hậu tố `.py`, tự động kích hoạt **Plugin Python**. Plugin ngay lập tức tiếp quản trình soạn thảo, bắt đầu phân tích cú pháp, tô màu code khác nhau (tô sáng cú pháp) và cung cấp gợi ý thông minh.
 
-#### 2. 任务委托 (Delegation)
+#### 2. Ủy quyền tác vụ (Delegation)
 
-当你下达指令时，插件本身并不直接执行代码，而是将任务**委托**给底层的专业工具：
+Khi bạn đưa ra lệnh, bản thân plugin không trực tiếp thực thi code, mà **ủy quyền** tác vụ cho các công cụ chuyên nghiệp cấp thấp:
 
-- **运行模式**：插件生成一条指令（如 `python main.py`），发送给系统的**终端**去执行。
-- **调试模式**：插件启动一个**调试适配器 (Debug Adapter)**。它就像一个“监控探头”，连接到 Python 解释器内部，让你能一行行地控制代码执行。
+-   **Chế độ chạy**: Plugin tạo một lệnh (ví dụ: `python main.py`), gửi đến **Terminal** của hệ thống để thực thi.
+-   **Chế độ gỡ lỗi**: Plugin khởi động một **Debug Adapter**. Nó giống như một "đầu dò giám sát", kết nối với bên trong trình thông dịch Python, cho phép bạn kiểm soát việc thực thi code từng dòng một.
 
-#### 3. 结果反馈 (Feedback)
+#### 3. Phản hồi kết quả (Feedback)
 
-Python 解释器（或编译器）执行完代码，将结果（或错误信息）返回给插件。插件再把这些信息“搬运”回来，显示在 VS Code 的**底部终端面板**中。
+Trình thông dịch Python (hoặc trình biên dịch) thực thi xong code, trả về kết quả (hoặc thông báo lỗi) cho plugin. Plugin sau đó "chuyển" thông tin này trở lại, hiển thị trong **bảng điều khiển Terminal dưới cùng** của VS Code.
 
-### 3.4 总结：用“餐厅”来打个比方
+### 3.4 Tóm tắt: Lấy "nhà hàng" làm ví dụ
 
-如果觉得上面的公式有点抽象，我们可以把写代码的过程想象成**去餐厅吃饭**：
+Nếu thấy công thức trên hơi trừu tượng, chúng ta có thể hình dung quá trình viết code giống như **đi ăn ở nhà hàng**:
 
-1.  **VS Code 是“餐厅大堂”**：
-    - 这里装修豪华，环境舒适（代码高亮、好看的主题）。
-    - **但大堂本身不生产食物**。你坐在这里，只是为了更舒服地“点菜”（写代码）。
+1.  **VS Code là "sảnh nhà hàng"**:
+    -   Nơi đây trang trí sang trọng, môi trường thoải mái (tô sáng code, chủ đề đẹp mắt).
+    -   **Nhưng sảnh không tự sản xuất thức ăn**. Bạn ngồi đây chỉ để "gọi món" thoải mái hơn (viết code).
 
-2.  **环境 (Python/Node) 是“后厨”**：
-    - 这是真正**做饭（运行代码）**的地方。
-    - 如果餐厅没有后厨（没安装 Python），你在大堂坐到天黑也吃不上饭。
+2.  **Môi trường (Python/Node) là "nhà bếp"**:
+    -   Đây là nơi thực sự **nấu ăn (chạy code)**.
+    -   Nếu nhà hàng không có nhà bếp (chưa cài Python), bạn ngồi ở sảnh đến tối cũng không có gì ăn.
 
-3.  **插件 是“服务员”**：
-    - 他连接了大堂和后厨。
-    - 他看得懂你的菜单，跑去告诉后厨：“3 号桌要一份‘运行 main.py’！”
-    - 做好了，他又把结果（热腾腾的饭菜）端回到你面前。
+3.  **Plugin là "người phục vụ"**:
+    -   Anh ta kết nối sảnh và nhà bếp.
+    -   Anh ta hiểu menu của bạn, chạy vào nói với nhà bếp: "Bàn số 3 muốn một món 'chạy main.py'!"
+    -   Khi món ăn đã sẵn sàng, anh ta lại mang kết quả (món ăn nóng hổi) ra trước mặt bạn.
 
-**结论**：
+**Kết luận**:
 
-- 只装 VS Code = **只有大堂没后厨**（只能看，不能吃）。
-- 只装 Python = **只有后厨没大堂**（能吃，但得蹲在厨房地上吃，体验很差）。
-- **装了 VS Code + 插件 + Python = 完美的就餐体验。**
+-   Chỉ cài VS Code = **Chỉ có sảnh không có nhà bếp** (chỉ có thể nhìn, không thể ăn).
+-   Chỉ cài Python = **Chỉ có nhà bếp không có sảnh** (có thể ăn, nhưng phải ngồi dưới sàn bếp ăn, trải nghiệm rất tệ).
+-   **Cài VS Code + Plugin + Python = Trải nghiệm ăn uống hoàn hảo.**
 
 ---
 
@@ -177,137 +177,137 @@ onMounted(() => {
 })
 </script>
 
-# 附录： Visual Studio Code 菜单栏解析
+# Phụ lục: Phân tích thanh menu của Visual Studio Code
 
-为了方便大家理解每个选项的含义，在这里我们对菜单栏进行深入解析：
+Để tiện cho mọi người hiểu ý nghĩa của từng tùy chọn, dưới đây chúng tôi sẽ phân tích sâu về thanh menu:
 
 ![](editors-and-ai/images/index-2026-01-09-11-35-55.png)
 
 ![](editors-and-ai/images/index-2026-01-09-11-36-23.png)
 
 <details class="custom-block details" id="vscode-file-menu">
-  <summary>File（文件）：项目与文件的打开/保存/工作区管理</summary>
+  <summary>File (Tệp): Mở/lưu/quản lý không gian làm việc của dự án và tệp</summary>
 
-本菜单主要负责：**创建/打开文件**、**打开项目文件夹（Folder）**、**管理工作区（Workspace）**、**保存与关闭**。
+Menu này chủ yếu chịu trách nhiệm: **Tạo/mở tệp**, **mở thư mục dự án (Folder)**, **quản lý không gian làm việc (Workspace)**, **lưu và đóng**.
 
-> 其中最常用的就是：Open Folder（打开文件夹） 来打开一个项目；Open…（打开…） 来单独打开一个文件；然后用 Save / Save All（保存/全部保存） 来保存修改，最后用 Close Editor / Close Folder（关闭编辑器/关闭文件夹） 结束本次工作。工作区（Workspace）、复制工作区之类的内容可以等你项目多起来再慢慢用，不必一上来全搞懂
+> Trong đó, các thao tác thường dùng nhất là: Open Folder (Mở thư mục) để mở một dự án; Open… (Mở…) để mở riêng một tệp; sau đó dùng Save / Save All (Lưu / Lưu tất cả) để lưu các thay đổi, cuối cùng dùng Close Editor / Close Folder (Đóng trình soạn thảo / Đóng thư mục) để kết thúc công việc. Các nội dung như Workspace (Không gian làm việc), Duplicate Workspace (Sao chép không gian làm việc) có thể tìm hiểu dần khi bạn có nhiều dự án, không cần phải hiểu hết ngay từ đầu.
 
-- **New Text File（新建文本文件）**：新建一个未命名文本缓冲区，用于临时记录或快速粘贴内容。
-- **New File…（新建文件…）**：在项目中创建新文件（通常会要求你选择路径/命名）。
-- **New Window（新建窗口）**：开启一个新的 VS Code 窗口实例。
-- **New Window with Profile（使用配置档新建窗口）**：以指定 Profile（扩展/设置组合）打开新窗口，适合不同课程/项目隔离环境。
-- **Open…（打开…）**：打开单个文件进行编辑。
-- **Open Folder…（打开文件夹…）**：打开一个文件夹作为项目根目录（最常用的“打开项目”方式）。
-- **Open Workspace from File…（从文件打开工作区…）**：打开 `.code-workspace` 文件，加载多文件夹/特定设置的工作区。
-- **Open Recent（打开最近）**：快速进入最近打开的文件/文件夹/工作区。
-- **Add Folder to Workspace…（添加文件夹到工作区…）**：把另一个文件夹加入当前工作区（形成 multi-root workspace）。
-- **Save Workspace As…（工作区另存为…）**：将当前工作区结构保存为 `.code-workspace` 文件，便于分享/复用。
-- **Duplicate Workspace（复制工作区）**：复制当前工作区配置（常用于建立相似项目环境）。
-- **Save（保存）**：保存当前文件更改。
-- **Save As…（另存为…）**：以新名称/新路径保存当前文件。
-- **Save All（全部保存）**：保存所有已打开且有修改的文件。
+-   **New Text File (Tạo tệp văn bản mới)**: Tạo một bộ đệm văn bản chưa đặt tên, dùng để ghi chú tạm thời hoặc dán nhanh nội dung.
+-   **New File… (Tạo tệp mới…)**: Tạo tệp mới trong dự án (thường yêu cầu bạn chọn đường dẫn/đặt tên).
+-   **New Window (Cửa sổ mới)**: Mở một phiên bản cửa sổ VS Code mới.
+-   **New Window with Profile (Mở cửa sổ mới với Profile)**: Mở cửa sổ mới với Profile (tổ hợp tiện ích mở rộng/cài đặt) được chỉ định, phù hợp để cô lập môi trường cho các khóa học/dự án khác nhau.
+-   **Open… (Mở…)**: Mở một tệp riêng lẻ để chỉnh sửa.
+-   **Open Folder… (Mở thư mục…)**: Mở một thư mục làm thư mục gốc của dự án (cách "mở dự án" phổ biến nhất).
+-   **Open Workspace from File… (Mở không gian làm việc từ tệp…)**: Mở tệp `.code-workspace`, tải không gian làm việc đa thư mục/cài đặt cụ thể.
+-   **Open Recent (Mở gần đây)**: Nhanh chóng truy cập các tệp/thư mục/không gian làm việc đã mở gần đây.
+-   **Add Folder to Workspace… (Thêm thư mục vào không gian làm việc…)**: Thêm một thư mục khác vào không gian làm việc hiện tại (tạo thành multi-root workspace).
+-   **Save Workspace As… (Lưu không gian làm việc thành…)**: Lưu cấu trúc không gian làm việc hiện tại thành tệp `.code-workspace`, tiện lợi cho việc chia sẻ/tái sử dụng.
+-   **Duplicate Workspace (Sao chép không gian làm việc)**: Sao chép cấu hình không gian làm việc hiện tại (thường dùng để thiết lập môi trường dự án tương tự).
+-   **Save (Lưu)**: Lưu các thay đổi của tệp hiện tại.
+-   **Save As… (Lưu thành…)**: Lưu tệp hiện tại với tên/đường dẫn mới.
+-   **Save All (Lưu tất cả)**: Lưu tất cả các tệp đã mở và có thay đổi.
 
-- **Share（分享）**：与共享/协作相关的入口（具体内容取决于版本与扩展）。
-- **Auto Save（自动保存）**：切换自动保存策略（例如延迟保存/失焦保存）。
-- **Revert File（还原文件）**：丢弃当前文件未保存改动，回到磁盘版本。
-- **Close Editor（关闭编辑器）**：关闭当前标签页。
-- **Close Folder（关闭文件夹）**：关闭当前项目文件夹（工作区变为空）。
-- **Close Window（关闭窗口）**：关闭当前 VS Code 窗口。
+-   **Share (Chia sẻ)**: Điểm truy cập liên quan đến chia sẻ/hợp tác (nội dung cụ thể tùy thuộc vào phiên bản và tiện ích mở rộng).
+-   **Auto Save (Tự động lưu)**: Chuyển đổi chiến lược tự động lưu (ví dụ: lưu sau một khoảng thời gian/lưu khi mất tiêu điểm).
+-   **Revert File (Hoàn tác tệp)**: Hủy bỏ các thay đổi chưa lưu của tệp hiện tại, trở về phiên bản trên đĩa.
+-   **Close Editor (Đóng trình soạn thảo)**: Đóng tab hiện tại.
+-   **Close Folder (Đóng thư mục)**: Đóng thư mục dự án hiện tại (không gian làm việc trở nên trống rỗng).
+-   **Close Window (Đóng cửa sổ)**: Đóng cửa sổ VS Code hiện tại.
 
 </details>
 
 <details class="custom-block details" id="vscode-edit-menu">
-  <summary>Edit（编辑）：基础编辑、查找替换、注释与快速编辑动作</summary>
+  <summary>Edit (Chỉnh sửa): Chỉnh sửa cơ bản, tìm kiếm thay thế, chú thích và các thao tác chỉnh sửa nhanh</summary>
 
-本菜单主要负责：**撤销/重做**、**剪切复制粘贴**、**查找替换**、**注释与编辑器动作**（提升编辑效率）。
+Menu này chủ yếu chịu trách nhiệm: **Hoàn tác/làm lại**, **cắt/sao chép/dán**, **tìm kiếm thay thế**, **chú thích và các thao tác của trình soạn thảo** (nâng cao hiệu quả chỉnh sửa).
 
-- **Undo / Redo（撤销 / 重做）**：代码写错了后悔药，最基础的操作。
-- **Cut / Copy / Paste（剪切 / 复制 / 粘贴）**：文本搬运工。
-- **Find / Replace（查找 / 替换）**：在当前文件中搜索或批量修改。
-- **Find in Files / Replace in Files（在文件中查找 / 在文件中替换）**：全局（全项目）搜索与替换，非常强大但需谨慎使用。
-- **Toggle Line Comment（切换行注释）**：`Ctrl + /`，快速注释/取消注释当前行。
-- **Toggle Block Comment（切换块注释）**：`Shift + Alt + A`，快速注释/取消注释选区。
-- **Emmet: Expand Abbreviation（Emmet 展开）**：HTML/CSS 开发神器，输入简写按 Tab 展开代码。
+-   **Undo / Redo (Hoàn tác / Làm lại)**: Thuốc hối hận khi viết code sai, thao tác cơ bản nhất.
+-   **Cut / Copy / Paste (Cắt / Sao chép / Dán)**: Công cụ vận chuyển văn bản.
+-   **Find / Replace (Tìm kiếm / Thay thế)**: Tìm kiếm hoặc thay đổi hàng loạt trong tệp hiện tại.
+-   **Find in Files / Replace in Files (Tìm kiếm trong tệp / Thay thế trong tệp)**: Tìm kiếm và thay thế toàn cục (toàn bộ dự án), rất mạnh mẽ nhưng cần thận trọng khi sử dụng.
+-   **Toggle Line Comment (Chuyển đổi chú thích dòng)**: `Ctrl + /`, nhanh chóng chú thích/bỏ chú thích dòng hiện tại.
+-   **Toggle Block Comment (Chuyển đổi chú thích khối)**: `Shift + Alt + A`, nhanh chóng chú thích/bỏ chú thích vùng chọn.
+-   **Emmet: Expand Abbreviation (Mở rộng Emmet)**: Công cụ thần kỳ cho phát triển HTML/CSS, nhập viết tắt và nhấn Tab để mở rộng code.
 
 </details>
 
 <details class="custom-block details" id="vscode-selection-menu">
-  <summary>Selection（选择）：多光标与智能选区</summary>
+  <summary>Selection (Lựa chọn): Đa con trỏ và vùng chọn thông minh</summary>
 
-本菜单主要负责：**光标控制**、**多行编辑**、**扩大/缩小选区**。这是 VS Code 提升效率的杀手锏。
+Menu này chủ yếu chịu trách nhiệm: **Điều khiển con trỏ**, **chỉnh sửa đa dòng**, **mở rộng/thu hẹp vùng chọn**. Đây là một trong những tính năng sát thủ của VS Code giúp nâng cao hiệu quả.
 
-- **Select All（全选）**：选中当前文件所有内容。
-- **Expand Selection / Shrink Selection（扩大 / 缩小选区）**：智能感知语法结构，逐级扩大或缩小选中范围（例如：单词 -> 字符串 -> 括号内 -> 整行 -> 函数体）。
-- **Copy Line Up / Down（向上 / 向下复制行）**：快速克隆当前行。
-- **Move Line Up / Down（向上 / 向下移动行）**：`Alt + ↑ / ↓`，无需剪切粘贴，直接调整代码行顺序。
-- **Add Cursor Above / Below（在上方 / 下方添加光标）**：`Ctrl + Alt + ↑ / ↓`，开启多光标模式，同时编辑多行。
-- **Add Cursor to Line Ends（在行尾添加光标）**：选中多行文本后，在每一行末尾添加光标。
+-   **Select All (Chọn tất cả)**: Chọn tất cả nội dung trong tệp hiện tại.
+-   **Expand Selection / Shrink Selection (Mở rộng / Thu hẹp vùng chọn)**: Tự động nhận diện cấu trúc cú pháp, dần dần mở rộng hoặc thu hẹp phạm vi chọn (ví dụ: từ từ -> chuỗi -> trong dấu ngoặc -> toàn bộ dòng -> thân hàm).
+-   **Copy Line Up / Down (Sao chép dòng lên / xuống)**: Nhanh chóng nhân bản dòng hiện tại.
+-   **Move Line Up / Down (Di chuyển dòng lên / xuống)**: `Alt + ↑ / ↓`, điều chỉnh thứ tự dòng code trực tiếp mà không cần cắt dán.
+-   **Add Cursor Above / Below (Thêm con trỏ phía trên / phía dưới)**: `Ctrl + Alt + ↑ / ↓`, bật chế độ đa con trỏ, chỉnh sửa nhiều dòng cùng lúc.
+-   **Add Cursor to Line Ends (Thêm con trỏ vào cuối dòng)**: Sau khi chọn nhiều dòng văn bản, thêm con trỏ vào cuối mỗi dòng.
 
 </details>
 
 <details class="custom-block details" id="vscode-view-menu">
-  <summary>View（查看）：界面布局与面板控制</summary>
+  <summary>View (Xem): Bố cục giao diện và điều khiển bảng điều khiển</summary>
 
-本菜单主要负责：**开关侧边栏/面板**、**调整布局**、**命令面板**、**输出与调试控制台**。
+Menu này chủ yếu chịu trách nhiệm: **Bật/tắt thanh bên/bảng điều khiển**, **điều chỉnh bố cục**, **bảng lệnh**, **Output và Debug Console**.
 
-- **Command Palette…（命令面板…）**：`Ctrl + Shift + P` / `F1`，VS Code 的总指挥中心，可以搜索并执行所有命令。
-- **Open View…（打开视图…）**：快速打开特定的侧边栏视图（如资源管理器、源代码管理）。
-- **Appearance（外观）**：控制全屏、菜单栏显隐、侧边栏位置、缩放级别（Zoom In/Out）。
-- **Editor Layout（编辑器布局）**：拆分编辑器（Split Up/Down/Left/Right），实现分屏对比代码。
-- **Explorer / Search / Source Control / Run / Extensions**：直接切换活动栏（Activity Bar）的视图。
-- **Problems / Output / Debug Console / Terminal**：直接控制底部面板（Panel）的显示内容。
-- **Word Wrap（自动换行）**：`Alt + Z`，控制长行代码是否自动换行显示（不影响实际文件内容）。
+-   **Command Palette… (Bảng lệnh…)**: `Ctrl + Shift + P` / `F1`, trung tâm chỉ huy tổng thể của VS Code, có thể tìm kiếm và thực thi tất cả các lệnh.
+-   **Open View… (Mở chế độ xem…)**: Nhanh chóng mở các chế độ xem thanh bên cụ thể (như Explorer, Source Control).
+-   **Appearance (Giao diện)**: Điều khiển chế độ toàn màn hình, hiển thị/ẩn thanh menu, vị trí thanh bên, mức độ phóng to/thu nhỏ (Zoom In/Out).
+-   **Editor Layout (Bố cục trình soạn thảo)**: Chia trình soạn thảo (Split Up/Down/Left/Right), thực hiện chia màn hình để so sánh code.
+-   **Explorer / Search / Source Control / Run / Extensions**: Trực tiếp chuyển đổi chế độ xem của Activity Bar.
+-   **Problems / Output / Debug Console / Terminal**: Trực tiếp điều khiển nội dung hiển thị của Panel dưới cùng.
+-   **Word Wrap (Tự động xuống dòng)**: `Alt + Z`, điều khiển xem các dòng code dài có tự động xuống dòng hiển thị hay không (không ảnh hưởng đến nội dung tệp thực tế).
 
 </details>
 
 <details class="custom-block details" id="vscode-go-menu">
-  <summary>Go（转到）：代码导航与跳转</summary>
+  <summary>Go (Đi tới): Điều hướng và nhảy code</summary>
 
-本菜单主要负责：**在文件间跳转**、**在符号（函数/变量）间跳转**。
+Menu này chủ yếu chịu trách nhiệm: **Nhảy giữa các tệp**, **nhảy giữa các ký hiệu (hàm/biến)**.
 
-- **Back / Forward（后退 / 前进）**：像浏览器一样，在你的光标历史位置之间跳转。
-- **Switch Editor…（切换编辑器…）**：在已打开的标签页之间快速切换。
-- **Go to File…（转到文件…）**：`Ctrl + P`，输入文件名快速打开文件。
-- **Go to Symbol in Editor…（转到编辑器中的符号…）**：`Ctrl + Shift + O`，列出当前文件的函数/类/变量，快速跳转。
-- **Go to Definition（转到定义）**：`F12`，跳转到光标处变量或函数的定义处。
-- **Go to References（转到引用）**：`Shift + F12`，查看该变量或函数在哪些地方被使用了。
-- **Go to Line/Column…（转到行/列…）**：`Ctrl + G`，跳转到指定行号。
+-   **Back / Forward (Quay lại / Tiến lên)**: Giống như trình duyệt, nhảy giữa các vị trí lịch sử con trỏ của bạn.
+-   **Switch Editor… (Chuyển trình soạn thảo…)**: Nhanh chóng chuyển đổi giữa các tab đã mở.
+-   **Go to File… (Đi tới tệp…)**: `Ctrl + P`, nhập tên tệp để mở nhanh tệp.
+-   **Go to Symbol in Editor… (Đi tới ký hiệu trong trình soạn thảo…)**: `Ctrl + Shift + O`, liệt kê các hàm/lớp/biến của tệp hiện tại, nhảy nhanh.
+-   **Go to Definition (Đi tới định nghĩa)**: `F12`, nhảy đến nơi định nghĩa của biến hoặc hàm tại vị trí con trỏ.
+-   **Go to References (Đi tới tham chiếu)**: `Shift + F12`, xem biến hoặc hàm đó được sử dụng ở những đâu.
+-   **Go to Line/Column… (Đi tới dòng/cột…)**: `Ctrl + G`, nhảy đến số dòng được chỉ định.
 
 </details>
 
 <details class="custom-block details" id="vscode-run-menu">
-  <summary>Run（运行）：调试与执行</summary>
+  <summary>Run (Chạy): Gỡ lỗi và thực thi</summary>
 
-本菜单主要负责：**启动调试**、**断点管理**。
+Menu này chủ yếu chịu trách nhiệm: **Khởi động gỡ lỗi**, **quản lý điểm dừng (breakpoint)**.
 
-- **Start Debugging（开始调试）**：`F5`，以调试模式运行程序（支持断点、变量监视）。
-- **Run Without Debugging（以非调试模式运行）**：`Ctrl + F5`，直接运行程序，不驻留调试器（速度稍快）。
-- **Stop Debugging（停止调试）**：强行结束当前调试会话。
-- **Restart Debugging（重启调试）**：重新运行。
-- **Toggle Breakpoint（切换断点）**：`F9`，在当前行打上或取消红点（断点）。
-- **New Breakpoint（新建断点）**：支持条件断点、日志断点等高级功能。
+-   **Start Debugging (Bắt đầu gỡ lỗi)**: `F5`, chạy chương trình ở chế độ gỡ lỗi (hỗ trợ breakpoint, theo dõi biến).
+-   **Run Without Debugging (Chạy không gỡ lỗi)**: `Ctrl + F5`, chạy trực tiếp chương trình, không giữ trình gỡ lỗi (tốc độ nhanh hơn một chút).
+-   **Stop Debugging (Dừng gỡ lỗi)**: Buộc kết thúc phiên gỡ lỗi hiện tại.
+-   **Restart Debugging (Khởi động lại gỡ lỗi)**: Chạy lại.
+-   **Toggle Breakpoint (Chuyển đổi điểm dừng)**: `F9`, đặt hoặc hủy bỏ chấm đỏ (breakpoint) tại dòng hiện tại.
+-   **New Breakpoint (Tạo điểm dừng mới)**: Hỗ trợ các chức năng nâng cao như conditional breakpoint, log breakpoint.
 
 </details>
 
 <details class="custom-block details" id="vscode-terminal-menu">
-  <summary>Terminal（终端）：集成命令行</summary>
+  <summary>Terminal (Thiết bị đầu cuối): Dòng lệnh tích hợp</summary>
 
-本菜单主要负责：**新建终端**、**管理终端窗口**。
+Menu này chủ yếu chịu trách nhiệm: **Tạo Terminal mới**, **quản lý cửa sổ Terminal**.
 
-- **New Terminal（新建终端）**：在底部面板打开一个新的 Shell（PowerShell/Bash/Zsh）。
-- **Split Terminal（拆分终端）**：在同一个终端面板中左右/上下拆分，同时运行多个命令。
-- **Run Task…（运行任务…）**：运行 `tasks.json` 中定义的构建/测试任务。
+-   **New Terminal (Terminal mới)**: Mở một Shell mới (PowerShell/Bash/Zsh) trong bảng điều khiển dưới cùng.
+-   **Split Terminal (Chia Terminal)**: Chia Terminal theo chiều ngang/dọc trong cùng một bảng điều khiển Terminal, chạy nhiều lệnh cùng lúc.
+-   **Run Task… (Chạy tác vụ…)**: Chạy các tác vụ build/test được định nghĩa trong `tasks.json`.
 
 </details>
 
 <details class="custom-block details" id="vscode-help-menu">
-  <summary>Help（帮助）：文档与反馈</summary>
+  <summary>Help (Trợ giúp): Tài liệu và phản hồi</summary>
 
-- **Welcome（欢迎）**：打开欢迎页（包含入门引导、最近项目）。
-- **Show All Commands（显示所有命令）**：同命令面板。
-- **Documentation（文档）**：跳转官方文档。
-- **Editor Playground（编辑器演练场）**：交互式教程，学习编辑技巧。
-- **Check for Updates…（检查更新…）**：手动检查更新。
-- **About（关于）**：查看版本号、构建时间、Electron/Node 版本信息。
+-   **Welcome (Chào mừng)**: Mở trang chào mừng (bao gồm hướng dẫn bắt đầu, các dự án gần đây).
+-   **Show All Commands (Hiển thị tất cả lệnh)**: Giống như Command Palette.
+-   **Documentation (Tài liệu)**: Chuyển đến tài liệu chính thức.
+-   **Editor Playground (Sân chơi trình soạn thảo)**: Hướng dẫn tương tác, học các kỹ thuật chỉnh sửa.
+-   **Check for Updates… (Kiểm tra cập nhật…)**: Kiểm tra cập nhật thủ công.
+-   **About (Giới thiệu)**: Xem số phiên bản, thời gian build, thông tin phiên bản Electron/Node.
 
 </details>
